@@ -1,0 +1,16 @@
+{
+    "nav": {
+      "items": [
+        "Home",
+        "Business",
+        "Service Providers",
+        "About",
+        "Contact Us"
+      ]
+    },
+    "buttons": {
+      "language": "العربية",
+      "login": "Login",
+      "join": "Join as a Driver"
+    }
+  }
