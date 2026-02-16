@@ -76,13 +76,13 @@ const OrderDetails = () => {
                 <h2 className='orders-card-title my-2'>صور الحمولة</h2>
                 <div className="taken-imgs d-flex gap-2 align-items-center flex-wrap">
     <div className="taken-img position-relative">
-        <img src="../../assets/taken-img-1.png" className="taken-img" alt="taken-img" />
+        <img src="../assets/taken-img-1.png" className="taken-img" alt="taken-img" />
     </div>
     <div className="taken-img position-relative">
-        <img src="../../assets/taken-img-2.png" className="taken-img" alt="taken-img" />
+        <img src="../assets/taken-img-2.png" className="taken-img" alt="taken-img" />
     </div>
     <div className="taken-img position-relative">
-        <img src="../../assets/taken-img-3.png" className="taken-img" alt="taken-img" />
+        <img src="../assets/taken-img-3.png" className="taken-img" alt="taken-img" />
     </div>
 </div>
                                     </div>
@@ -97,7 +97,7 @@ const OrderDetails = () => {
                                             <p className="footer-main-sublabel mb-2">الرياض</p>
                                             <p className="not-have mb-2">وقت التسليم</p>
                                             <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
@@ -109,7 +109,7 @@ const OrderDetails = () => {
                                             <h2 className='orders-card-title mb-2'>مكان التسليم</h2>
                                             <p className="footer-main-sublabel mb-2">الرياض</p>
                                             <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>

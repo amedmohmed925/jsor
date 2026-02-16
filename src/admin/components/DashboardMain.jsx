@@ -118,7 +118,7 @@ const DashboardMain = () => {
               style={{ cursor: 'pointer' }}
             >
               <img 
-                src={`../../assets/${activeSubFilter === filter.id ? filter.icon.replace('.svg', '-active.svg') : filter.icon}`} 
+                src={`../assets/${activeSubFilter === filter.id ? filter.icon.replace('.svg', '-active.svg') : filter.icon}`} 
                 alt={filter.label} 
               />                
               <h6 className='sub-filter-text m-0'>{filter.label}</h6>

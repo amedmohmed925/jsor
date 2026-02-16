@@ -87,7 +87,7 @@ const LiveTrackingComponent = () => {
                     <div className='d-flex align-items-start justify-content-between w-100'>
                     <div className="d-flex gap-2 align-items-start">
                         <div className="truck-icon-container d-flex justify-content-center align-items-center">
-                            <img src="../../assets/truck-icon.svg" alt="user" />
+                            <img src="../assets/truck-icon.svg" alt="user" />
 
                         </div>
                             <div>
@@ -118,7 +118,7 @@ const LiveTrackingComponent = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
@@ -132,7 +132,7 @@ const LiveTrackingComponent = () => {
                     <div className="d-flex justify-content-between align-items-center gap-2 pt-2 border-top mt-2">
                         <div className="d-flex align-items-center gap-2">
                             <h4 className="orders-card-title mb-0">65 ميلاً في الساعة</h4>
-                            <img src="../../assets/gas-station.svg" alt="gas-station" />
+                            <img src="../assets/gas-station.svg" alt="gas-station" />
                             <p className="percent-green m-0">76%</p>
                         </div>
                         <div className='not-have'>منذ دقيقتين</div>
@@ -143,7 +143,7 @@ const LiveTrackingComponent = () => {
                     <div className='d-flex align-items-start justify-content-between w-100'>
                     <div className="d-flex gap-2 align-items-start">
                         <div className="truck-icon-container d-flex justify-content-center align-items-center">
-                            <img src="../../assets/truck-icon.svg" alt="user" />
+                            <img src="../assets/truck-icon.svg" alt="user" />
 
                         </div>
                             <div>
@@ -174,7 +174,7 @@ const LiveTrackingComponent = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
@@ -188,7 +188,7 @@ const LiveTrackingComponent = () => {
                     <div className="d-flex justify-content-between align-items-center gap-2 pt-2 border-top mt-2">
                         <div className="d-flex align-items-center gap-2">
                             <h4 className="orders-card-title mb-0">65 ميلاً في الساعة</h4>
-                            <img src="../../assets/gas-station.svg" alt="gas-station" />
+                            <img src="../assets/gas-station.svg" alt="gas-station" />
                             <p className="percent-green m-0">76%</p>
                         </div>
                         <div className='not-have'>منذ دقيقتين</div>
@@ -199,7 +199,7 @@ const LiveTrackingComponent = () => {
                     <div className='d-flex align-items-start justify-content-between w-100'>
                     <div className="d-flex gap-2 align-items-start">
                         <div className="truck-icon-container d-flex justify-content-center align-items-center">
-                            <img src="../../assets/truck-icon.svg" alt="user" />
+                            <img src="../assets/truck-icon.svg" alt="user" />
 
                         </div>
                             <div>
@@ -230,7 +230,7 @@ const LiveTrackingComponent = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
@@ -244,7 +244,7 @@ const LiveTrackingComponent = () => {
                     <div className="d-flex justify-content-between align-items-center gap-2 pt-2 border-top mt-2">
                         <div className="d-flex align-items-center gap-2">
                             <h4 className="orders-card-title mb-0">65 ميلاً في الساعة</h4>
-                            <img src="../../assets/gas-station.svg" alt="gas-station" />
+                            <img src="../assets/gas-station.svg" alt="gas-station" />
                             <p className="percent-green m-0">76%</p>
                         </div>
                         <div className='not-have'>منذ دقيقتين</div>

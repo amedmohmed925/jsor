@@ -1,0 +1,37 @@
+{
+    "user": {
+        "title": "User Dashboard",
+        "orders": "Orders",
+        "balance": "Balance",
+        "profile": "Profile",
+        "notifications": "Notifications",
+        "tracking": "Track Order",
+        "providerAccount": "Provider Account",
+        "uploads": {
+            "basic": "Upload Basic Documents",
+            "trip": "Upload Trip Documents",
+            "contract": "Upload Contract"
+        }
+    },
+    "orders": {
+        "title": "My Orders",
+        "newOrder": "New Order",
+        "orderNumber": "Order Number",
+        "date": "Date",
+        "status": "Status",
+        "total": "Total",
+        "details": "Order Details",
+        "noOrders": "No orders",
+        "pickupLocation": "Pickup Location",
+        "deliveryLocation": "Delivery Location",
+        "description": "Description",
+        "weight": "Weight"
+    },
+    "balance": {
+        "title": "Balance",
+        "currentBalance": "Current Balance",
+        "transactions": "Transactions",
+        "addFunds": "Add Funds",
+        "withdraw": "Withdraw"
+    }
+}

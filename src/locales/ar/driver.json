@@ -1,0 +1,30 @@
+{
+    "driver": {
+        "title": "لوحة تحكم السائق",
+        "orders": "الطلبات",
+        "balance": "الرصيد",
+        "profile": "الملف الشخصي",
+        "notifications": "الإشعارات",
+        "missions": {
+            "inRoad": "في الطريق",
+            "started": "بدأت المهمة",
+            "arrived": "وصلت"
+        }
+    },
+    "orders": {
+        "title": "طلبات السائق",
+        "available": "الطلبات المتاحة",
+        "active": "الطلبات النشطة",
+        "completed": "الطلبات المكتملة",
+        "accept": "قبول الطلب",
+        "reject": "رفض الطلب",
+        "startMission": "بدء المهمة",
+        "complete": "إكمال الطلب",
+        "orderDetails": "تفاصيل الطلب"
+    },
+    "status": {
+        "available": "متاح",
+        "busy": "مشغول",
+        "offline": "غير متصل"
+    }
+}

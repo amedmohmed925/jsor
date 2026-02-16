@@ -5,7 +5,7 @@ const ProfileMain = () => {
     <section>
       <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 pb-4">
       <div className="d-flex gap-3 align-items-center">
-                    <img src="../../assets/man.png" className='profile-main-img' alt="user" />
+                    <img src="../assets/man.png" className='profile-main-img' alt="user" />
                     <div>
                         <h6 className="orders-title m-0">Habib Meddour</h6>
                         <p className="why-card-desc email-text m-0">habibmeddour1997@gmail.com</p>

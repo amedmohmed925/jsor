@@ -72,16 +72,16 @@ const DriverOrdersMain = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
               </div>
               <div className="d-flex align-items-center flex-wrap gap-2">
-                    <img src="../../assets/distance.svg" alt="distance" />
+                    <img src="../assets/distance.svg" alt="distance" />
                     <p className="orders-card-title mb-2">33 كلم</p>
                     <FontAwesomeIcon icon={faCircle} className='dot-gray-8' />
-                    <img src="../../assets/box.svg" alt="distance" />
+                    <img src="../assets/box.svg" alt="distance" />
                     <p className="orders-card-title mb-2">أثاث منزلي</p>
                 </div>
               {/* <div className="d-flex justify-content-between text-center align-items-center w-100 mb-1">
@@ -91,7 +91,7 @@ const DriverOrdersMain = () => {
                 </div>
                 <div>
                   <h6 className='user-desc m-0 mt-1'>حجم الشاحنة</h6>
-                  <img src="../../assets/filter-badge-img-1.png" alt="truck" />
+                  <img src="../assets/filter-badge-img-1.png" alt="truck" />
                 </div>
                 <div>
                   <h6 className='user-desc m-0 mt-1'>نوع البضاعة</h6>
@@ -151,16 +151,16 @@ const DriverOrdersMain = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
               </div>
               <div className="d-flex align-items-center flex-wrap gap-2">
-                    <img src="../../assets/distance.svg" alt="distance" />
+                    <img src="../assets/distance.svg" alt="distance" />
                     <p className="orders-card-title mb-2">33 كلم</p>
                     <FontAwesomeIcon icon={faCircle} className='dot-gray-8' />
-                    <img src="../../assets/box.svg" alt="distance" />
+                    <img src="../assets/box.svg" alt="distance" />
                     <p className="orders-card-title mb-2">أثاث منزلي</p>
                 </div>
               {/* <div className="d-flex justify-content-between text-center align-items-center w-100 mb-1">
@@ -170,7 +170,7 @@ const DriverOrdersMain = () => {
                 </div>
                 <div>
                   <h6 className='user-desc m-0 mt-1'>حجم الشاحنة</h6>
-                  <img src="../../assets/filter-badge-img-1.png" alt="truck" />
+                  <img src="../assets/filter-badge-img-1.png" alt="truck" />
                 </div>
                 <div>
                   <h6 className='user-desc m-0 mt-1'>نوع البضاعة</h6>
@@ -220,11 +220,11 @@ const DriverOrdersMain = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-start">
-                <img src="../../assets/man.png" className='user-img' alt="user" />
+                <img src="../assets/man.png" className='user-img' alt="user" />
                 <div>
                   <div className="d-flex gap-1 align-items-center">
                     <h6 className="user-name m-0">Omar alrajihi</h6>
-                    <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                    <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                   </div>
                   <p className="user-desc m-0">الرياض</p>
                 </div>
@@ -248,7 +248,7 @@ const DriverOrdersMain = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
@@ -277,11 +277,11 @@ const DriverOrdersMain = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-start">
-                <img src="../../assets/man.png" className='user-img' alt="user" />
+                <img src="../assets/man.png" className='user-img' alt="user" />
                 <div>
                   <div className="d-flex gap-1 align-items-center">
                     <h6 className="user-name m-0">Omar alrajihi</h6>
-                    <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                    <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                   </div>
                   <p className="user-desc m-0">الرياض</p>
                 </div>
@@ -305,7 +305,7 @@ const DriverOrdersMain = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
@@ -341,11 +341,11 @@ const DriverOrdersMain = () => {
                 <div>
                   <h5 className='footer-link'>العميل</h5>
                   <div className="d-flex gap-2 align-items-start">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Omar alrajihi</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">الرياض</p>
                     </div>
@@ -371,7 +371,7 @@ const DriverOrdersMain = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
@@ -403,11 +403,11 @@ const DriverOrdersMain = () => {
                 <div>
                   <h5 className='footer-link'>العميل</h5>
                   <div className="d-flex gap-2 align-items-start">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Omar alrajihi</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">الرياض</p>
                     </div>
@@ -433,7 +433,7 @@ const DriverOrdersMain = () => {
                 </div>
               </div>
               <div className="d-flex gap-2 align-items-center">
-                <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                 <h6 className='user-desc m-0'>03-06-2025</h6>
                 <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                 <h6 className='user-desc m-0'>08:00</h6>
@@ -475,7 +475,7 @@ const DriverOrdersMain = () => {
               style={{ cursor: 'pointer' }}
             >
               <img 
-                src={`../../assets/${activeSubFilter === filter.id ? filter.icon.replace('.svg', '-active.svg') : filter.icon}`} 
+                src={`../assets/${activeSubFilter === filter.id ? filter.icon.replace('.svg', '-active.svg') : filter.icon}`} 
                 alt={filter.label} 
               />                
               <h6 className='sub-filter-text m-0'>{filter.label}</h6>
@@ -493,7 +493,7 @@ const DriverOrdersMain = () => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Driver Info */}
-            <img src="../../assets/man.png" className="rating-user-img" alt="" />
+            <img src="../assets/man.png" className="rating-user-img" alt="" />
             <h4 className="orders-card-title mb-2">Omar Alrajihi</h4>
             <h4 className="user-desc mb-2">الرياض</h4>
             <div className="flex gap-1 align-items-center">

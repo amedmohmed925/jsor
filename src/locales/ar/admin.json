@@ -1,0 +1,40 @@
+{
+    "admin": {
+        "title": "لوحة تحكم المدير",
+        "dashboard": "لوحة التحكم",
+        "users": "المستخدمون",
+        "drivers": "السائقون",
+        "trucks": "الشاحنات",
+        "orders": "الطلبات",
+        "reports": "التقارير",
+        "settings": "الإعدادات"
+    },
+    "dashboard": {
+        "title": "لوحة التحكم",
+        "statistics": "الإحصائيات",
+        "totalOrders": "إجمالي الطلبات",
+        "activeDrivers": "السائقون النشطون",
+        "totalRevenue": "إجمالي الإيرادات",
+        "pendingOrders": "الطلبات المعلقة"
+    },
+    "trucks": {
+        "title": "إدارة الشاحنات",
+        "addTruck": "إضافة شاحنة",
+        "editTruck": "تعديل الشاحنة",
+        "deleteTruck": "حذف الشاحنة",
+        "truckNumber": "رقم الشاحنة",
+        "model": "الموديل",
+        "capacity": "السعة",
+        "status": "الحالة"
+    },
+    "drivers": {
+        "title": "إدارة السائقين",
+        "addDriver": "إضافة سائق",
+        "editDriver": "تعديل السائق",
+        "deleteDriver": "حذف السائق",
+        "driverName": "اسم السائق",
+        "licenseNumber": "رقم الرخصة",
+        "phone": "الهاتف",
+        "assignedTruck": "الشاحنة المخصصة"
+    }
+}

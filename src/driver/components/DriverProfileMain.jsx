@@ -5,7 +5,7 @@ const DriverProfileMain = () => {
     <section>
       <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 pb-4">
       <div className="d-flex gap-3 align-items-center">
-                    <img src="../../assets/man.png" className='profile-main-img' alt="user" />
+                    <img src="../assets/man.png" className='profile-main-img' alt="user" />
                     <div>
                         <h6 className="orders-title m-0">Habib Meddour</h6>
                         <p className="why-card-desc email-text m-0">habibmeddour1997@gmail.com</p>
@@ -136,8 +136,8 @@ const DriverProfileMain = () => {
                                         </div>
                                     </div>
                                     <div className="col-md-6">
-                                        <img src="../../assets/truck-details-img.png" className='img-fluid truck-driver-img w-100' alt="truck" />
-                                        <button type='button' className="login-button text-decoration-none w-100 mt-3 d-flex align-items-center gap-1 justify-content-center"><img src="../../assets/camera.svg" alt="" /> تغيير صورة الشاحنة</button>
+                                        <img src="../assets/truck-details-img.png" className='img-fluid truck-driver-img w-100' alt="truck" />
+                                        <button type='button' className="login-button text-decoration-none w-100 mt-3 d-flex align-items-center gap-1 justify-content-center"><img src="../assets/camera.svg" alt="" /> تغيير صورة الشاحنة</button>
 
                                     </div>
                                 </div>

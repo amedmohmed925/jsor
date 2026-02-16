@@ -1,0 +1,37 @@
+{
+    "user": {
+        "title": "لوحة تحكم المستخدم",
+        "orders": "الطلبات",
+        "balance": "الرصيد",
+        "profile": "الملف الشخصي",
+        "notifications": "الإشعارات",
+        "tracking": "تتبع الطلب",
+        "providerAccount": "حساب مزود الخدمة",
+        "uploads": {
+            "basic": "رفع المستندات الأساسية",
+            "trip": "رفع مستندات الرحلة",
+            "contract": "رفع العقد"
+        }
+    },
+    "orders": {
+        "title": "طلباتي",
+        "newOrder": "طلب جديد",
+        "orderNumber": "رقم الطلب",
+        "date": "التاريخ",
+        "status": "الحالة",
+        "total": "المجموع",
+        "details": "تفاصيل الطلب",
+        "noOrders": "لا توجد طلبات",
+        "pickupLocation": "موقع الاستلام",
+        "deliveryLocation": "موقع التسليم",
+        "description": "الوصف",
+        "weight": "الوزن"
+    },
+    "balance": {
+        "title": "الرصيد",
+        "currentBalance": "الرصيد الحالي",
+        "transactions": "المعاملات",
+        "addFunds": "إضافة رصيد",
+        "withdraw": "سحب"
+    }
+}

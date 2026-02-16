@@ -108,7 +108,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>03-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>08:00</h6>
@@ -120,7 +120,7 @@ const [rating, setRating] = useState(0);
                   </div>
                   <div>
                     <h6 className='user-desc m-0 mt-1'>حجم الشاحنة</h6>
-                    <img src="../../assets/filter-badge-img-1.png" alt="truck" />
+                    <img src="../assets/filter-badge-img-1.png" alt="truck" />
                   </div>
                   <div>
                     <h6 className='user-desc m-0 mt-1'>نوع البضاعة</h6>
@@ -155,16 +155,16 @@ const [rating, setRating] = useState(0);
                 </div>
                 <div className="driver-applicant card p-2 mt-2">
                   <div className="d-flex gap-2 align-items-start mb-3">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Omar alrajihi</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق تريلا</p>
                     </div>
                     <div className="card-type-badge d-flex align-items-center">
-                      <img src="../../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>تريلا</h6>
                     </div>
                   </div>
@@ -175,16 +175,16 @@ const [rating, setRating] = useState(0);
                 </div>
                 <div className="driver-applicant card p-2 mt-2">
                   <div className="d-flex gap-2 align-items-start mb-3">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Omar alrajihi</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق تريلا</p>
                     </div>
                     <div className="card-type-badge d-flex align-items-center">
-                      <img src="../../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>تريلا</h6>
                     </div>
                   </div>
@@ -195,16 +195,16 @@ const [rating, setRating] = useState(0);
                 </div>
                 <div className="driver-applicant card p-2 mt-2">
                   <div className="d-flex gap-2 align-items-start mb-3">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Omar alrajihi</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق تريلا</p>
                     </div>
                     <div className="card-type-badge d-flex align-items-center">
-                      <img src="../../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>تريلا</h6>
                     </div>
                   </div>
@@ -232,18 +232,18 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-start">
-                  <img src="../../assets/man.png" className='user-img' alt="user" />
+                  <img src="../assets/man.png" className='user-img' alt="user" />
                   <div>
                     <div className="d-flex gap-1 align-items-center">
                       <h6 className="user-name m-0">Omar alrajihi</h6>
-                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                     </div>
                     <p className="user-desc m-0">سائق تريلا</p>
                   </div>
                 </div>
                 <h5 className='footer-link m-0'>الشاحنة</h5>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
+                  <img src="../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
                   <h6 className='driver-truck-type m-0'>تريلا</h6>
                 </div>
                 <div className="from-to-wrapper">
@@ -265,7 +265,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>03-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>08:00</h6>
@@ -280,7 +280,7 @@ const [rating, setRating] = useState(0);
                     </div>
                   </div>
                   <div className="code-badge d-flex align-items-center gap-2 ms-5">
-                    <img src="../../assets/document-copy.svg" alt="" />
+                    <img src="../assets/document-copy.svg" alt="" />
                     KB438472
                   </div>
                 </div>
@@ -298,18 +298,18 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-start">
-                  <img src="../../assets/man.png" className='user-img' alt="user" />
+                  <img src="../assets/man.png" className='user-img' alt="user" />
                   <div>
                     <div className="d-flex gap-1 align-items-center">
                       <h6 className="user-name m-0">Omar alrajihi</h6>
-                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                     </div>
                     <p className="user-desc m-0">سائق تريلا</p>
                   </div>
                 </div>
                 <h5 className='footer-link m-0'>الشاحنة</h5>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
+                  <img src="../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
                   <h6 className='driver-truck-type m-0'>تريلا</h6>
                 </div>
                 <div className="from-to-wrapper">
@@ -331,7 +331,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>03-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>08:00</h6>
@@ -346,7 +346,7 @@ const [rating, setRating] = useState(0);
                     </div>
                   </div>
                   <div className="code-badge d-flex align-items-center gap-2 ms-5">
-                    <img src="../../assets/document-copy.svg" alt="" />
+                    <img src="../assets/document-copy.svg" alt="" />
                     KB438472
                   </div>
                 </div>
@@ -369,11 +369,11 @@ const [rating, setRating] = useState(0);
                   <div>
                     <h5 className='footer-link'>مقدم الخدمة</h5>
                     <div className="d-flex gap-2 align-items-start">
-                      <img src="../../assets/man.png" className='user-img' alt="user" />
+                      <img src="../assets/man.png" className='user-img' alt="user" />
                       <div>
                         <div className="d-flex gap-1 align-items-center">
                           <h6 className="user-name m-0">Omar alrajihi</h6>
-                          <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                          <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                         </div>
                         <p className="user-desc m-0">سائق تريلا</p>
                       </div>
@@ -382,7 +382,7 @@ const [rating, setRating] = useState(0);
                   <div>
                     <h5 className='footer-link'>الشاحنة</h5>
                     <div className="d-flex gap-2 align-items-center">
-                      <img src="../../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>تريلا</h6>
                     </div>
                   </div>
@@ -406,7 +406,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>03-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>08:00</h6>
@@ -439,11 +439,11 @@ const [rating, setRating] = useState(0);
                   <div>
                     <h5 className='footer-link'>مقدم الخدمة</h5>
                     <div className="d-flex gap-2 align-items-start">
-                      <img src="../../assets/man.png" className='user-img' alt="user" />
+                      <img src="../assets/man.png" className='user-img' alt="user" />
                       <div>
                         <div className="d-flex gap-1 align-items-center">
                           <h6 className="user-name m-0">Omar alrajihi</h6>
-                          <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                          <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                         </div>
                         <p className="user-desc m-0">سائق تريلا</p>
                       </div>
@@ -452,7 +452,7 @@ const [rating, setRating] = useState(0);
                   <div>
                     <h5 className='footer-link'>الشاحنة</h5>
                     <div className="d-flex gap-2 align-items-center">
-                      <img src="../../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-1.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>تريلا</h6>
                     </div>
                   </div>
@@ -476,7 +476,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>03-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>08:00</h6>
@@ -512,11 +512,11 @@ const [rating, setRating] = useState(0);
                 </div>
                 <h5 className='footer-link'>مقدم الخدمة</h5>
                 <div className="d-flex gap-2 align-items-start">
-                  <img src="../../assets/man.png" className='user-img' alt="user" />
+                  <img src="../assets/man.png" className='user-img' alt="user" />
                   <div>
                     <div className="d-flex gap-1 align-items-center">
                       <h6 className="user-name m-0">Omar alrajihi</h6>
-                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                     </div>
                     <p className="user-desc m-0">سائق تريلا</p>
                   </div>
@@ -540,7 +540,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>03-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>08:00</h6>
@@ -568,11 +568,11 @@ const [rating, setRating] = useState(0);
                 </div>
                 <h5 className='footer-link'>مقدم الخدمة</h5>
                 <div className="d-flex gap-2 align-items-start">
-                  <img src="../../assets/man.png" className='user-img' alt="user" />
+                  <img src="../assets/man.png" className='user-img' alt="user" />
                   <div>
                     <div className="d-flex gap-1 align-items-center">
                       <h6 className="user-name m-0">Omar alrajihi</h6>
-                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                     </div>
                     <p className="user-desc m-0">سائق تريلا</p>
                   </div>
@@ -596,7 +596,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>03-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>08:00</h6>
@@ -648,7 +648,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>05-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>10:00</h6>
@@ -660,7 +660,7 @@ const [rating, setRating] = useState(0);
                   </div>
                   <div>
                     <h6 className='user-desc m-0 mt-1'>حجم الشاحنة</h6>
-                    <img src="../../assets/filter-badge-img-2.png" alt="truck" />
+                    <img src="../assets/filter-badge-img-2.png" alt="truck" />
                   </div>
                   <div>
                     <h6 className='user-desc m-0 mt-1'>عدد الرحلات</h6>
@@ -695,16 +695,16 @@ const [rating, setRating] = useState(0);
                 </div>
                 <div className="driver-applicant card p-2 mt-2">
                   <div className="d-flex gap-2 align-items-start mb-3">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Ahmed Khalid</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,8 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,8 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق نقل خفيف</p>
                     </div>
                     <div className="card-type-badge d-flex align-items-center">
-                      <img src="../../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>نقل خفيف</h6>
                     </div>
                   </div>
@@ -715,16 +715,16 @@ const [rating, setRating] = useState(0);
                 </div>
                 <div className="driver-applicant card p-2 mt-2">
                   <div className="d-flex gap-2 align-items-start mb-3">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Mohammed Ali</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,7 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,7 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق نقل خفيف</p>
                     </div>
                     <div className="card-type-badge d-flex align-items-center">
-                      <img src="../../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>نقل خفيف</h6>
                     </div>
                   </div>
@@ -735,16 +735,16 @@ const [rating, setRating] = useState(0);
                 </div>
                 <div className="driver-applicant card p-2 mt-2">
                   <div className="d-flex gap-2 align-items-start mb-3">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Salem Omar</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق نقل خفيف</p>
                     </div>
                     <div className="card-type-badge d-flex align-items-center">
-                      <img src="../../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>نقل خفيف</h6>
                     </div>
                   </div>
@@ -772,18 +772,18 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-start">
-                  <img src="../../assets/man.png" className='user-img' alt="user" />
+                  <img src="../assets/man.png" className='user-img' alt="user" />
                   <div>
                     <div className="d-flex gap-1 align-items-center">
                       <h6 className="user-name m-0">Ahmed Khalid</h6>
-                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,8 <img src="../../assets/star.svg" alt="" /></div>
+                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,8 <img src="../assets/star.svg" alt="" /></div>
                     </div>
                     <p className="user-desc m-0">سائق نقل خفيف</p>
                   </div>
                 </div>
                 <h5 className='footer-link m-0'>الشاحنة</h5>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
+                  <img src="../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
                   <h6 className='driver-truck-type m-0'>نقل خفيف</h6>
                 </div>
                 <div className="from-to-wrapper">
@@ -805,7 +805,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>05-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>10:00</h6>
@@ -820,7 +820,7 @@ const [rating, setRating] = useState(0);
                     </div>
                   </div>
                   <div className="code-badge d-flex align-items-center gap-2 ms-5">
-                    <img src="../../assets/document-copy.svg" alt="" />
+                    <img src="../assets/document-copy.svg" alt="" />
                     TR589432
                   </div>
                 </div>
@@ -843,11 +843,11 @@ const [rating, setRating] = useState(0);
                   <div>
                     <h5 className='footer-link'>مقدم الخدمة</h5>
                     <div className="d-flex gap-2 align-items-start">
-                      <img src="../../assets/man.png" className='user-img' alt="user" />
+                      <img src="../assets/man.png" className='user-img' alt="user" />
                       <div>
                         <div className="d-flex gap-1 align-items-center">
                           <h6 className="user-name m-0">Mohammed Ali</h6>
-                          <div className="new-order-badge p-1 rounded-2 text-nowrap">4,7 <img src="../../assets/star.svg" alt="" /></div>
+                          <div className="new-order-badge p-1 rounded-2 text-nowrap">4,7 <img src="../assets/star.svg" alt="" /></div>
                         </div>
                         <p className="user-desc m-0">سائق نقل خفيف</p>
                       </div>
@@ -856,7 +856,7 @@ const [rating, setRating] = useState(0);
                   <div>
                     <h5 className='footer-link'>الشاحنة</h5>
                     <div className="d-flex gap-2 align-items-center">
-                      <img src="../../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-2.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>نقل خفيف</h6>
                     </div>
                   </div>
@@ -880,7 +880,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>05-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>10:00</h6>
@@ -916,11 +916,11 @@ const [rating, setRating] = useState(0);
                 </div>
                 <h5 className='footer-link'>مقدم الخدمة</h5>
                 <div className="d-flex gap-2 align-items-start">
-                  <img src="../../assets/man.png" className='user-img' alt="user" />
+                  <img src="../assets/man.png" className='user-img' alt="user" />
                   <div>
                     <div className="d-flex gap-1 align-items-center">
                       <h6 className="user-name m-0">Salem Omar</h6>
-                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                     </div>
                     <p className="user-desc m-0">سائق نقل خفيف</p>
                   </div>
@@ -944,7 +944,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>05-06-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>10:00</h6>
@@ -996,7 +996,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>01-07-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>09:00</h6>
@@ -1008,7 +1008,7 @@ const [rating, setRating] = useState(0);
                   </div>
                   <div>
                     <h6 className='user-desc m-0 mt-1'>حجم الشاحنة</h6>
-                    <img src="../../assets/filter-badge-img-3.png" alt="truck" />
+                    <img src="../assets/filter-badge-img-3.png" alt="truck" />
                   </div>
                   <div>
                     <h6 className='user-desc m-0 mt-1'>مدة العقد</h6>
@@ -1043,16 +1043,16 @@ const [rating, setRating] = useState(0);
                 </div>
                 <div className="driver-applicant card p-2 mt-2">
                   <div className="d-flex gap-2 align-items-start mb-3">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Yousef Hassan</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,6 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,6 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق شاحنة صغيرة</p>
                     </div>
                     <div className="card-type-badge d-flex align-items-center">
-                      <img src="../../assets/filter-card-img-3.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-3.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>شاحنة صغيرة</h6>
                     </div>
                   </div>
@@ -1080,18 +1080,18 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-start">
-                  <img src="../../assets/man.png" className='user-img' alt="user" />
+                  <img src="../assets/man.png" className='user-img' alt="user" />
                   <div>
                     <div className="d-flex gap-1 align-items-center">
                       <h6 className="user-name m-0">Yousef Hassan</h6>
-                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,6 <img src="../../assets/star.svg" alt="" /></div>
+                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,6 <img src="../assets/star.svg" alt="" /></div>
                     </div>
                     <p className="user-desc m-0">سائق شاحنة صغيرة</p>
                   </div>
                 </div>
                 <h5 className='footer-link m-0'>الشاحنة</h5>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/filter-card-img-3.png" className='driver-truck-type-img' alt="truck" />
+                  <img src="../assets/filter-card-img-3.png" className='driver-truck-type-img' alt="truck" />
                   <h6 className='driver-truck-type m-0'>شاحنة صغيرة</h6>
                 </div>
                 <div className="from-to-wrapper">
@@ -1113,7 +1113,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>01-07-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>09:00</h6>
@@ -1128,7 +1128,7 @@ const [rating, setRating] = useState(0);
                     </div>
                   </div>
                   <div className="code-badge d-flex align-items-center gap-2 ms-5">
-                    <img src="../../assets/document-copy.svg" alt="" />
+                    <img src="../assets/document-copy.svg" alt="" />
                     CT789456
                   </div>
                 </div>
@@ -1151,11 +1151,11 @@ const [rating, setRating] = useState(0);
                   <div>
                     <h5 className='footer-link'>مقدم الخدمة</h5>
                     <div className="d-flex gap-2 align-items-start">
-                      <img src="../../assets/man.png" className='user-img' alt="user" />
+                      <img src="../assets/man.png" className='user-img' alt="user" />
                       <div>
                         <div className="d-flex gap-1 align-items-center">
                           <h6 className="user-name m-0">Fahad Nasser</h6>
-                          <div className="new-order-badge p-1 rounded-2 text-nowrap">4,8 <img src="../../assets/star.svg" alt="" /></div>
+                          <div className="new-order-badge p-1 rounded-2 text-nowrap">4,8 <img src="../assets/star.svg" alt="" /></div>
                         </div>
                         <p className="user-desc m-0">سائق شاحنة صغيرة</p>
                       </div>
@@ -1164,7 +1164,7 @@ const [rating, setRating] = useState(0);
                   <div>
                     <h5 className='footer-link'>الشاحنة</h5>
                     <div className="d-flex gap-2 align-items-center">
-                      <img src="../../assets/filter-card-img-3.png" className='driver-truck-type-img' alt="truck" />
+                      <img src="../assets/filter-card-img-3.png" className='driver-truck-type-img' alt="truck" />
                       <h6 className='driver-truck-type m-0'>شاحنة صغيرة</h6>
                     </div>
                   </div>
@@ -1188,7 +1188,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>01-07-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>09:00</h6>
@@ -1224,11 +1224,11 @@ const [rating, setRating] = useState(0);
                 </div>
                 <h5 className='footer-link'>مقدم الخدمة</h5>
                 <div className="d-flex gap-2 align-items-start">
-                  <img src="../../assets/man.png" className='user-img' alt="user" />
+                  <img src="../assets/man.png" className='user-img' alt="user" />
                   <div>
                     <div className="d-flex gap-1 align-items-center">
                       <h6 className="user-name m-0">Fahad Nasser</h6>
-                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,8 <img src="../../assets/star.svg" alt="" /></div>
+                      <div className="new-order-badge p-1 rounded-2 text-nowrap">4,8 <img src="../assets/star.svg" alt="" /></div>
                     </div>
                     <p className="user-desc m-0">سائق شاحنة صغيرة</p>
                   </div>
@@ -1252,7 +1252,7 @@ const [rating, setRating] = useState(0);
                   </div>
                 </div>
                 <div className="d-flex gap-2 align-items-center">
-                  <img src="../../assets/calendar.svg" className='mb-1' alt="calender" />
+                  <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                   <h6 className='user-desc m-0'>01-07-2025</h6>
                   <FontAwesomeIcon icon={faCircle} className='dot-icon' />
                   <h6 className='user-desc m-0'>09:00</h6>
@@ -1314,7 +1314,7 @@ const [rating, setRating] = useState(0);
               style={{ cursor: 'pointer' }}
             >
               <img 
-                src={`../../assets/${activeSubFilter === filter.id ? filter.icon.replace('.svg', '-active.svg') : filter.icon}`} 
+                src={`../assets/${activeSubFilter === filter.id ? filter.icon.replace('.svg', '-active.svg') : filter.icon}`} 
                 alt={filter.label} 
               />                
               <h6 className='sub-filter-text m-0'>{filter.label}</h6>
@@ -1334,7 +1334,7 @@ const [rating, setRating] = useState(0);
 
 
       {/* Driver Info */}
-      <img src="../../assets/man.png" className="rating-user-img" alt="" />
+      <img src="../assets/man.png" className="rating-user-img" alt="" />
       <h4 className="orders-card-title mb-2">Omar Alrajihi</h4>
       <h4 className="user-desc mb-2">سائق تريلا</h4>
       <div className="flex gap-1 align-items-center">

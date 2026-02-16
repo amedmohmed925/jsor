@@ -1,0 +1,30 @@
+{
+    "driver": {
+        "title": "Driver Dashboard",
+        "orders": "Orders",
+        "balance": "Balance",
+        "profile": "Profile",
+        "notifications": "Notifications",
+        "missions": {
+            "inRoad": "On the Road",
+            "started": "Mission Started",
+            "arrived": "Arrived"
+        }
+    },
+    "orders": {
+        "title": "Driver Orders",
+        "available": "Available Orders",
+        "active": "Active Orders",
+        "completed": "Completed Orders",
+        "accept": "Accept Order",
+        "reject": "Reject Order",
+        "startMission": "Start Mission",
+        "complete": "Complete Order",
+        "orderDetails": "Order Details"
+    },
+    "status": {
+        "available": "Available",
+        "busy": "Busy",
+        "offline": "Offline"
+    }
+}

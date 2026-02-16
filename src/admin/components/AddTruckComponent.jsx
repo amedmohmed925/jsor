@@ -12,7 +12,7 @@ const AddTruckComponent = () => {
 
       <div className="p-3 mt-2 shadow rounded-2">
         <div className="d-flex gap-1 align-items-center mb-2">
-          <img src="../../assets/truck-icon.svg" alt="truck" />
+          <img src="../assets/truck-icon.svg" alt="truck" />
           <h4 className="orders-title m-0">إضافة مركبة جديدة</h4>
         </div>
 
@@ -104,7 +104,7 @@ const AddTruckComponent = () => {
                   onChange={(e) => setLicenseFile(e.target.files[0]?.name)}
                 />
                 <div className="upload-content">
-                  <img src="../../assets/export.svg" alt="upload" />
+                  <img src="../assets/export.svg" alt="upload" />
                   <p className="m-0 user-desc">اضغط لتحميل الملف</p>
                 </div>
               </label>
@@ -123,7 +123,7 @@ const AddTruckComponent = () => {
                   onChange={(e) => setInsuranceFile(e.target.files[0]?.name)}
                 />
                 <div className="upload-content">
-                  <img src="../../assets/export.svg" alt="upload" />
+                  <img src="../assets/export.svg" alt="upload" />
                   <p className="m-0 user-desc">اضغط لتحميل الملف</p>
                 </div>
               </label>
@@ -142,7 +142,7 @@ const AddTruckComponent = () => {
                   onChange={(e) => setFormFile(e.target.files[0]?.name)}
                 />
                 <div className="upload-content">
-                  <img src="../../assets/export.svg" alt="upload" />
+                  <img src="../assets/export.svg" alt="upload" />
                   <p className="m-0 user-desc">اضغط لتحميل الملف</p>
                 </div>
               </label>

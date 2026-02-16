@@ -1,111 +1,117 @@
-import React, { useState } from 'react';
-
-// We'll create a data structure to hold all truck information. This makes the code cleaner and easier to manage.
-const truckTypes = [
-  {
-    id: 1,
-    title: 'لوري',
-    filterCardImage: '../assets/filter-card-img.png',
-    itemImage: '../assets/filter-card-item-img.png',
-    items: [
-      { badgeImage: '../assets/filter-badge-img-1.png', text: 'لوري ثلاجة مبرد ( 8 طن) الحجم یصل إلى 6.5 متر' },
-      { badgeImage: '../assets/filter-badge-img-2.png', text: 'لوري جوانب (8 طن)  الحجم یصل إلى 6.5 متر' },
-      { badgeImage: '../assets/filter-badge-img-3.png', text: 'لوري بونش (5 طن) الحجم یصل إلى 6.5 متر' },
-    ]
-  },
-  {
-    id: 2,
-    title: 'تريلا',
-    filterCardImage: '../assets/filter-card-img-1.png',
-    itemImage: '../assets/filter-card-item-img.png',
-    items: [
-      { badgeImage: '../assets/filter-badge-img-1.png', text: 'تريلا ثلاجة مبرد ( 15 طن) الحجم یصل إلى 13 متر' },
-      { badgeImage: '../assets/filter-badge-img-2.png', text: 'تريلا جوانب (15 طن)  الحجم یصل إلى 13 متر' },
-      { badgeImage: '../assets/filter-badge-img-3.png', text: 'تريلا بونش (12 طن) الحجم یصل إلى 13 متر' },
-    ]
-  },
-  {
-    id: 3,
-    title: 'سقس',
-    filterCardImage: '../assets/filter-card-img-2.png',
-    itemImage: '../assets/filter-card-item-img.png',
-    items: [
-      { badgeImage: '../assets/filter-badge-img-1.png', text: 'سقس ثلاجة مبرد ( 4 طن) الحجم یصل إلى 4 متر' },
-      { badgeImage: '../assets/filter-badge-img-2.png', text: 'سقس جوانب (4 طن)  الحجم یصل إلى 4 متر' },
-      { badgeImage: '../assets/filter-badge-img-3.png', text: 'سقس بونش (3 طن) الحجم یصل إلى 4 متر' },
-    ]
-  },
-  {
-    id: 4,
-    title: 'دينا',
-    filterCardImage: '../assets/filter-card-img-3.png',
-    itemImage: '../assets/filter-card-item-img.png',
-    items: [
-      { badgeImage: '../assets/filter-badge-img-1.png', text: 'دينا ثلاجة مبرد ( 2 طن) الحجم یصل إلى 3 متر' },
-      { badgeImage: '../assets/filter-badge-img-2.png', text: 'دينا جوانب (2 طن)  الحجم یصل إلى 3 متر' },
-      { badgeImage: '../assets/filter-badge-img-3.png', text: 'دينا بونش (1.5 طن) الحجم یصل إلى 3 متر' },
-    ]
-  }
-];
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useGetHomeDataQuery } from '../../api/site/siteApi';
 
 const Trucks = () => {
-  // 1. State to track the active filter. We initialize it to 1 to show the first item by default.
-  const [activeFilter, setActiveFilter] = useState(1);
+  const { i18n } = useTranslation();
+  const { data: homeData, isLoading } = useGetHomeDataQuery();
+  const [activeFilter, setActiveFilter] = useState(null);
 
-  // 2. Handler function to update the state when a card is clicked.
+  // Helper to get localized field from API
+  const getLangField = (item, field) => {
+    if (!item) return '';
+    const isEn = i18n.language === 'en';
+    const enField = `${field}_en`;
+    return (isEn && item[enField]) ? item[enField] : item[field];
+  };
+
+  // Prepend API base URL if needed, although the API seems to provide full URLs
+  const getImageUrl = (image) => {
+    if (!image) return 'assets/truck-type-img.png';
+    // If it's a relative path, we might need a base URL, but assuming absolute from API
+    return image;
+  };
+
+  const trucksSection = homeData?.Sections?.[15]; // ID 29: انواع الشاحنات
+  const allTrucks = homeData?.Truks || [];
+
+  // Filter trucks into parent and child (sub-trucks)
+  const parentTrucks = allTrucks.filter((t) => !t.parent_id);
+  const childTrucks = allTrucks.filter((t) => t.parent_id);
+
+  useEffect(() => {
+    if (parentTrucks.length > 0 && !activeFilter) {
+      setActiveFilter(parentTrucks[0].id);
+    }
+  }, [parentTrucks, activeFilter]);
+
   const handleFilterClick = (id) => {
     setActiveFilter(id);
   };
 
+  const currentParent = parentTrucks.find((t) => t.id === activeFilter);
+  const currentChildren = childTrucks.filter((t) => t.parent_id === activeFilter);
+
   return (
-    <section className='my-5'>
+    <section className="trucks py-4">
       <div className="container">
-        <h2 className="section-title text-center">انواع الشاحنات</h2>
-        <p className="section-desc text-center">اختر نوع الشاحنة المناسب حسب طبيعة واحتياج شحنتك. نوفر شاحنات متعددة بتصنيفات مختلفة لضمان التوصيل الأمثل.</p>
-        
-        {/* 3. Dynamically render the filter cards */}
+        <h2 className="section-title text-center">
+          {isLoading ? '...' : getLangField(trucksSection, 'title') || 'انواع الشاحنات'}
+        </h2>
+        <p className="section-desc text-center">
+          {isLoading ? '...' : getLangField(trucksSection, 'content')}
+        </p>
+
         <div className="row">
-          {truckTypes.map((type) => (
+          {/* Main Truck Categories (Filters) */}
+          {parentTrucks.map((type) => (
             <div className="col-lg-3 col-md-6 mt-3" key={type.id}>
-              <div 
-                // 4. Conditionally apply the 'active' class
-                className={`trucks-filter-card d-flex justify-content-between align-items-center w-100 ${activeFilter === type.id ? 'active' : ''}`}
-                // 5. Add the onClick handler
+              <div
+                className={`trucks-filter-card d-flex justify-content-between align-items-center w-100 ${
+                  activeFilter === type.id ? 'active' : ''
+                }`}
                 onClick={() => handleFilterClick(type.id)}
-                style={{ cursor: 'pointer' }} // Add a pointer cursor to indicate it's clickable
+                style={{ cursor: 'pointer' }}
               >
-                <h3 className='trucks-filter-title m-0'>{type.title}</h3>
-                <img src={type.filterCardImage} className='filter-card-img' alt={`${type.title} truck`} />
+                <div className="d-flex align-items-center gap-2">
+                  <img src={getImageUrl(type.image)} alt={getLangField(type, 'name')} />
+                  <span>{getLangField(type, 'name')}</span>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="col-12 mt-4">
-          <div className="filter-item-container">
-            {/* 6. Dynamically render the filter items */}
-            {truckTypes.map((type) => (
-              <div 
-                key={type.id}
-                // 7. Conditionally hide items that are not active
-                className={`filter-item-${type.id} d-flex justify-content-center justify-content-md-between align-items-center flex-wrap flex-md-nowrap w-100 ${activeFilter !== type.id ? 'd-none' : ''}`}
-              >
-                <img src={type.itemImage} className='filter-card-item-img img-fluid mb-3 mb-md-0' alt={`${type.title} details`} />
-                <div>
-                  {type.items.map((item, index) => (
-                    <div key={index} className="filter-badge d-flex gap-2 align-items-center  mb-3">
-                      <img src={item.badgeImage} className='filter-badge-img' alt="badge" />
-                      <h4 className='filter-badge-text m-0'>{item.text}</h4>
-                    </div>
-                  ))}
+        <div className="row mt-4">
+          <div className="col-12">
+            <div className="trucks-details-container p-4 rounded-4 shadow-sm bg-white">
+              <div className="row align-items-center">
+                <div className="col-md-7">
+                  <h3 className="mb-3 text-primary">{getLangField(currentParent, 'name')}</h3>
+                  <p className="truck-main-desc mb-4">{getLangField(currentParent, 'content')}</p>
+
+                  <div className="row">
+                    {currentChildren.length > 0 ? (
+                      currentChildren.map((child) => (
+                        <div key={child.id} className="col-md-6 mb-3">
+                          <div className="truck-child-item p-3 border rounded-3 h-100">
+                            <h5 className="fs-6 fw-bold mb-2">{getLangField(child, 'name')}</h5>
+                            <p className="small text-muted mb-0">{getLangField(child, 'content')}</p>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-12">
+                        <p className="text-muted italic">{i18n.language === 'en' ? 'No sub-types available' : 'لا توجد أنواع فرعية متاحة'}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-5 text-center">
+                  <img
+                    src={getImageUrl(currentParent?.image)}
+                    alt={getLangField(currentParent, 'name')}
+                    className="img-fluid rounded-3"
+                    style={{ maxHeight: '300px', objectFit: 'contain' }}
+                  />
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default Trucks;

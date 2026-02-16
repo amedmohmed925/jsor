@@ -18,7 +18,7 @@ const UserNavbar = () => {
     <nav className="navbar navbar-expand-lg shadow-sm py-2 navbar-background">
       <div className="container-fluid px-lg-5">
         {/* Logo */}
-        <Link to='/'><img src="../assets/logo.png" alt="logo" /></Link>
+        <Link to='/'><img src="assets/logo.png" alt="logo" /></Link>
         
         {/* Navbar Toggler for mobile */}
         <button
@@ -58,10 +58,10 @@ const UserNavbar = () => {
               </button>
             </li>
             <li className="nav-item d-flex align-items-center gap-2">
-                <div className="nav-labg-mode"><img src="../../assets/notification.svg" alt="notification" /></div>
-                <div className="nav-labg-mode"><img src="../../assets/moon.svg" alt="mode" /></div>
+                <div className="nav-labg-mode"><img src="../assets/notification.svg" alt="notification" /></div>
+                <div className="nav-labg-mode"><img src="../assets/moon.svg" alt="mode" /></div>
                 <div className="d-flex gap-2 align-items-center">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                         <h6 className="user-name m-0">Habib M</h6>
                         <p className="user-desc m-0">جديد</p>

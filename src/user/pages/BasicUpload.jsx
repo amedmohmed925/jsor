@@ -31,19 +31,19 @@ const BasicUpload = () => {
 const serviceOptions = [
   {
     id: "service1",
-    image: "../../assets/truck-size-1.png",
+    image: "../assets/truck-size-1.png",
   },
   {
     id: "service2",
-    image: "../../assets/truck-size-2.png",
+    image: "../assets/truck-size-2.png",
   },
   {
     id: "service3",
-    image: "../../assets/truck-size-3.png",
+    image: "../assets/truck-size-3.png",
   },
   {
     id: "service4",
-    image: "../../assets/truck-size-4.png",
+    image: "../assets/truck-size-4.png",
   },
 ];
 
@@ -52,17 +52,17 @@ const serviceOptions = [
     {
       value: "trailer",
       label: "تريلا",
-      image: "../../assets/filter-card-img-1.png",
+      image: "../assets/filter-card-img-1.png",
     },
     {
       value: "dina",
       label: "دينا",
-      image: "../../assets/filter-card-img-2.png",
+      image: "../assets/filter-card-img-2.png",
     },
     {
       value: "refrigerated",
       label: "ثلاجة",
-      image: "../../assets/filter-card-img-3.png",
+      image: "../assets/filter-card-img-3.png",
     },
   ];
 
@@ -141,12 +141,12 @@ const serviceOptions = [
                   </div>
                 </div>
 
-                <img src="../../assets/arrow-round-vector.svg" alt="vector" />
-                <img src="../../assets/plus-vector.svg" alt="plus" />
+                <img src="../assets/arrow-round-vector.svg" alt="vector" />
+                <img src="../assets/plus-vector.svg" alt="plus" />
               </div>
 
               <div className="d-flex align-items-center gap-1 border-bottom pb-2">
-                <img src="../../assets/map-hotel.svg" alt="map" />
+                <img src="../assets/map-hotel.svg" alt="map" />
                 <h6 className='choose-from-map m-0'>حدد من الخريطة</h6>
               </div>
 

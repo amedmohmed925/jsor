@@ -16,7 +16,7 @@ const DriverNotifications = () => {
             <label className="form-label mb-1 mt-2">جديدة</label>
             <div className="notifications-container py-3 px-2 rounded-3">
                 <div className="notification-item d-flex align-items-start gap-2">
-                    <img src="../../assets/man.png" className='notification-user-img' alt="user" />
+                    <img src="../assets/man.png" className='notification-user-img' alt="user" />
                     <div>
                     <div className="d-flex align-items-center gap-1 mb-1 flex-wrap"><h6 className='document-li m-0'>وافق عبدالعزيز الحايك على</h6><h5 className='orders-card-title m-0'>طلب توصيل أثاث منزلي</h5></div>
                     <div className="d-flex gap-1 align-items-center footer-main-sublabel mb-2">
@@ -32,7 +32,7 @@ const DriverNotifications = () => {
                 </div>
                 <hr />
                 <div className="notification-item d-flex align-items-start gap-2">
-                    <img src="../../assets/man.png" className='notification-user-img' alt="user" />
+                    <img src="../assets/man.png" className='notification-user-img' alt="user" />
                     <div>
                     <div className="d-flex align-items-center gap-1 mb-1 flex-wrap"><h6 className='document-li m-0'>لقد قام عبدالعزيز الحامد بإلغاء طلبك</h6><h5 className='orders-card-title m-0'>طلب توصيل أثاث منزلي</h5></div>
                     <div className="d-flex gap-1 align-items-center footer-main-sublabel">
@@ -49,7 +49,7 @@ const DriverNotifications = () => {
             <label className="form-label mb-1 mt-2">منذ فترة</label>
             <div className="notifications-container py-3 px-2 rounded-3">
                 <div className="notification-item d-flex align-items-start gap-2">
-                    <img src="../../assets/man.png" className='notification-user-img' alt="user" />
+                    <img src="../assets/man.png" className='notification-user-img' alt="user" />
                     <div>
                     <div className="d-flex align-items-center gap-1 mb-1 flex-wrap"><h6 className='document-li m-0'>لقد تم توصيل حمولة عبدالعزيز الحايك</h6><h5 className='orders-card-title m-0'>طلب توصيل أثاث منزلي</h5><h6 className='document-li m-0'>يمكنك تقييم هذا العميل</h6></div>
                     <div className="d-flex gap-1 align-items-center footer-main-sublabel mb-2">
@@ -65,7 +65,7 @@ const DriverNotifications = () => {
                 </div>
                 <hr />
                 <div className="notification-item d-flex align-items-start gap-2">
-                    <img src="../../assets/man.png" className='notification-user-img' alt="user" />
+                    <img src="../assets/man.png" className='notification-user-img' alt="user" />
                     <div>
                     <div className="d-flex align-items-center gap-1 mb-1 flex-wrap"><h6 className='document-li m-0'>لديك عرض جديد من عبدالعزيز الحايك على</h6><h5 className='orders-card-title m-0'>طلب توصيل أثاث منزلي</h5></div>
                     <div className="d-flex gap-1 align-items-center footer-main-sublabel mb-2">
@@ -91,7 +91,7 @@ const DriverNotifications = () => {
 
 
       {/* Driver Info */}
-      <img src="../../assets/man.png" className="rating-user-img" alt="" />
+      <img src="../assets/man.png" className="rating-user-img" alt="" />
       <h4 className="orders-card-title mb-2">Omar Alrajihi</h4>
       <h4 className="user-desc mb-2">سائق تريلا</h4>
       <div className="flex gap-1 align-items-center">

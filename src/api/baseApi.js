@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getToken } from '../utils/tokenStorage';
+import i18n from '../i18n';
 
 /**
  * Base API Configuration
@@ -7,7 +8,7 @@ import { getToken } from '../utils/tokenStorage';
  */
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+  baseUrl: import.meta.env.VITE_API_BASE_URL || 'https://alrajihy.com/demo/jsor',
   
   // Prepare headers for each request
   prepareHeaders: (headers, { getState }) => {
@@ -26,6 +27,10 @@ const baseQuery = fetchBaseQuery({
     
     // Add accept header
     headers.set('Accept', 'application/json');
+    
+    // Add language header
+    const currentLanguage = i18n.language || 'ar';
+    headers.set('Accept-Language', currentLanguage);
     
     return headers;
   },

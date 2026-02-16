@@ -1,0 +1,40 @@
+{
+    "admin": {
+        "title": "Admin Dashboard",
+        "dashboard": "Dashboard",
+        "users": "Users",
+        "drivers": "Drivers",
+        "trucks": "Trucks",
+        "orders": "Orders",
+        "reports": "Reports",
+        "settings": "Settings"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "statistics": "Statistics",
+        "totalOrders": "Total Orders",
+        "activeDrivers": "Active Drivers",
+        "totalRevenue": "Total Revenue",
+        "pendingOrders": "Pending Orders"
+    },
+    "trucks": {
+        "title": "Truck Management",
+        "addTruck": "Add Truck",
+        "editTruck": "Edit Truck",
+        "deleteTruck": "Delete Truck",
+        "truckNumber": "Truck Number",
+        "model": "Model",
+        "capacity": "Capacity",
+        "status": "Status"
+    },
+    "drivers": {
+        "title": "Driver Management",
+        "addDriver": "Add Driver",
+        "editDriver": "Edit Driver",
+        "deleteDriver": "Delete Driver",
+        "driverName": "Driver Name",
+        "licenseNumber": "License Number",
+        "phone": "Phone",
+        "assignedTruck": "Assigned Truck"
+    }
+}

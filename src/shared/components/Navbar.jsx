@@ -1,23 +1,26 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
 
 const Navbar = () => {
   const location = useLocation();
+  const { t } = useTranslation('common');
   
-  // Static Arabic navigation items with their corresponding routes
+  // Navigation items with translation keys
   const navItems = [
-    { name: 'الرئيسية', path: '/' },
-    { name: 'الاعمال', path: '/works' },
+    { name: t('navigation.home'), path: '/' },
+    { name: t('navigation.works'), path: '/works' },
     { name: 'مزودي الخدمات', path: '/service-provider' },
-    { name: 'عن المنصة', path: '/about' },
-    { name: 'تواصل معنا', path: '/contact' }
+    { name: t('navigation.about'), path: '/about' },
+    { name: t('navigation.contact'), path: '/contact' }
   ];
 
   return (
     <nav className="navbar navbar-expand-lg shadow-sm py-2 navbar-background">
       <div className="container-fluid px-lg-5">
         {/* Logo */}
-        <Link to='/'><img src="../assets/logo.png" alt="logo" /></Link>
+        <Link to='/'><img src="assets/logo.png" alt="logo" /></Link>
         
         {/* Navbar Toggler for mobile */}
         <button
@@ -49,16 +52,17 @@ const Navbar = () => {
           </ul>
 
           {/* Right side items (Language, Login, Join) */}
-          <ul className="navbar-nav align-items-lg-center gap-lg-5">
+          <ul className="navbar-nav align-items-lg-center gap-lg-3">
             <li className="nav-item">
-              <button className="nav-link lang-button">
-                English
-                <i className="fas fa-globe pe-1"></i>
-              </button>
+              <LanguageSwitcher />
             </li>
             <li className="nav-item d-flex align-items-center gap-2">
-              <Link to="/login" className="login-button text-decoration-none">سجل الدخول</Link>
-              <Link to="/login" className="join-button text-decoration-none">انضم كسائق</Link>
+              <Link to="/login" className="login-button text-decoration-none">
+                {t('auth:login.loginButton', 'سجل الدخول')}
+              </Link>
+              <Link to="/login" className="join-button text-decoration-none">
+                انضم كسائق
+              </Link>
             </li>
           </ul>
         </div>

@@ -43,11 +43,11 @@ const DriversComponent = () => {
             <div className="d-flex flex-column align-items-start gap-2 w-100">
               <div className='d-flex align-items-start justify-content-between w-100'>
               <div className="d-flex gap-2 align-items-start">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Omar alrajihi</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق تريلا</p>
                     </div>
@@ -82,11 +82,11 @@ const DriversComponent = () => {
             <div className="d-flex flex-column align-items-start gap-2 w-100">
               <div className='d-flex align-items-start justify-content-between w-100'>
               <div className="d-flex gap-2 align-items-start">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Omar alrajihi</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق تريلا</p>
                     </div>
@@ -99,7 +99,7 @@ const DriversComponent = () => {
                 </div>
               <div className='d-flex gap-1 align-items-center'>
                 <p className="user-desc m-0">تصنيف:</p>
-                <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                 </div>
               <div className="warning-badge p-2 d-flex align-items-center gap-1 rounded-3 w-100"><FontAwesomeIcon icon={faTriangleExclamation} className='text-warning' /> ينتهي الترخيص في 2025-06-15</div>
             </div>
@@ -121,11 +121,11 @@ const DriversComponent = () => {
             <div className="d-flex flex-column align-items-start gap-2 w-100">
               <div className='d-flex align-items-start justify-content-between w-100'>
               <div className="d-flex gap-2 align-items-start">
-                    <img src="../../assets/man.png" className='user-img' alt="user" />
+                    <img src="../assets/man.png" className='user-img' alt="user" />
                     <div>
                       <div className="d-flex gap-1 align-items-center">
                         <h6 className="user-name m-0">Omar alrajihi</h6>
-                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../../assets/star.svg" alt="" /></div>
+                        <div className="new-order-badge p-1 rounded-2 text-nowrap">4,9 <img src="../assets/star.svg" alt="" /></div>
                       </div>
                       <p className="user-desc m-0">سائق تريلا</p>
                     </div>

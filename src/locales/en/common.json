@@ -1,0 +1,75 @@
+{
+    "app": {
+        "name": "Josur",
+        "welcome": "Welcome"
+    },
+    "buttons": {
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete",
+        "edit": "Edit",
+        "add": "Add",
+        "search": "Search",
+        "filter": "Filter",
+        "refresh": "Refresh",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "confirm": "Confirm",
+        "close": "Close",
+        "upload": "Upload",
+        "download": "Download"
+    },
+    "messages": {
+        "loading": "Loading...",
+        "success": "Operation successful",
+        "error": "An error occurred",
+        "noData": "No data available",
+        "confirmDelete": "Are you sure you want to delete?",
+        "saved": "Saved successfully",
+        "updated": "Updated successfully",
+        "deleted": "Deleted successfully",
+        "created": "Created successfully"
+    },
+    "navigation": {
+        "home": "Home",
+        "contact": "Contact Us",
+        "about": "About Us",
+        "services": "Services",
+        "works": "Works"
+    },
+    "forms": {
+        "required": "This field is required",
+        "invalidEmail": "Invalid email address",
+        "invalidPhone": "Invalid phone number",
+        "passwordMismatch": "Passwords do not match",
+        "minLength": "Minimum {{count}} characters",
+        "maxLength": "Maximum {{count}} characters"
+    },
+    "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "pending": "Pending",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "inProgress": "In Progress"
+    },
+    "hero": {
+        "title": "Smart Solutions for Cargo Shipping & Delivery",
+        "description": "Josur bridges the gap between companies in need of shipping and reliable service providers. Get instant quotes, track shipments, and manage your logistics seamlessly.",
+        "orderTruck": "Order a Truck",
+        "joinDriver": "Join as a Driver",
+        "orderNow": "Order Now",
+        "search": "Search",
+        "pickupPlaceholder": "Enter Load Location",
+        "deliveryPlaceholder": "Enter Delivery Location"
+    },
+    "requestTypes": {
+        "normal": "Standard Delivery",
+        "trips": "Trip Package Request",
+        "contract": "Contract Package Request",
+        "singleLocation": "Single Delivery Location",
+        "multipleLocations": "Multiple Delivery Locations"
+    }
+}

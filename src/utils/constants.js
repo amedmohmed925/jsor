@@ -78,6 +78,9 @@ export const API_ENDPOINTS = {
   ADMIN_TRUCKS: '/admin/trucks',
   ADMIN_DRIVERS: '/admin/drivers',
   ADMIN_USERS: '/admin/users',
+
+  // Site
+  SITE_HOME: '/api/web/v1/site/home-web',
 };
 
 // HTTP Status Codes

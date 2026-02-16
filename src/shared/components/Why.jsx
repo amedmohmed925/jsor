@@ -1,44 +1,47 @@
-import React from 'react'
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useGetHomeDataQuery } from '../../api/site/siteApi';
 
 const Why = () => {
+  const { i18n } = useTranslation();
+  const { data: homeData, isLoading } = useGetHomeDataQuery();
+
+  // Helper to get localized field from API
+  const getLangField = (item, field) => {
+    if (!item) return '';
+    const isEn = i18n.language === 'en';
+    const enField = `${field}_en`;
+    return (isEn && item[enField]) ? item[enField] : item[field];
+  };
+
+  const whySection = homeData?.Sections?.[18]; // ID 27: لماذا نحن
+  const whyCards = homeData?.Why || [];
+
   return (
     <section className='my-5'>
       <div className="container text-center">
-        <h2 className="section-title">لماذا نحن</h2>
-        <p className="section-desc">نعمل على تقديم تجربة شحن موثوقة وآمنة ترتكز على راحة العميل، من خلال مزايا تضمن لك حماية
- البضائع وسهولة المتابعة على مدار الساعة.</p>
-      <div className="row">
-        <div className="col-md-4 mt-4">
-            <div className="why-card h-100 p-4 d-flex flex-column align-items-center justify-content-start gap-2">
+        <h2 className="section-title">
+          {isLoading ? '...' : getLangField(whySection, 'title') || 'لماذا نحن'}
+        </h2>
+        <p className="section-desc">
+          {isLoading ? '...' : getLangField(whySection, 'content')}
+        </p>
+        <div className="row">
+          {whyCards.map((card) => (
+            <div className="col-md-4 mt-4" key={card.id}>
+              <div className="why-card h-100 p-4 d-flex flex-column align-items-center justify-content-start gap-2">
                 <div className="card-img-container p-2 rounded-circle">
-                    <img src="../assets/why-icon-1.svg" alt="icon" />
+                  <img src={card.image} alt={getLangField(card, 'title')} />
                 </div>
-                <h5 className='why-card-title m-0'>تأمين على البضائع</h5>
-                <p className='why-card-desc m-0'>نتعاون مع شركة تأمين معروفة وموثوقة لضمان حماية بضائعك طوال فترة النقل، مما يعزز من سلامة عملياتك التجارية.</p>
+                <h5 className='why-card-title m-0'>{getLangField(card, 'title')}</h5>
+                <p className='why-card-desc m-0'>{getLangField(card, 'content')}</p>
+              </div>
             </div>
+          ))}
         </div>
-        <div className="col-md-4 mt-4">
-            <div className="why-card h-100 p-4 d-flex flex-column align-items-center justify-content-start gap-2">
-                <div className="card-img-container p-2 rounded-circle">
-                    <img src="../assets/why-icon-2.svg" alt="icon" />
-                </div>
-                <h5 className='why-card-title m-0'>خدمة عملاء على مدار الساعة</h5>
-                <p className='why-card-desc m-0'>فريق دعم متواجد 24/7 لمساعدتك والإجابة على استفساراتك في أي وقت.</p>
-            </div>
-        </div>
-        <div className="col-md-4 mt-4">
-            <div className="why-card h-100 p-4 d-flex flex-column align-items-center justify-content-start gap-2">
-                <div className="card-img-container p-2 rounded-circle">
-                    <img src="../assets/why-icon-3.svg" alt="icon" />
-                </div>
-                <h5 className='why-card-title m-0'>نظام تتبع دقيق</h5>
-                <p className='why-card-desc m-0'>تابع موقع شاحنتك لحظيًا عبر التطبيق أو الموقع الإلكتروني، واعرف موقع بضائعك في كل لحظة.</p>
-            </div>
-        </div>
-      </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Why
+export default Why;

@@ -14,7 +14,7 @@ const AddDriverComponent = () => {
 
       <div className="p-3 mt-2 shadow rounded-2">
         <div className="d-flex gap-1 align-items-center mb-2">
-          <img src="../../assets/user-add.svg" alt="truck" />
+          <img src="../assets/user-add.svg" alt="truck" />
           <h4 className="orders-title m-0">دعوة سائق جديد</h4>
         </div>
 

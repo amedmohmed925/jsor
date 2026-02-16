@@ -1,0 +1,75 @@
+{
+    "app": {
+        "name": "جسور",
+        "welcome": "مرحباً بك"
+    },
+    "buttons": {
+        "submit": "إرسال",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "delete": "حذف",
+        "edit": "تعديل",
+        "add": "إضافة",
+        "search": "بحث",
+        "filter": "تصفية",
+        "refresh": "تحديث",
+        "back": "رجوع",
+        "next": "التالي",
+        "previous": "السابق",
+        "confirm": "تأكيد",
+        "close": "إغلاق",
+        "upload": "رفع",
+        "download": "تحميل"
+    },
+    "messages": {
+        "loading": "جاري التحميل...",
+        "success": "تمت العملية بنجاح",
+        "error": "حدث خطأ",
+        "noData": "لا توجد بيانات",
+        "confirmDelete": "هل أنت متأكد من الحذف؟",
+        "saved": "تم الحفظ بنجاح",
+        "updated": "تم التحديث بنجاح",
+        "deleted": "تم الحذف بنجاح",
+        "created": "تم الإنشاء بنجاح"
+    },
+    "navigation": {
+        "home": "الرئيسية",
+        "contact": "اتصل بنا",
+        "about": "من نحن",
+        "services": "الخدمات",
+        "works": "الأعمال"
+    },
+    "forms": {
+        "required": "هذا الحقل مطلوب",
+        "invalidEmail": "البريد الإلكتروني غير صحيح",
+        "invalidPhone": "رقم الهاتف غير صحيح",
+        "passwordMismatch": "كلمات المرور غير متطابقة",
+        "minLength": "الحد الأدنى {{count}} أحرف",
+        "maxLength": "الحد الأقصى {{count}} أحرف"
+    },
+    "status": {
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "pending": "قيد الانتظار",
+        "completed": "مكتمل",
+        "cancelled": "ملغي",
+        "inProgress": "قيد التنفيذ"
+    },
+    "hero": {
+        "title": "حلول ذكية لشحن وتوصيل البضائع",
+        "description": "تعمل ”جسور“ على سد الفجوة بين الشركات التي تحتاج إلى الشحن ومقدمي الخدمات الموثوق بهم. احصل على عروض أسعار فورية، وتتبع الشحنات، وقم بإدارة خدماتك اللوجستية بسلاسة.",
+        "orderTruck": "اطلب شاحنة",
+        "joinDriver": "انضم كسائق",
+        "orderNow": "اطلب الآن",
+        "search": "بحث",
+        "pickupPlaceholder": "ادخل موقع التحميل",
+        "deliveryPlaceholder": "ادخل موقع التسليم"
+    },
+    "requestTypes": {
+        "normal": "توصيل عادى",
+        "trips": "طلب باقة رحلات",
+        "contract": "طلب باقة عقد",
+        "singleLocation": "موقع توصيل واحد",
+        "multipleLocations": "تعدد مواقع توصيل"
+    }
+}
