@@ -90,14 +90,14 @@ export const API_ENDPOINTS = {
 
   // User
   USER_ORDERS: '/user/orders',
-  USER_BALANCE: '/user/balance',
+  USER_BALANCE: '/api/web/v1/site/user-balance',
   USER_PROFILE: '/user/profile',
   USER_DOCUMENTS: '/user/documents',
 
   NOTIFICATIONS: '/api/web/v1/site/notification',
   // Driver
   DRIVER_ORDERS: '/driver/orders',
-  DRIVER_BALANCE: '/driver/balance',
+  DRIVER_BALANCE: '/api/web/v1/site/user-balance',
   DRIVER_PROFILE: '/driver/profile',
 
   // Admin

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import DriverNavbar from '../components/DriverNavbar'
 import Footer from '../../shared/components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,17 +9,26 @@ import { useGetNotificationsQuery } from '../../api/site/notificationApi'
 import LoadingSpinner from '../../components/LoadingSpinner'
 
 const DriverNotifications = () => {
+    const { t, i18n } = useTranslation(['driver']);
     const [showRating, setShowRating] = useState(false);
     const [rating, setRating] = useState(0);
 
     const { data: notificationsData, isLoading } = useGetNotificationsQuery();
     const notifications = notificationsData?.items || [];
 
+    // Helper to get localized field
+    const getLangField = (item, field) => {
+        if (!item) return '';
+        const isEn = i18n.language === 'en';
+        const enField = `${field}_en`;
+        return (isEn && item[enField]) ? item[enField] : item[field];
+    };
+
   return (
     <>
         <DriverNavbar />
         <div className="container my-5">
-            <h2 className='orders-title'>الإشعارات</h2>
+            <h2 className='orders-title'>{t('notification.title')}</h2>
             
             {isLoading ? (
                 <div className="d-flex justify-content-center py-5">
@@ -26,19 +36,19 @@ const DriverNotifications = () => {
                 </div>
             ) : notifications.length === 0 ? (
                 <div className="text-center py-5">
-                    <p className="text-muted">لا توجد إشعارات حالياً</p>
+                    <p className="text-muted">{t('notification.noNotifications')}</p>
                 </div>
             ) : (
                 <>
-                    <label className="form-label mb-1 mt-2">الإشعارات</label>
+                    <label className="form-label mb-1 mt-2">{t('notification.label')}</label>
                     <div className="notifications-container py-3 px-2 rounded-3">
                         {notifications.map((item, index) => (
                             <React.Fragment key={index}>
                                 <div className="notification-item d-flex align-items-start gap-2">
-                                    <img src={item.avatar || "/assets/man.png"} className='notification-user-img' alt="user" />
+                                    <img src={item.avatar || "../assets/man.png"} className='notification-user-img' alt="user" />
                                     <div>
                                         <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
-                                            <h6 className='document-li m-0'>{item.message || item.title}</h6>
+                                            <h6 className='document-li m-0'>{getLangField(item, 'msg')}</h6>
                                             {item.order_title && <h5 className='orders-card-title m-0'>{item.order_title}</h5>}
                                         </div>
                                         <div className="d-flex gap-1 align-items-center footer-main-sublabel mb-2">
@@ -49,14 +59,14 @@ const DriverNotifications = () => {
                                         {/* Dynamic buttons based on notification type */}
                                         {item.type === 'action' && (
                                             <div className="d-flex gap-1">
-                                                <button type='button' className="services-btn py-1 px-3 text-decoration-none">تجاهل</button>
-                                                <button type='button' className="login-button py-1 px-3 text-decoration-none">ابدأ الان</button>
+                                                <button type='button' className="services-btn py-1 px-3 text-decoration-none">{t('notification.ignore')}</button>
+                                                <button type='button' className="login-button py-1 px-3 text-decoration-none">{t('notification.startNow')}</button>
                                             </div>
                                         )}
                                         {item.type === 'rating' && (
                                             <div className="d-flex gap-1">
-                                                <button type='button' className="services-btn py-1 px-3 text-decoration-none">تجاهل</button>
-                                                <button type='button' className="orange-btn py-1 px-3 text-decoration-none" onClick={() => setShowRating(true)}>تقييم</button>
+                                                <button type='button' className="services-btn py-1 px-3 text-decoration-none">{t('notification.ignore')}</button>
+                                                <button type='button' className="orange-btn py-1 px-3 text-decoration-none" onClick={() => setShowRating(true)}>{t('notification.rate')}</button>
                                             </div>
                                         )}
                                     </div>
@@ -75,59 +85,28 @@ const DriverNotifications = () => {
       className="rating-modal"
       onClick={(e) => e.stopPropagation()}
     >
+      <h3 className="orders-title mb-4">{t('notification.rating.title')}</h3>
 
-
-      {/* Driver Info */}
+      {/* User Info */}
       <img src="../assets/man.png" className="rating-user-img" alt="" />
-      <h4 className="orders-card-title mb-2">Omar Alrajihi</h4>
-      <h4 className="user-desc mb-2">سائق تريلا</h4>
-      <div className="flex gap-1 align-items-center">
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
+      <h4 className="orders-card-title mb-2">User Name</h4>
+      <div className="d-flex gap-1 align-items-center mb-4">
+            {[1, 2, 3, 4, 5].map((star) => (
+                <FontAwesomeIcon
+                    key={star}
+                    icon={faStar}
+                    className={rating >= star ? 'yellow-star' : 'gray-star'}
+                    onClick={() => setRating(star)}
+                    style={{ cursor: 'pointer' }}
                 />
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
-                />
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
-                />
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
-                />
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
-                />
-            </div>
-      {/* Stars */}
-      <p className="orders-title mb-2">ما تقييمك للخدمة</p>
-      <h4 className="user-desc mb-2">ستساعدنا ملاحظاتك على تحسين خدمة الشحن بشكل أفضل</h4>
-
-      <div className="stars-wrapper">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <FontAwesomeIcon
-            key={star}
-            icon={faStar}
-            className={`star ${rating >= star ? "active" : ""}`}
-            onClick={() => setRating(star)}
-          />
-        ))}
+            ))}
       </div>
-
-      {/* Comment */}
-      <textarea
-        className="form-control form-input mb-3"
-        placeholder="اكتب تقييمك..."
-        rows='5'
-      />
-
-      {/* Submit */}
-      <button className="login-button w-100">
-        تقييم
+      
+      <button 
+        className="login-button w-100" 
+        onClick={() => setShowRating(false)}
+      >
+        {t('notification.rating.submit')}
       </button>
     </div>
   </div>
@@ -137,3 +116,4 @@ const DriverNotifications = () => {
 }
 
 export default DriverNotifications
+   

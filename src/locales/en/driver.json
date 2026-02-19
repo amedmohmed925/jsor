@@ -26,5 +26,28 @@
         "available": "Available",
         "busy": "Busy",
         "offline": "Offline"
+    },
+    "balance": {
+        "title": "Balance",
+        "currentBalance": "Current Balance",
+        "totalBalance": "Total Balance",
+        "transactions": "Financial Transactions",
+        "addFunds": "Recharge",
+        "withdraw": "Withdraw Profits",
+        "noTransactions": "No transactions found"
+    },
+    "notification": {
+        "title": "Notifications",
+        "label": "Notifications",
+        "noNotifications": "No notifications found",
+        "ignore": "Ignore",
+        "accept": "Accept",
+        "reject": "Reject",
+        "rate": "Rate",
+        "startNow": "Start Now",
+        "rating": {
+            "title": "Rate Service",
+            "submit": "Submit Rating"
+        }
     }
 }

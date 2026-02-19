@@ -15,20 +15,18 @@ const Trucks = () => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  // Prepend API base URL if needed, although the API seems to provide full URLs
   const getImageUrl = (image) => {
     if (!image) return 'assets/truck-type-img.png';
-    // If it's a relative path, we might need a base URL, but assuming absolute from API
     return image;
   };
 
   const trucksSection = homeData?.Sections?.[15]; // ID 29: انواع الشاحنات
   const allTrucks = homeData?.Truks || [];
 
-  // Filter trucks into parent and child (sub-trucks)
-  const parentTrucks = allTrucks.filter((t) => !t.parent_id);
-  const childTrucks = allTrucks.filter((t) => t.parent_id);
-
+  // تحديد الشاحنات الأساسية بالـ IDs
+  const parentIds = [3, 11, 12, 13];
+  const parentTrucks = allTrucks.filter((t) => parentIds.includes(t.id));
+  
   useEffect(() => {
     if (parentTrucks.length > 0 && !activeFilter) {
       setActiveFilter(parentTrucks[0].id);
@@ -40,7 +38,27 @@ const Trucks = () => {
   };
 
   const currentParent = parentTrucks.find((t) => t.id === activeFilter);
-  const currentChildren = childTrucks.filter((t) => t.parent_id === activeFilter);
+
+  // فلترة الشاحنات الفرعية: البحث عن الشاحنات التي تحتوي اسم الشاحنة الأساسية
+  const currentChildren = allTrucks.filter((t) => {
+    // استبعاد الشاحنات الأساسية
+    if (parentIds.includes(t.id)) return false;
+    if (!currentParent) return false;
+
+    // الحصول على أسماء الشاحنة الأساسية (عربي وإنجليزي)
+    const parentNameAr = (currentParent.name || '').toLowerCase().trim();
+    const parentNameEn = (currentParent.name_en || '').toLowerCase().trim();
+
+    // الحصول على أسماء الشاحنة الفرعية (عربي وإنجليزي)
+    const childNameAr = (t.name || '').toLowerCase();
+    const childNameEn = (t.name_en || '').toLowerCase();
+
+    // البحث إذا كان اسم الشاحنة الفرعية يحتوي على اسم الشاحنة الأساسية
+    return (
+      (parentNameAr && childNameAr.includes(parentNameAr)) ||
+      (parentNameEn && childNameEn.includes(parentNameEn))
+    );
+  });
 
   return (
     <section className="trucks py-4">
@@ -63,10 +81,12 @@ const Trucks = () => {
                 onClick={() => handleFilterClick(type.id)}
                 style={{ cursor: 'pointer' }}
               >
-                <div className="d-flex align-items-center gap-2">
-                  <img src={getImageUrl(type.image)} alt={getLangField(type, 'name')} />
-                  <span>{getLangField(type, 'name')}</span>
-                </div>
+                <span className="trucks-filter-title">{getLangField(type, 'name')}</span>
+                <img
+                  src={getImageUrl(type.image)}
+                  alt={getLangField(type, 'name')}
+                  className="filter-card-img"
+                />
               </div>
             </div>
           ))}
@@ -74,36 +94,46 @@ const Trucks = () => {
 
         <div className="row mt-4">
           <div className="col-12">
-            <div className="trucks-details-container p-4 rounded-4 shadow-sm bg-white">
+            <div className="filter-item-container">
               <div className="row align-items-center">
-                <div className="col-md-7">
-                  <h3 className="mb-3 text-primary">{getLangField(currentParent, 'name')}</h3>
-                  <p className="truck-main-desc mb-4">{getLangField(currentParent, 'content')}</p>
-
-                  <div className="row">
-                    {currentChildren.length > 0 ? (
-                      currentChildren.map((child) => (
-                        <div key={child.id} className="col-md-6 mb-3">
-                          <div className="truck-child-item p-3 border rounded-3 h-100">
-                            <h5 className="fs-6 fw-bold mb-2">{getLangField(child, 'name')}</h5>
-                            <p className="small text-muted mb-0">{getLangField(child, 'content')}</p>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="col-12">
-                        <p className="text-muted italic">{i18n.language === 'en' ? 'No sub-types available' : 'لا توجد أنواع فرعية متاحة'}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                {/* الصورة الكبيرة على اليمين (في RTL) واليسار (في LTR) */}
                 <div className="col-md-5 text-center">
                   <img
                     src={getImageUrl(currentParent?.image)}
                     alt={getLangField(currentParent, 'name')}
-                    className="img-fluid rounded-3"
-                    style={{ maxHeight: '300px', objectFit: 'contain' }}
+                    className="img-fluid filter-card-item-img"
+                    style={{ objectFit: 'contain' }}
                   />
+                </div>
+                {/* القائمة الفرعية على اليسار (في RTL) واليمين (في LTR) */}
+                <div className="col-md-7">
+                  <div className="d-flex flex-column gap-3 align-items-end" style={{}}>
+                    {currentChildren.length > 0 ? (
+                      currentChildren.map((child) => (
+                        <div
+                          key={child.id}
+                          className="filter-badge d-flex justify-content-between align-items-center"
+                        >
+                          <span className="filter-badge-text">
+                            {getLangField(child, 'name')}
+                          </span>
+                          <img
+                            src={getImageUrl(child.image)}
+                            alt={getLangField(child, 'name')}
+                            className="filter-badge-img"
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-12 text-center">
+                        <p className="text-muted italic">
+                          {i18n.language === 'en'
+                            ? 'No sub-types available'
+                            : 'لا توجد أنواع فرعية متاحة'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

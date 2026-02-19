@@ -30,8 +30,23 @@
     "balance": {
         "title": "Balance",
         "currentBalance": "Current Balance",
-        "transactions": "Transactions",
-        "addFunds": "Add Funds",
-        "withdraw": "Withdraw"
+        "totalBalance": "Total Balance",
+        "transactions": "Financial Transactions",
+        "addFunds": "Recharge",
+        "withdraw": "Withdraw Profits",
+        "noTransactions": "No transactions found"
+    },
+    "notification": {
+        "title": "Notifications",
+        "label": "Notifications",
+        "noNotifications": "No notifications found",
+        "ignore": "Ignore",
+        "accept": "Accept",
+        "reject": "Reject",
+        "rate": "Rate",
+        "rating": {
+            "title": "Rate Service",
+            "submit": "Submit Rating"
+        }
     }
 }

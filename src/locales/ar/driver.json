@@ -26,5 +26,28 @@
         "available": "متاح",
         "busy": "مشغول",
         "offline": "غير متصل"
+    },
+    "balance": {
+        "title": "الرصيد",
+        "currentBalance": "الرصيد الحالي",
+        "totalBalance": "الرصيد الكلي",
+        "transactions": "المعاملات المالية",
+        "addFunds": "شحن الرصيد",
+        "withdraw": "سحب الارباح",
+        "noTransactions": "لا توجد معاملات مالية حتى الآن"
+    },
+    "notification": {
+        "title": "الإشعارات",
+        "label": "الإشعارات",
+        "noNotifications": "لا توجد إشعارات حالياً",
+        "ignore": "تجاهل",
+        "accept": "قبول",
+        "reject": "رفض",
+        "rate": "تقييم",
+        "startNow": "ابدأ الآن",
+        "rating": {
+            "title": "تقييم الخدمة",
+            "submit": "إرسال التقييم"
+        }
     }
 }
