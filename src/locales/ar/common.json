@@ -92,6 +92,11 @@
         "singleLocation": "موقع توصيل واحد",
         "multipleLocations": "تعدد مواقع توصيل"
     },
+    "roles": {
+        "user": "جديد",
+        "driver": "سائق",
+        "admin": "مشرف"
+    },
     "footer": {
         "solutionTitle": "حلول ذكية لشحن وتوصيل البضائع",
         "aboutTitle": "عن جسور",

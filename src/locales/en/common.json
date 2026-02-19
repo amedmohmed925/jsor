@@ -92,6 +92,11 @@
         "singleLocation": "Single Delivery Location",
         "multipleLocations": "Multiple Delivery Locations"
     },
+    "roles": {
+        "user": "New",
+        "driver": "Driver",
+        "admin": "Admin"
+    },
     "footer": {
         "solutionTitle": "Smart solutions for shipping and delivering goods",
         "aboutTitle": "About Jusoor",

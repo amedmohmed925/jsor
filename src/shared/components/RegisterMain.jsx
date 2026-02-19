@@ -301,9 +301,9 @@ const RegisterMain = () => {
               />
               <label htmlFor="agree" className="not-have m-0">
                 {i18n.language === 'en' ? 'By creating an account, you agree to our ' : 'من خلال إنشاء حساب، فإنك توافق على '}
-                <a href="#" className="text-decoration-none register-link">
+                <Link to="/terms" className="text-decoration-none register-link">
                   {i18n.language === 'en' ? 'Terms and Conditions' : 'الشروط والأحكام'}
-                </a>
+                </Link>
               </label>
             </div>
 

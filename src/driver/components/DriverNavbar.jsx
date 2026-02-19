@@ -1,24 +1,42 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAuth } from '../../hooks/useAuth';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
+import { selectTheme, setTheme } from '../../store/slices/uiSlice';
+import { useGetNotificationBadgeQuery } from '../../api/site/notificationApi';
+
 const DriverNavbar = () => {
   const location = useLocation();
+  const { t } = useTranslation('common');
+  const { user, role } = useAuth();
+  const dispatch = useDispatch();
+  const currentTheme = useSelector(selectTheme);
   
-  // Static Arabic navigation items with their corresponding routes
+  // Fetch notification badge count
+  const { data: badgeCount } = useGetNotificationBadgeQuery(undefined, {
+    pollingInterval: 30000,
+  });
+
+  const handleToggleTheme = () => {
+    dispatch(setTheme(currentTheme === 'light' ? 'dark' : 'light'));
+  };
+  
+  // Navigation items with translation keys
   const navItems = [
-    { name: 'الرئيسية', path: '/' },
-    { name: 'الاعمال', path: '/works' },
-    { name: 'مزودي الخدمات', path: '/service-provider' },
-    { name: 'عن المنصة', path: '/about' },
-    { name: 'تواصل معنا', path: '/contact' }
+    { name: t('navigation.home'), path: '/' },
+    { name: t('navigation.works'), path: '/works' },
+    { name: t('navigation.providers'), path: '/service-provider' },
+    { name: t('navigation.about'), path: '/about' },
+    { name: t('navigation.contact'), path: '/contact' }
   ];
 
   return (
     <nav className="navbar navbar-expand-lg shadow-sm py-2 navbar-background">
       <div className="container-fluid px-lg-5">
         {/* Logo */}
-        <Link to='/'><img src="assets/logo.png" alt="logo" /></Link>
+        <Link to='/'><img src="/assets/logo.png" alt="logo" /></Link>
         
         {/* Navbar Toggler for mobile */}
         <button
@@ -49,24 +67,30 @@ const DriverNavbar = () => {
             ))}
           </ul>
 
-          {/* Right side items (Language, Login, Join) */}
+          {/* Right side items (Language, Profile, Notifications) */}
           <ul className="navbar-nav align-items-lg-center gap-lg-5">
             <li className="nav-item">
-              <button className="nav-link lang-button">
-                English
-                <i className="fas fa-globe pe-1"></i>
-              </button>
+              <LanguageSwitcher />
             </li>
             <li className="nav-item d-flex align-items-center gap-2">
-                <div className="nav-labg-mode"><img src="../assets/notification.svg" alt="notification" /></div>
-                <div className="nav-labg-mode"><img src="../assets/moon.svg" alt="mode" /></div>
-                <div className="d-flex gap-2 align-items-center">
-                    <img src="../assets/man.png" className='user-img' alt="user" />
-                    <div>
-                        <h6 className="user-name m-0">Habib M</h6>
-                        <p className="user-desc m-0">جديد</p>
-                    </div>
+                <Link to="/driver/notifications" className="nav-labg-mode position-relative">
+                  <img src="/assets/notification.svg" alt="notification" />
+                  {badgeCount > 0 && (
+                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '0.6rem' }}>
+                      {badgeCount}
+                    </span>
+                  )}
+                </Link>
+                <div className="nav-labg-mode" onClick={handleToggleTheme} style={{ cursor: 'pointer' }}>
+                  <img src="/assets/moon.svg" alt="mode" />
                 </div>
+                <Link to="/driver/profile" className="d-flex gap-2 align-items-center text-decoration-none">
+                    <img src={user?.avatar || "/assets/man.png"} className='user-img' alt="user" />
+                    <div className="d-none d-md-block">
+                        <h6 className="user-name m-0">{user?.name || 'Habib M'}</h6>
+                        <p className="user-desc m-0">{t(`roles.${role}`, 'جديد')}</p>
+                    </div>
+                </Link>
             </li>
           </ul>
         </div>

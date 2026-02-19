@@ -15,6 +15,7 @@ import ForgotPassword from "./shared/pages/ForgotPassword";
 import Contact from "./shared/pages/Contact";
 import ServiceProvider from "./shared/pages/ServiceProvider";
 import Works from "./shared/pages/Works";
+import Terms from "./shared/pages/Terms";
 
 // User Pages
 import Oreders from "./user/pages/Orders";
@@ -53,6 +54,7 @@ function App() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/service-provider" element={<ServiceProvider />} />
       <Route path="/works" element={<Works />} />
+      <Route path="/terms" element={<Terms />} />
       
       {/* Public Routes - Only accessible when NOT authenticated */}
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />

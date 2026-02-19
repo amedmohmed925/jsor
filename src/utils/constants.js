@@ -94,6 +94,7 @@ export const API_ENDPOINTS = {
   USER_PROFILE: '/user/profile',
   USER_DOCUMENTS: '/user/documents',
 
+  NOTIFICATIONS: '/api/web/v1/site/notification',
   // Driver
   DRIVER_ORDERS: '/driver/orders',
   DRIVER_BALANCE: '/driver/balance',
@@ -107,6 +108,9 @@ export const API_ENDPOINTS = {
 
   // Site
   SITE_HOME: '/api/web/v1/site/home-web',
+  SITE_CONTACT: '/api/web/v1/site/contact',
+  SITE_TERMS: '/api/web/v1/site/term',
+  NOTIFICATION_BADGE: '/api/web/v1/site/notification-budge',
 };
 
 // HTTP Status Codes

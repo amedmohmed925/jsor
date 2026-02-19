@@ -95,6 +95,7 @@ const Footer = ({ isProviderPage = false }) => {
             <Link to="/works" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.business')}</Link>
             <Link to="/service-provider" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.providers')}</Link>
             <Link to="/contact" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.contact')}</Link>
+            <Link to="/terms" className='mb-3 footer-link d-block text-decoration-none'>{i18n.language === 'en' ? 'Terms & Conditions' : 'الشروط والأحكام'}</Link>
           </div>
         </div>
       </div>

@@ -4,82 +4,69 @@ import Footer from '../../shared/components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from '@fortawesome/free-regular-svg-icons'
+import { useGetNotificationsQuery } from '../../api/site/notificationApi'
+import LoadingSpinner from '../../components/LoadingSpinner'
+
 const DriverNotifications = () => {
     const [showRating, setShowRating] = useState(false);
     const [rating, setRating] = useState(0);
+
+    const { data: notificationsData, isLoading } = useGetNotificationsQuery();
+    const notifications = notificationsData?.items || [];
 
   return (
     <>
         <DriverNavbar />
         <div className="container my-5">
             <h2 className='orders-title'>الإشعارات</h2>
-            <label className="form-label mb-1 mt-2">جديدة</label>
-            <div className="notifications-container py-3 px-2 rounded-3">
-                <div className="notification-item d-flex align-items-start gap-2">
-                    <img src="../assets/man.png" className='notification-user-img' alt="user" />
-                    <div>
-                    <div className="d-flex align-items-center gap-1 mb-1 flex-wrap"><h6 className='document-li m-0'>وافق عبدالعزيز الحايك على</h6><h5 className='orders-card-title m-0'>طلب توصيل أثاث منزلي</h5></div>
-                    <div className="d-flex gap-1 align-items-center footer-main-sublabel mb-2">
-                        <FontAwesomeIcon icon={faClock} />
-                        <p className='m-0'>03:48 am</p>
-                    </div>
-                    <div className="d-flex gap-1">
-                        <button type='button' className="services-btn py-1 px-3 text-decoration-none">تجاهل</button>
-                        <button type='button' className="login-button py-1 px-3 text-decoration-none">ابدأ الان</button>
-                    </div>
-
-                    </div>
+            
+            {isLoading ? (
+                <div className="d-flex justify-content-center py-5">
+                    <LoadingSpinner />
                 </div>
-                <hr />
-                <div className="notification-item d-flex align-items-start gap-2">
-                    <img src="../assets/man.png" className='notification-user-img' alt="user" />
-                    <div>
-                    <div className="d-flex align-items-center gap-1 mb-1 flex-wrap"><h6 className='document-li m-0'>لقد قام عبدالعزيز الحامد بإلغاء طلبك</h6><h5 className='orders-card-title m-0'>طلب توصيل أثاث منزلي</h5></div>
-                    <div className="d-flex gap-1 align-items-center footer-main-sublabel">
-                        <FontAwesomeIcon icon={faClock} />
-                        <p className='m-0'>03:48 am</p>
-                    </div>
-                    <div className="d-flex gap-1 mt-1">
-                        <button type='button' className="services-btn py-1 px-3 text-decoration-none">تجاهل</button>
-                        <button type='button' className="login-button py-1 px-3 text-decoration-none">ابدأ الان</button>
-                    </div>
-                    </div>
+            ) : notifications.length === 0 ? (
+                <div className="text-center py-5">
+                    <p className="text-muted">لا توجد إشعارات حالياً</p>
                 </div>
-            </div>
-            <label className="form-label mb-1 mt-2">منذ فترة</label>
-            <div className="notifications-container py-3 px-2 rounded-3">
-                <div className="notification-item d-flex align-items-start gap-2">
-                    <img src="../assets/man.png" className='notification-user-img' alt="user" />
-                    <div>
-                    <div className="d-flex align-items-center gap-1 mb-1 flex-wrap"><h6 className='document-li m-0'>لقد تم توصيل حمولة عبدالعزيز الحايك</h6><h5 className='orders-card-title m-0'>طلب توصيل أثاث منزلي</h5><h6 className='document-li m-0'>يمكنك تقييم هذا العميل</h6></div>
-                    <div className="d-flex gap-1 align-items-center footer-main-sublabel mb-2">
-                        <FontAwesomeIcon icon={faClock} />
-                        <p className='m-0'>03:48 am</p>
+            ) : (
+                <>
+                    <label className="form-label mb-1 mt-2">الإشعارات</label>
+                    <div className="notifications-container py-3 px-2 rounded-3">
+                        {notifications.map((item, index) => (
+                            <React.Fragment key={index}>
+                                <div className="notification-item d-flex align-items-start gap-2">
+                                    <img src={item.avatar || "/assets/man.png"} className='notification-user-img' alt="user" />
+                                    <div>
+                                        <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
+                                            <h6 className='document-li m-0'>{item.message || item.title}</h6>
+                                            {item.order_title && <h5 className='orders-card-title m-0'>{item.order_title}</h5>}
+                                        </div>
+                                        <div className="d-flex gap-1 align-items-center footer-main-sublabel mb-2">
+                                            <FontAwesomeIcon icon={faClock} />
+                                            <p className='m-0'>{item.created_at}</p>
+                                        </div>
+                                        
+                                        {/* Dynamic buttons based on notification type */}
+                                        {item.type === 'action' && (
+                                            <div className="d-flex gap-1">
+                                                <button type='button' className="services-btn py-1 px-3 text-decoration-none">تجاهل</button>
+                                                <button type='button' className="login-button py-1 px-3 text-decoration-none">ابدأ الان</button>
+                                            </div>
+                                        )}
+                                        {item.type === 'rating' && (
+                                            <div className="d-flex gap-1">
+                                                <button type='button' className="services-btn py-1 px-3 text-decoration-none">تجاهل</button>
+                                                <button type='button' className="orange-btn py-1 px-3 text-decoration-none" onClick={() => setShowRating(true)}>تقييم</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                {index < notifications.length - 1 && <hr />}
+                            </React.Fragment>
+                        ))}
                     </div>
-                    <div className="d-flex gap-1">
-                        <button type='button' className="services-btn py-1 px-3 text-decoration-none">تجاهل</button>
-                        <button type='button' className="orange-btn py-1 px-3 text-decoration-none" onClick={() => setShowRating(true)}>تقييم</button>
-                    </div>
-
-                    </div>
-                </div>
-                <hr />
-                <div className="notification-item d-flex align-items-start gap-2">
-                    <img src="../assets/man.png" className='notification-user-img' alt="user" />
-                    <div>
-                    <div className="d-flex align-items-center gap-1 mb-1 flex-wrap"><h6 className='document-li m-0'>لديك عرض جديد من عبدالعزيز الحايك على</h6><h5 className='orders-card-title m-0'>طلب توصيل أثاث منزلي</h5></div>
-                    <div className="d-flex gap-1 align-items-center footer-main-sublabel mb-2">
-                        <FontAwesomeIcon icon={faClock} />
-                        <p className='m-0'>03:48 am</p>
-                    </div>
-                    <div className="d-flex gap-1">
-                        <button type='button' className="services-btn py-1 px-3 text-decoration-none">تجاهل</button>
-                        <button type='button' className="login-button py-1 px-3 text-decoration-none">ابدأ الان</button>
-                    </div>
-
-                    </div>
-                </div>
-            </div>
+                </>
+            )}
         </div>
         <Footer />
         {showRating && (
