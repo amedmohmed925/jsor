@@ -21,7 +21,14 @@
         "upload": "Upload",
         "download": "Download",
         "logout": "Logout",
-        "sendRequest": "Send Request"
+        "sendRequest": "Send Request",
+        "offers": "Offers",
+        "cancel_order": "Cancel Order",
+        "no_offers": "No offers currently",
+        "contact_driver": "Contact Driver",
+        "order_again": "Order Again",
+        "shipping": "Shipping",
+        "completed": "Shipped"
     },
     "messages": {
         "loading": "Loading...",

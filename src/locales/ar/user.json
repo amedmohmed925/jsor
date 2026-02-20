@@ -1,7 +1,26 @@
 {
     "user": {
         "title": "لوحة تحكم المستخدم",
-        "orders": "الطلبات",
+        "orders": {
+            "title": "الطلبات",
+            "order_number": "رقم الطلب",
+            "order_type": "نوع الباقة",
+            "car_type": "نوع الشاحنة",
+            "contract_duration": "مدة العقد",
+            "total_price": "التكلفة الإجمالية",
+            "no_orders": "لا توجد طلبات في هذا القسم",
+            "rating_title": "ما تقييمك للخدمة",
+            "rating_subtitle": "ستساعدنا ملاحظاتك على تحسين خدمة الشحن بشكل أفضل",
+            "rating_placeholder": "اكتب تقييمك...",
+            "rating_button": "تقييم",
+            "truck_driver": "سائق تريلا",
+            "status": {
+                "new": "طلب جديد",
+                "waiting": "في انتظار التحميل",
+                "shipped": "تم الشحن",
+                "cancelled": "ملغي"
+            }
+        },
         "balance": "الرصيد",
         "profile": "الملف الشخصي",
         "notifications": "الإشعارات",
@@ -102,17 +121,24 @@
         "updateError": "حدث خطأ أثناء تحديث الملف الشخصي",
         "selectCountry": "اختر المنطقة",
         "selectCity": "اختر الموقع",
-        "uploadImage": "تغيير الصورة"
+        "uploadImage": "تغيير الصورة",
+        "submitting": "جاري الحفظ..."
     },
     "orders": {
         "title": "طلباتي",
         "newOrder": "طلب جديد",
         "orderNumber": "رقم الطلب",
+        "order_number": "رقم الطلب",
+        "order_type": "نوع الباقة",
+        "car_type": "نوع الشاحنة",
+        "contract_duration": "مدة العقد",
+        "total_price": "التكلفة الإجمالية",
         "date": "التاريخ",
         "status": "الحالة",
         "total": "المجموع",
         "details": "تفاصيل الطلب",
         "noOrders": "لا توجد طلبات",
+        "no_orders": "لا توجد طلبات في هذا القسم",
         "pickupLocation": "موقع الاستلام",
         "deliveryLocation": "موقع التسليم",
         "description": "الوصف",

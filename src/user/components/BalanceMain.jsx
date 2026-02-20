@@ -2,10 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetUserBalanceQuery } from '../../api/user/userApi';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useSelector } from 'react-redux';
 
 const BalanceMain = () => {
   const { t, i18n } = useTranslation(['user']);
-  const { data: balanceData, isLoading, isError } = useGetUserBalanceQuery();
+  const { token } = useSelector((state) => state.auth);
+  const { data: balanceData, isLoading, isError } = useGetUserBalanceQuery(token);
 
   // تعيين البيانات بناءً على هيكل الريسبونس المقدم
   const balanceInfo = balanceData?.data?.[0];

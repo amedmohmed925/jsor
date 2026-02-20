@@ -14,9 +14,14 @@ const ProfileMain = () => {
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
   const userFromRedux = useSelector(selectCurrentUser);
+  const { token } = useSelector((state) => state.auth);
 
   const { data: listsData } = useGetListsQuery();
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery();
+  const { data: profileResponse, isLoading: isProfileLoading, refetch } = useGetUserProfileQuery(token);
+  
+  // Extract profile data safely - handling case where it might be in data[0] or data
+  const profileData = profileResponse?.data?.[0] || profileResponse?.data;
+  
   const [updateProfile, { isLoading: isUpdating }] = useUpdateUserProfileMutation();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -31,19 +36,20 @@ const ProfileMain = () => {
   });
 
   useEffect(() => {
-    const user = userFromRedux || profileData?.data;
-    if (user) {
+    // Prefer profileData from server, fallback to userFromRedux
+    const user = profileData || userFromRedux;
+    if (user && !isEditing) {
       setFormData({
         name: user.name || '',
         last_name: user.last_name || '',
-        mobile: user.mobile || '',
+        mobile: user.mobile || user.phone || '',
         country_id: (user.country_id && user.country_id !== 0 && user.country_id !== '0') ? user.country_id : '',
         city_id: (user.city_id && user.city_id !== 0 && user.city_id !== '0') ? user.city_id : '',
         image: null,
-        imagePreview: user.avatar || user.image || '../assets/man.png'
+        imagePreview: user.avatar || user.image || user.profile_image || '/assets/man.png'
       });
     }
-  }, [userFromRedux, profileData]);
+  }, [userFromRedux, profileData, isEditing]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,12 +80,18 @@ const ProfileMain = () => {
     }
 
     try {
-      const res = await updateProfile(updateData).unwrap();
+      const res = await updateProfile({ profileData: updateData, token }).unwrap();
       if (res.status === 1) {
         toast.success(t('profile.updateSuccess'));
-        if (res.data) {
-          dispatch(updateUser(res.data));
+        
+        // Refetch profile data to ensure local state and RTK cache are synced
+        const newProfile = await refetch();
+        const updatedUser = newProfile.data?.data?.[0] || newProfile.data?.data || res.data;
+        
+        if (updatedUser) {
+          dispatch(updateUser(updatedUser));
         }
+        
         setIsEditing(false);
       } else {
         toast.error(res.message || t('profile.updateError'));
@@ -94,16 +106,16 @@ const ProfileMain = () => {
     return i18n.language === 'ar' ? item[field] : (item[`${field}_en`] || item[field]);
   };
 
-  if (isProfileLoading && !userFromRedux) return <LoadingSpinner />;
+  if (isProfileLoading && !userFromRedux) return <div className="p-5 text-center"><LoadingSpinner /></div>;
 
-  const displayUser = userFromRedux || profileData?.data || {};
+  const displayUser = profileData || userFromRedux || {};
 
   return (
     <section>
       <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 pb-4">
       <div className="d-flex gap-3 align-items-center">
                     <div className="position-relative">
-                        <img src={formData.imagePreview || '../assets/man.png'} className='profile-main-img' alt="user" />
+                        <img src={formData.imagePreview || '/assets/man.png'} className='profile-main-img' alt="user" />
                         {isEditing && (
                             <div 
                                 className="position-absolute bottom-0 end-0 bg-white rounded-circle p-1 shadow-sm" 

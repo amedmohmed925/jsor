@@ -95,6 +95,25 @@ export const API_ENDPOINTS = {
   USER_DOCUMENTS: '/user/documents',
 
   NOTIFICATIONS: '/api/web/v1/site/notification',
+
+  // Normal Orders
+  MY_NORMAL_NEW_ORDERS: '/api/web/v1/site/my-normal-new-order',
+  MY_NORMAL_SHIPPING_ORDERS: '/api/web/v1/site/my-normal-shipping-order',
+  MY_NORMAL_COMPLETE_ORDERS: '/api/web/v1/site/my-normal-complete-order',
+  MY_NORMAL_CANCELED_ORDERS: '/api/web/v1/site/my-normal-canceled-order',
+
+  // Trip Orders
+  MY_TRIP_NEW_ORDERS: '/api/web/v1/site/my-trip-new-order',
+  MY_TRIP_SHIPPING_ORDERS: '/api/web/v1/site/my-trip-shipping-order',
+  MY_TRIP_COMPLETE_ORDERS: '/api/web/v1/site/my-trip-complete-order',
+  MY_TRIP_CANCELED_ORDERS: '/api/web/v1/site/my-trip-canceled-order',
+
+  // Contract Orders
+  MY_CONTRACT_NEW_ORDERS: '/api/web/v1/site/my-contract-new-order',
+  MY_CONTRACT_SHIPPING_ORDERS: '/api/web/v1/site/my-contract-shipping-order',
+  MY_CONTRACT_COMPLETE_ORDERS: '/api/web/v1/site/my-contract-complete-order',
+  MY_CONTRACT_CANCELED_ORDERS: '/api/web/v1/site/my-contract-canceled-order',
+
   // Driver
   DRIVER_ORDERS: '/driver/orders',
   DRIVER_BALANCE: '/api/web/v1/site/user-balance',
@@ -115,6 +134,12 @@ export const API_ENDPOINTS = {
   CREATE_TRIP_REQUEST: '/api/web/v1/site/create-trip-request',
   CREATE_CONTRACT_REQUEST: '/api/web/v1/site/create-contract-request',
   SUB_TRUCK: '/api/web/v1/site/sub-truck',
+
+  // Normal Orders (API per status)
+  MY_NORMAL_NEW_ORDERS: '/api/web/v1/site/my-normal-new-order',
+  MY_NORMAL_SHIPPING_ORDERS: '/api/web/v1/site/my-normal-shipping-order',
+  MY_NORMAL_COMPLETE_ORDERS: '/api/web/v1/site/my-normal-complete-order',
+  MY_NORMAL_CANCELED_ORDERS: '/api/web/v1/site/my-normal-canceled-order',
 };
 
 // HTTP Status Codes

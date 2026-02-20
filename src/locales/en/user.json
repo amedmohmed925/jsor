@@ -1,7 +1,26 @@
 {
     "user": {
         "title": "User Dashboard",
-        "orders": "Orders",
+        "orders": {
+            "title": "Orders",
+            "order_number": "Order number",
+            "order_type": "Package Type",
+            "car_type": "Truck Type",
+            "contract_duration": "Contract Duration",
+            "total_price": "Total Price",
+            "no_orders": "No orders in this section",
+            "rating_title": "How would you rate the service?",
+            "rating_subtitle": "Your feedback will help us improve our shipping service better",
+            "rating_placeholder": "Write your review...",
+            "rating_button": "Rate",
+            "truck_driver": "Truck Driver",
+            "status": {
+                "new": "New Order",
+                "waiting": "Waiting for load",
+                "shipped": "Shipped",
+                "cancelled": "Cancelled"
+            }
+        },
         "balance": "Balance",
         "profile": "Profile",
         "notifications": "Notifications",
@@ -102,17 +121,24 @@
         "updateError": "Error updating profile",
         "selectCountry": "Select Region",
         "selectCity": "Select Location",
-        "uploadImage": "Change Image"
+        "uploadImage": "Change Image",
+        "submitting": "Saving..."
     },
     "orders": {
         "title": "My Orders",
         "newOrder": "New Order",
         "orderNumber": "Order Number",
+        "order_number": "Order Number",
+        "order_type": "Package Type",
+        "car_type": "Truck Type",
+        "contract_duration": "Contract Duration",
+        "total_price": "Total Price",
         "date": "Date",
         "status": "Status",
         "total": "Total",
         "details": "Order Details",
         "noOrders": "No orders",
+        "no_orders": "No orders in this section",
         "pickupLocation": "Pickup Location",
         "deliveryLocation": "Delivery Location",
         "description": "Description",

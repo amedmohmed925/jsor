@@ -1,26 +1,28 @@
 import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const UserSidebar = () => {
+  const { t } = useTranslation('user');
   const navigate = useNavigate();
   const location = useLocation();
 
   const sidebarItems = [
     {
       id: 'orders',
-      title: 'طلباتي',
+      title: t('orders.title'),
       icon: 'order-icon.svg',
       path: '/user/orders'
     },
     {
       id: 'balance',
-      title: 'الرصيد',
+      title: t('user.balance'),
       icon: 'charge-icon.svg',
       path: '/user/balance'
     },
     {
       id: 'profile',
-      title: 'الملف الشخصي',
+      title: t('user.profile'),
       icon: 'profile-icon.svg',
       path: '/user/profile'
     }

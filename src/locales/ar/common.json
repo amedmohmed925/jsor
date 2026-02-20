@@ -21,7 +21,14 @@
         "upload": "رفع",
         "download": "تحميل",
         "logout": "تسجيل الخروج",
-        "sendRequest": "إرسال الطلب"
+        "sendRequest": "إرسال الطلب",
+        "offers": "العروض",
+        "cancel_order": "إلغاء الطلب",
+        "no_offers": "لا يوجد عروض حالياً",
+        "contact_driver": "الاتصال بالسائق",
+        "order_again": "الطلب مرة أخرى",
+        "shipping": "قيد الشحن",
+        "completed": "تم الشحن"
     },
     "messages": {
         "loading": "جاري التحميل...",

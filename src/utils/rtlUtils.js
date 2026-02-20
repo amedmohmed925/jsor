@@ -87,3 +87,15 @@ export const applyDirectionalStyles = (element, styles) => {
   
   Object.assign(element.style, stylesToApply);
 };
+
+/**
+ * Get localized name from an object (supports name and name_en)
+ * @param {object} obj - Object containing name/name_en fields
+ * @param {string} lang - Current language code
+ * @returns {string} - Localized name
+ */
+export const getName = (obj, lang = 'ar') => {
+  if (!obj) return '';
+  if (lang === 'en' && obj.name_en) return obj.name_en;
+  return obj.name || obj.name_en || '';
+};
