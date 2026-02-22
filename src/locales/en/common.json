@@ -28,8 +28,13 @@
         "contact_driver": "Contact Driver",
         "order_again": "Order Again",
         "shipping": "Shipping",
-        "completed": "Shipped"
+        "accept_offer": "Accept Offer",
+        "completed": "Completed",
+        "details": "Details",
+        "rate": "Rate",
+        "currency": "$"
     },
+    "provider": "Service Provider",
     "messages": {
         "loading": "Loading...",
         "success": "Operation successful",
@@ -78,6 +83,9 @@
         "completed": "Completed",
         "cancelled": "Cancelled",
         "inProgress": "In Progress"
+    },
+    "placeholders": {
+        "write_comment": "Write your comment here..."
     },
     "faq": {
         "title": "Frequently Asked Questions"

@@ -13,15 +13,38 @@ import {
 import { useGetListsQuery } from '../../api/site/siteApi';
 import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useCancelRequestMutation, useAcceptOfferMutation } from '../../api/site/siteApi';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRating }) => {
+const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRating, setShowCancel }) => {
   const { t, i18n } = useTranslation();
   const { token } = useAuth();
+  const navigate = useNavigate();
   const currentLanguage = i18n.language || 'ar';
+
+  const [acceptOffer, { isLoading: isAccepting }] = useAcceptOfferMutation();
 
   // Fetch lists for truck images
   const { data: listsResponse } = useGetListsQuery();
-  const truckList = listsResponse?.data?.[0]?.Truck || [];
+  const truckList = listsResponse?.Truck || [];
+
+  const handleAcceptOffer = async (offerId) => {
+    try {
+      const response = await acceptOffer(offerId).unwrap();
+      if (response.status === 1) {
+        toast.success(t('user:user.orders.acceptSuccess') || 'Offer accepted successfully');
+      } else {
+        toast.error(response.message || t('common:messages.error'));
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || t('common:messages.error'));
+    }
+  };
+
+  const handleOrderAgain = () => {
+    navigate('/user/trip-upload');
+  };
 
   // Call all hooks to follow Rules of Hooks, but use 'skip' to only fire the active one
   const newRequests = useGetTripNewOrdersQuery(token, { skip: activeSubFilter !== 'new-request' });
@@ -75,6 +98,7 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
   return (
     <div className="trip-orders-wrapper">
       {orders.map((order) => {
+        const truckImg = getTruckImage(order.truck_id);
         if (activeSubFilter === 'new-request') {
           return (
             <div key={order.id} className="new-orders-card p-2 border rounded-3 mt-2">
@@ -129,7 +153,7 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                       <h6 className='offers-dropdown-text m-0'>{t('common:buttons.offers')}</h6>
                       <FontAwesomeIcon icon={offersExpanded ? faChevronUp : faChevronDown} />
                     </div>
-                    <div className="cancel-order-btn">
+                    <div className="cancel-order-btn" onClick={() => setShowCancel(order)}>
                       <p className='m-0'>{t('common:buttons.cancel_order')}</p>
                     </div>
                   </div>
@@ -137,14 +161,76 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
               </div>
               
               {offersExpanded && (
-                <div className="orders-new-offers">
-                   <p className="text-center mt-2 text-muted">{t('common:buttons.no_offers')}</p>
+                <div className="orders-new-offers mt-2 p-2 border-top">
+                   {order.requestOffers && order.requestOffers.length > 0 ? (
+                     order.requestOffers.map((offer) => (
+                       <div key={offer.id} className="offer-item position-relative border rounded-3 p-3 mb-3 bg-white" style={{ border: '1px solid #f0f0f0' }}>
+                          <div className="d-flex justify-content-between align-items-start gap-2">
+                            {/* Right Part (Child 1): Driver Info + Truck Details */}
+                            <div className='d-flex align-items-center gap-3'>
+                                <div className="driver-avatar-wrapper position-relative">
+                                    <img src={offer.driver_id?.avatar || "../assets/man.png"} 
+                                         alt="driver" 
+                                         className="rounded-circle border" 
+                                         style={{ width: '55px', height: '55px', objectFit: 'cover' }} />
+                                     <div className="verified-check position-absolute bottom-0 start-0" style={{ transform: 'translate(10%, 10%)' }}>
+                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                             <circle cx="12" cy="12" r="12" fill="#2D88FF"/>
+                                             <path d="M7 12L10.5 15.5L17.5 8.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                         </svg>
+                                     </div>
+                                </div>
+                                <div>
+                                    <div className="d-flex align-items-center gap-2 mb-1">
+                                        <h6 className="m-0 fw-bold fs-5">{offer.driver_id?.name}</h6>
+                                        <div className="rating-pill d-flex align-items-center gap-1 py-1 px-2 rounded-2" 
+                                             style={{ backgroundColor: '#EBF4FF', color: '#3182CE', fontSize: '0.85rem' }}>
+                                            <img src="../assets/star.svg" alt="star" style={{ width: '13px' }} className="mb-0.5" />
+                                            <span className="fw-bold">{offer.driver_id?.rate || '0.0'}</span>
+                                        </div>
+                                        {/* Truck Image next to rating */}
+                                        <div className="truck-icon-badge d-flex align-items-center gap-1 py-1 px-2 rounded-2" style={{ backgroundColor: '#FFF2E6' }}>
+                                            <span style={{ color: '#E58E26', fontSize: '0.8rem' }}>{getName(order.truck_id)}</span>
+                                            {truckImg ? (
+                                              <img src={truckImg} alt="truck" style={{ width: '30px', height: 'auto' }} />
+                                            ) : (
+                                              <img src="../assets/truck-icon.svg" alt="truck" style={{ width: '30px', height: 'auto' }} />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <p className="m-0 text-muted">{t('user:user.orders.truck_driver')}</p>
+                                </div>
+                            </div>
+                            <div className="d-none d-md-block"></div>
+                          </div>
+
+                          <div className="d-flex justify-content-between align-items-center mt-3 pt-2">
+                              {/* Right Part (Child 1): Price */}
+                              <div className="d-flex align-items-baseline gap-1">
+                                <span className='fw-bold fs-3 text-primary'>{offer.price}</span>
+                                <span className='fw-bold text-primary'>{t('common:currency') || '$'}</span>
+                              </div>
+
+                              {/* Left Part (Child 2): Accept Button */}
+                              <button 
+                                  className="btn btn-primary fw-bold text-center px-4 py-2" 
+                                  style={{ borderRadius: '10px', minWidth: '160px' }}
+                                  onClick={() => handleAcceptOffer(offer.id)}
+                                  disabled={isAccepting}
+                              >
+                                  {t('common:buttons.accept_offer')}
+                              </button>
+                          </div>
+                        </div>
+                     ))
+                   ) : (
+                     <p className="text-center mt-2 text-muted">{t('common:buttons.no_offers')}</p>
+                   )}
                 </div>
               )}
             </div>
           );
         } else if (activeSubFilter === 'waiting') {
-          const truckImg = getTruckImage(order.truck_id);
           return (
             <div key={order.id} className="waiting-orders-card p-2 border rounded-3 mt-2">
               <div className="card-order-details">
@@ -168,7 +254,7 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                             <h6 className="user-name m-0">{order.driver_id.name}</h6>
                             <div className="new-order-badge p-1 rounded-2 text-nowrap">{order.driver_id.rate || '0'} <img src="../assets/star.svg" alt="" /></div>
                           </div>
-                          <p className="user-desc m-0">{getName(order.driver_id.truck_type)}</p>
+                          <p className="user-desc m-0">{t('user:user.orders.driver_title')}: {getName(order.driver_id.truck_type)}</p>
                         </div>
                       </div>
                     )}
@@ -227,7 +313,6 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
             </div>
           );
         } else if (activeSubFilter === 'shipped') {
-          const truckImg = getTruckImage(order.truck_id);
           return (
             <div key={order.id} className="shipped-orders-card p-2 border rounded-3 mt-2">
               <div className="card-order-details">
@@ -249,7 +334,7 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                                 <h6 className="user-name m-0">{order.driver_id.name}</h6>
                                 <div className="new-order-badge p-1 rounded-2 text-nowrap">{order.driver_id.rate} <img src="../assets/star.svg" alt="" /></div>
                               </div>
-                              <p className="user-desc m-0">{getName(order.driver_id.truck_type)}</p>
+                              <p className="user-desc m-0">{t('user:user.orders.driver_title')}: {getName(order.driver_id.truck_type)}</p>
                             </div>
                           </div>
                         </div>
@@ -289,10 +374,10 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                   </div>
 
                   <div className="d-flex align-items-center gap-2 mt-2">
-                    <div className="contact-driver-button" onClick={() => setShowRating(true)}>
+                    <div className="contact-driver-button" onClick={() => setShowRating(order)}>
                       <p className='m-0'>{t('user:notification.rate')}</p>
                     </div>
-                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2">
+                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={handleOrderAgain}>
                       <h6 className='offers-dropdown-text m-0'>{t('common:buttons.order_again')}</h6>
                     </div>
                   </div>
@@ -332,9 +417,12 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                     <h6 className='user-desc m-0'>{order.date}</h6>
                   </div>
 
-                  <div className="mt-2 text-start">
-                    <div className="contact-driver-button" style={{display: 'inline-block'}} onClick={() => setShowRating(true)}>
+                  <div className="d-flex align-items-center gap-2 mt-2">
+                    <div className="contact-driver-button" onClick={() => setShowRating(order)}>
                       <p className='m-0'>{t('user:notification.rate')}</p>
+                    </div>
+                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={handleOrderAgain}>
+                      <h6 className='offers-dropdown-text m-0'>{t('common:buttons.order_again')}</h6>
                     </div>
                   </div>
                 </div>

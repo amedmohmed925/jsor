@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import './index.css'
 import App from './App.jsx'
 import store from './store'
+import './i18n'
 import ErrorBoundary from './components/ErrorBoundary'
 import ToastNotification from './components/ToastNotification'
 

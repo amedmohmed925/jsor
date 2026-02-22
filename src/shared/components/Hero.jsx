@@ -88,7 +88,7 @@ const Hero = () => {
 
                     <div className="hero-buttons d-flex justify-content-center align-items-center gap-2">
                       <Link to="/login" className="login-button text-decoration-none">{t('hero.orderTruck')}</Link>
-                      <Link to="/login" className="join-button text-decoration-none">{t('hero.joinDriver', 'انضم كسائق')}</Link>
+                      <Link to="/login" className="join-button text-decoration-none">{t('common:hero.joinDriver', 'انضم كسائق')}</Link>
                     </div>
                   </div>
                 </div>

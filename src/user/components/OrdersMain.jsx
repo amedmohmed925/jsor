@@ -5,18 +5,96 @@ import BasicOrders from './BasicOrders';
 import TripOrders from './TripOrders';
 import ContractOrders from './ContractOrders';
 import { useTranslation } from 'react-i18next';
+import { useRateRequestMutation, useCancelRequestMutation, useGetListsQuery } from '../../api/site/siteApi';
+import { toast } from 'react-toastify';
 
 const OrdersMain = () => {
-  const { t } = useTranslation(['user', 'common']);
+  const { t, i18n } = useTranslation(['user', 'common']);
+  const currentLanguage = i18n.language || 'ar';
+
   // State for tracking active main filter and sub-filter
   const [showRating, setShowRating] = useState(false);
-const [rating, setRating] = useState(0);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const [activeMainFilter, setActiveMainFilter] = useState('basic-orders');
   const [activeSubFilter, setActiveSubFilter] = useState('new-request');
+
+  const [rateOrder, { isLoading: isRating }] = useRateRequestMutation();
+  const [cancelOrder, { isLoading: isCancelling }] = useCancelRequestMutation();
+  const { data: listsResponse } = useGetListsQuery();
+  const truckList = listsResponse?.Truck || [];
   
   // State for tracking if offers section is expanded
   const [offersExpanded, setOffersExpanded] = useState(false);
+
+  // Helper to get localized name
+  const getName = (obj) => {
+    if (!obj) return '';
+    if (typeof obj === 'string') return obj;
+    if (currentLanguage === 'en' && obj.name_en) return obj.name_en;
+    return obj.name || obj.name_en || '';
+  };
+
+  const handleShowRating = (order) => {
+    setSelectedOrder(order);
+    setShowRating(true);
+    setRating(0);
+    setComment('');
+  };
+
+  const handleShowCancel = (order) => {
+    setSelectedOrder(order);
+    setShowCancelModal(true);
+  };
+
+  const handleCancelSubmit = async () => {
+    if (!selectedOrder) return;
+    try {
+      const finalRequestId = selectedOrder?.requestStatus?.[0]?.reqeust_id || selectedOrder?.id || selectedOrder;
+
+      const response = await cancelOrder(finalRequestId).unwrap();
+      if (response.status === 1) {
+        toast.success(t('user:user.orders.cancelSuccess') || 'Order cancelled successfully');
+        setShowCancelModal(false);
+      } else {
+        const errorMsg = response.data?.[0]?.message || response.message || t('common:messages.error');
+        toast.error(errorMsg);
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || t('common:messages.error'));
+    }
+  };
+
+  const handleRateSubmit = async () => {
+    if (!selectedOrder) return;
+    if (rating === 0) {
+      toast.error(t('user:user.orders.rating_error_no_stars') || 'Please select stars');
+      return;
+    }
+
+    try {
+      const finalRequestId = selectedOrder?.requestStatus?.[0]?.reqeust_id || selectedOrder?.id || selectedOrder;
+      
+      const response = await rateOrder({
+        reqeust_id: finalRequestId,
+        rate: rating,
+        comment: comment
+      }).unwrap();
+      
+      if (response.status === 1) {
+        toast.success(t('user:user.orders.rating_success') || 'Rating submitted successfully');
+        setShowRating(false);
+      } else {
+        const errorMsg = response.data?.[0]?.message || response.message || t('common:messages.error');
+        toast.error(errorMsg);
+      }
+    } catch (error) {
+      toast.error(error?.data?.message || t('common:messages.error'));
+    }
+  };
   
   // Main filters data
   const mainFilters = [
@@ -88,7 +166,8 @@ const [rating, setRating] = useState(0);
           activeSubFilter={activeSubFilter} 
           offersExpanded={offersExpanded} 
           toggleOffers={toggleOffers} 
-          setShowRating={setShowRating} 
+          setShowRating={handleShowRating} 
+          setShowCancel={handleShowCancel}
         />
       );
     }
@@ -98,8 +177,9 @@ const [rating, setRating] = useState(0);
         <TripOrders 
           activeSubFilter={activeSubFilter} 
           offersExpanded={offersExpanded} 
-          toggleOffers={toggleOffers} 
-          setShowRating={setShowRating} 
+          toggleOffers={toggleOffers}
+          setShowRating={handleShowRating}
+          setShowCancel={handleShowCancel}
         />
       );
     }
@@ -109,8 +189,9 @@ const [rating, setRating] = useState(0);
         <ContractOrders 
           activeSubFilter={activeSubFilter} 
           offersExpanded={offersExpanded} 
-          toggleOffers={toggleOffers} 
-          setShowRating={setShowRating} 
+          toggleOffers={toggleOffers}
+          setShowRating={handleShowRating}
+          setShowCancel={handleShowCancel}
         />
       );
     }
@@ -165,70 +246,102 @@ const [rating, setRating] = useState(0);
 
       {/* Render appropriate card based on both filters */}
       {renderOrderCard()}
+
+      {/* Rating Modal */}
       {showRating && (
-  <div className="rating-overlay" onClick={() => setShowRating(false)}>
-    <div
-      className="rating-modal"
-      onClick={(e) => e.stopPropagation()}
-    >
-
-
-      {/* Driver Info */}
-      <img src="../assets/man.png" className="rating-user-img" alt="" />
-      <h4 className="orders-card-title mb-2">Omar Alrajihi</h4>
-      <h4 className="user-desc mb-2">{t('user:user.orders.truck_driver')}</h4>
-      <div className="flex gap-1 align-items-center">
-            <FontAwesomeIcon
+        <div className="rating-overlay" onClick={() => setShowRating(false)}>
+          <div
+            className="rating-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Driver Info */}
+            <img 
+              src={selectedOrder?.driver_id?.avatar || selectedOrder?.driver?.avatar || "../assets/man.png"} 
+              className="rating-user-img mb-2" 
+              alt="" 
+            />
+            <h4 className="orders-card-title mb-1">
+              {selectedOrder?.driver_id?.name || selectedOrder?.driver?.name || '---'}
+            </h4>
+            <h6 className="user-desc mb-3">
+              {t('user:user.orders.driver_title')}: {
+                getName(truckList.find(t => t.id === selectedOrder?.truck_id || t.id === selectedOrder?.truck_id?.id)) || 
+                getName(selectedOrder?.truck_id) || 
+                getName(selectedOrder?.truck) || 
+                '---'
+              }
+            </h6>
+            <div className="d-flex gap-1 align-items-center justify-content-center mb-3">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <FontAwesomeIcon
+                  key={s}
                   icon={faStar}
-                  className='yellow-star'
+                  className={s <= (selectedOrder?.driver_id?.rate || selectedOrder?.driver?.rate || 0) ? 'yellow-star' : 'gray-star'}
                 />
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
-                />
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
-                />
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
-                />
-            <FontAwesomeIcon
-                  icon={faStar}
-                  className='yellow-star'
-                />
+              ))}
             </div>
-      {/* Stars */}
-      <p className="orders-title mb-2">{t('user:user.orders.rating_title')}</p>
-      <h4 className="user-desc mb-2">{t('user:user.orders.rating_subtitle')}</h4>
 
-      <div className="stars-wrapper">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <FontAwesomeIcon
-            key={star}
-            icon={faStar}
-            className={`star ${rating >= star ? "active" : ""}`}
-            onClick={() => setRating(star)}
-          />
-        ))}
-      </div>
+            {/* Stars for Rating */}
+            <p className="orders-title mb-2">{t('user:user.orders.rating_title')}</p>
+            <h4 className="user-desc mb-2">{t('user:user.orders.rating_subtitle')}</h4>
 
-      {/* Comment */}
-      <textarea
-        className="form-control form-input mb-3"
-        placeholder={t('user:user.orders.rating_placeholder')}
-        rows='5'
-      />
+            <div className="stars-wrapper">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FontAwesomeIcon
+                  key={star}
+                  icon={faStar}
+                  className={`star ${rating >= star ? "active" : ""}`}
+                  onClick={() => setRating(star)}
+                />
+              ))}
+            </div>
 
-      {/* Submit */}
-      <button className="login-button w-100">
-        {t('user:user.orders.rating_button')}
-      </button>
-    </div>
-  </div>
-)}
+            {/* Comment */}
+            <textarea
+              className="form-control form-input mb-3"
+              placeholder={t('user:user.orders.rating_placeholder')}
+              rows='5'
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
 
+            {/* Submit */}
+            <button 
+              className="login-button w-100" 
+              onClick={handleRateSubmit}
+              disabled={isRating}
+            >
+              {isRating ? t('common:messages.loading') : t('user:user.orders.rating_button')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Cancel Confirmation Modal */}
+      {showCancelModal && (
+        <div className="rating-overlay" onClick={() => setShowCancelModal(false)}>
+          <div className="rating-modal p-4 text-center" onClick={(e) => e.stopPropagation()}>
+            <h3 className="orders-card-title mb-3">{t('user:user.orders.cancelConfirmTitle')}</h3>
+            <p className="user-desc mb-4">{t('user:user.orders.cancelConfirmMessage')}</p>
+            <div className="d-flex gap-2">
+              <button 
+                className="login-button w-100 bg-danger border-danger" 
+                onClick={handleCancelSubmit}
+                disabled={isCancelling}
+              >
+                {isCancelling ? t('common:messages.loading') : t('common:buttons.cancel_order')}
+              </button>
+              <button 
+                className="login-button w-100 bg-secondary border-secondary" 
+                onClick={() => setShowCancelModal(false)}
+                disabled={isCancelling}
+              >
+                {t('common:buttons.cancel')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

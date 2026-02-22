@@ -81,7 +81,7 @@ function App() {
       <Route path="/driver/mission-in-road" element={<RoleBasedRoute allowedRoles={[USER_ROLES.DRIVER]}><MissionInroad /></RoleBasedRoute>} />
       <Route path="/driver/mission-started" element={<RoleBasedRoute allowedRoles={[USER_ROLES.DRIVER]}><MissionStarted /></RoleBasedRoute>} />
       <Route path="/driver/mission-arrived" element={<RoleBasedRoute allowedRoles={[USER_ROLES.DRIVER]}><MissionArrived /></RoleBasedRoute>} />
-      <Route path="/driver/order-details" element={<RoleBasedRoute allowedRoles={[USER_ROLES.DRIVER]}><OrderDetails /></RoleBasedRoute>} />
+      <Route path="/driver/order-details/:id" element={<RoleBasedRoute allowedRoles={[USER_ROLES.DRIVER]}><OrderDetails /></RoleBasedRoute>} />
       
       {/* Admin Routes - Only accessible to authenticated users with 'admin' role */}
       <Route path="/admin/dashboard" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AdminDashboard /></RoleBasedRoute>} />

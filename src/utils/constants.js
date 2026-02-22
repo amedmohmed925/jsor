@@ -88,6 +88,13 @@ export const API_ENDPOINTS = {
   REFRESH_TOKEN: '/auth/refresh',
   GET_CURRENT_USER: '/auth/me',
 
+  DRIVER_ORDERS: '/api/web/v1/site/driver-order',
+  DRIVER_NEW_ORDERS: '/api/web/v1/site/driver-new-order',
+  DRIVER_SHIPPING_ORDERS: '/api/web/v1/site/driver-shipping-order',
+  DRIVER_COMPLETE_ORDERS: '/api/web/v1/site/driver-complete-order',
+  CREATE_OFFER: '/api/web/v1/site/create-offer',
+  RATE_CUSTOMER: '/api/web/v1/site/rate-customer',
+  
   // User
   USER_ORDERS: '/user/orders',
   USER_BALANCE: '/api/web/v1/site/user-balance',
@@ -118,6 +125,9 @@ export const API_ENDPOINTS = {
   DRIVER_ORDERS: '/driver/orders',
   DRIVER_BALANCE: '/api/web/v1/site/user-balance',
   DRIVER_PROFILE: '/api/web/v1/site/profile',
+  DRIVER_NEW_ORDERS: '/api/web/v1/site/driver-new-order',
+  DRIVER_SHIPPING_ORDERS: '/api/web/v1/site/driver-shipping-order',
+  DRIVER_COMPLETE_ORDERS: '/api/web/v1/site/driver-complete-order',
 
   // Admin
   ADMIN_DASHBOARD: '/admin/dashboard',
@@ -134,6 +144,9 @@ export const API_ENDPOINTS = {
   CREATE_TRIP_REQUEST: '/api/web/v1/site/create-trip-request',
   CREATE_CONTRACT_REQUEST: '/api/web/v1/site/create-contract-request',
   SUB_TRUCK: '/api/web/v1/site/sub-truck',
+  CANCEL_REQUEST: '/api/web/v1/site/cancel-request',
+  RATE_REQUEST: '/api/web/v1/site/rate-request',
+  ACCEPT_OFFER: '/api/web/v1/site/accept-offer',
 
   // Normal Orders (API per status)
   MY_NORMAL_NEW_ORDERS: '/api/web/v1/site/my-normal-new-order',

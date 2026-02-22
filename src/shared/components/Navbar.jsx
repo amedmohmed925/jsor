@@ -6,7 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 const Navbar = () => {
   const location = useLocation();
-  const { t } = useTranslation(['common', 'auth', 'hero']);
+  const { t } = useTranslation(['common', 'auth', 'user']);
   const { isAuthenticated, user, logout } = useAuth();
   
   // Navigation items with translation keys
@@ -40,9 +40,56 @@ const Navbar = () => {
         {isAuthenticated && (
           <div className="d-flex d-lg-none align-items-center gap-2 ms-auto me-2">
             <LanguageSwitcher isMinimal={true} />
-            <Link to={user?.role === 'driver' ? "/driver/profile" : "/user/profile"} className="text-decoration-none">
-                <img src={user?.avatar || "/assets/man.png"} className='user-img border shadow-sm' alt="user" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-            </Link>
+            {user?.role === 'driver' ? (
+                <Link to="/driver/profile" className="text-decoration-none">
+                    <img src={user?.avatar || "/assets/man.png"} className='user-img border shadow-sm' alt="user" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                </Link>
+            ) : (
+                <div className="dropdown">
+                    <div 
+                        className="dropdown-toggle border-0 p-0" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <img src={user?.avatar || "/assets/man.png"} className='user-img border shadow-sm' alt="user" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                    </div>
+                    <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2" style={{ borderRadius: '15px' }}>
+                        <li>
+                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/profile">
+                                <i className="fas fa-user-circle"></i>
+                                <span>{t('user:user.navbar.profile')}</span>
+                            </Link>
+                        </li>
+                        <li><hr className="dropdown-divider" /></li>
+                        <li>
+                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/basic-upload">
+                                <i className="fas fa-truck"></i>
+                                <span>{t('user:user.navbar.basicUpload')}</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/trip-upload">
+                                <i className="fas fa-route"></i>
+                                <span>{t('user:user.navbar.tripUpload')}</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/contract-upload">
+                                <i className="fas fa-file-contract"></i>
+                                <span>{t('user:user.navbar.contractUpload')}</span>
+                            </Link>
+                        </li>
+                        <li><hr className="dropdown-divider" /></li>
+                        <li>
+                            <button className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3 text-danger border-0 bg-transparent w-100 text-start" onClick={logout}>
+                                <i className="fas fa-sign-out-alt"></i>
+                                <span>{t('common:buttons.logout')}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            )}
           </div>
         )}
         
@@ -83,22 +130,79 @@ const Navbar = () => {
             <li className="nav-item d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2">
               {isAuthenticated ? (
                 <>
-                  <Link 
-                    to={user?.role === 'driver' ? "/driver/profile" : "/user/profile"} 
-                    className="login-button text-decoration-none d-flex align-items-center justify-content-center justify-content-lg-start gap-2 px-3 py-2 rounded-pill shadow-sm"
-                  >
-                    <img 
-                      src={user?.avatar || "/assets/avatar.png"} 
-                      alt="avatar" 
-                      style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} 
-                      onError={(e) => { e.target.src = "/assets/man.png" }}
-                    />
-                    <span className="fw-semibold">{(user?.name || t('navigation.profile'))}</span>
-                  </Link>
-                  <button onClick={logout} className="join-button text-decoration-none border-0 px-3 py-2 rounded-pill d-flex align-items-center justify-content-center gap-2">
-                    <i className="fas fa-sign-out-alt"></i>
-                    <span className="d-lg-none">{t('buttons.logout', 'تسجيل الخروج')}</span>
-                  </button>
+                  {user?.role === 'driver' ? (
+                    <Link 
+                        to="/driver/profile" 
+                        className="login-button text-decoration-none d-flex align-items-center justify-content-center justify-content-lg-start gap-2 px-3 py-2 rounded-pill shadow-sm"
+                    >
+                        <img 
+                            src={user?.avatar || "/assets/avatar.png"} 
+                            alt="avatar" 
+                            style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} 
+                            onError={(e) => { e.target.src = "/assets/man.png" }}
+                        />
+                        <span className="fw-semibold">{(user?.name || t('navigation.profile'))}</span>
+                    </Link>
+                  ) : (
+                    <div className="dropdown d-flex justify-content-center">
+                        <div 
+                            className="login-button text-decoration-none d-flex align-items-center justify-content-center justify-content-lg-start gap-2 px-3 py-2 rounded-pill shadow-sm dropdown-toggle border-0"
+                            id="userDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false"
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <img 
+                                src={user?.avatar || "/assets/avatar.png"} 
+                                alt="avatar" 
+                                style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} 
+                                onError={(e) => { e.target.src = "/assets/man.png" }}
+                            />
+                            <span className="fw-semibold">{(user?.name || t('navigation.profile'))}</span>
+                        </div>
+                        <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2" aria-labelledby="userDropdown" style={{ borderRadius: '15px' }}>
+                            <li>
+                                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/profile">
+                                    <i className="fas fa-user-circle"></i>
+                                    <span>{t('user:user.navbar.profile')}</span>
+                                </Link>
+                            </li>
+                            <li><hr className="dropdown-divider" /></li>
+                            <li>
+                                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/basic-upload">
+                                    <i className="fas fa-truck"></i>
+                                    <span>{t('user:user.navbar.basicUpload')}</span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/trip-upload">
+                                    <i className="fas fa-route"></i>
+                                    <span>{t('user:user.navbar.tripUpload')}</span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/contract-upload">
+                                    <i className="fas fa-file-contract"></i>
+                                    <span>{t('user:user.navbar.contractUpload')}</span>
+                                </Link>
+                            </li>
+                            <li><hr className="dropdown-divider" /></li>
+                            <li>
+                                <button className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3 text-danger border-0 bg-transparent w-100 text-start" onClick={logout}>
+                                    <i className="fas fa-sign-out-alt"></i>
+                                    <span>{t('common:buttons.logout')}</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                  )}
+                  {user?.role === 'driver' && (
+                    <button onClick={logout} className="join-button text-decoration-none border-0 px-3 py-2 rounded-pill d-flex align-items-center justify-content-center gap-2">
+                        <i className="fas fa-sign-out-alt"></i>
+                        <span className="d-lg-none">{t('buttons.logout', 'تسجيل الخروج')}</span>
+                    </button>
+                  )}
                 </>
               ) : (
                 <>
@@ -106,7 +210,7 @@ const Navbar = () => {
                     {t('auth:login.loginButton')}
                   </Link>
                   <Link to="/login" className="join-button text-decoration-none px-4 py-2 rounded-pill shadow-sm text-center">
-                    {t('hero:hero.joinDriver')}
+                    {t('common:hero.joinDriver')}
                   </Link>
                 </>
               )}

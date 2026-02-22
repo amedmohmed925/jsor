@@ -9,7 +9,7 @@ import {
   setCredentials,
   logout as logoutAction,
 } from '../store/slices/authSlice';
-import { useLoginMutation, useLogoutMutation } from '../api/auth/authApi';
+import { useLoginMutation } from '../api/auth/authApi';
 
 /**
  * Custom Auth Hook
@@ -27,7 +27,6 @@ export const useAuth = () => {
   
   // Mutations
   const [loginMutation, { isLoading: isLoggingIn }] = useLoginMutation();
-  const [logoutMutation, { isLoading: isLoggingOut }] = useLogoutMutation();
   
   /**
    * Login function
@@ -50,18 +49,12 @@ export const useAuth = () => {
   
   /**
    * Logout function
+   * Since there is no logout endpoint in the backend,
+   * we handle it purely on the frontend by clearing the data.
    */
-  const logout = useCallback(async () => {
-    try {
-      // Call logout API
-      await logoutMutation().unwrap();
-    } catch (error) {
-      console.error('Logout API error:', error);
-    } finally {
-      // Always clear local state even if API fails
-      dispatch(logoutAction());
-    }
-  }, [logoutMutation, dispatch]);
+  const logout = useCallback(() => {
+    dispatch(logoutAction());
+  }, [dispatch]);
   
   /**
    * Check if user has specific role
@@ -88,8 +81,7 @@ export const useAuth = () => {
     hasRole,
     
     // Loading states
-    isLoading: isLoggingIn || isLoggingOut,
+    isLoading: isLoggingIn,
     isLoggingIn,
-    isLoggingOut,
   };
 };

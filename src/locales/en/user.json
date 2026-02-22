@@ -14,6 +14,13 @@
             "rating_placeholder": "Write your review...",
             "rating_button": "Rate",
             "truck_driver": "Truck Driver",
+            "driver_title": "Driver",
+            "cancelConfirmTitle": "Cancel Confirmation",
+            "cancelConfirmMessage": "Are you sure you want to cancel this order?",
+            "cancelSuccess": "Order cancelled successfully",
+            "acceptSuccess": "Offer accepted successfully",
+            "rating_success": "Rating submitted successfully",
+            "rating_error_no_stars": "Please select stars for rating",
             "status": {
                 "new": "New Order",
                 "waiting": "Waiting for load",
@@ -23,6 +30,12 @@
         },
         "balance": "Balance",
         "profile": "Profile",
+        "navbar": {
+            "profile": "Profile",
+            "basicUpload": "Basic Shipment",
+            "tripUpload": "Trip Shipment",
+            "contractUpload": "Contract Shipment"
+        },
         "notifications": "Notifications",
         "tracking": "Track Order",
         "providerAccount": "Provider Account",

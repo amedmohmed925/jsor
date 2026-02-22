@@ -106,6 +106,48 @@ export const siteApi = baseApi.injectEndpoints({
         body: requestData,
       }),
     }),
+
+    /**
+     * Cancel Request
+     * POST /api/web/v1/site/cancel-request
+     * Body: { request_id }
+     */
+    cancelRequest: builder.mutation({
+      query: (requestId) => ({
+        url: API_ENDPOINTS.CANCEL_REQUEST,
+        method: 'POST',
+        params: { 'access-token': localStorage.getItem('josur_auth_token') },
+        body: { reqeust_id: requestId },
+      }),
+    }),
+
+    /**
+     * Rate Request
+     * POST /api/web/v1/site/rate-request
+     * Body: { request_id, rate, comment }
+     */
+    rateRequest: builder.mutation({
+      query: (ratingData) => ({
+        url: API_ENDPOINTS.RATE_REQUEST,
+        method: 'POST',
+        params: { 'access-token': localStorage.getItem('josur_auth_token') },
+        body: ratingData,
+      }),
+    }),
+
+    /**
+     * Accept Offer
+     * POST /api/web/v1/site/accept-offer
+     * Body: { offer_id }
+     */
+    acceptOffer: builder.mutation({
+      query: (offerId) => ({
+        url: API_ENDPOINTS.ACCEPT_OFFER,
+        method: 'POST',
+        params: { 'access-token': localStorage.getItem('josur_auth_token') },
+        body: { offer_id: offerId },
+      }),
+    }),
   }),
 });
 
@@ -117,6 +159,8 @@ export const {
   useGetSubTrucksQuery,
   useCreateNormalRequestMutation,
   useCreateTripRequestMutation,
-  useCreateContractMutation, // Fix: naming convention
   useCreateContractRequestMutation,
+  useCancelRequestMutation,
+  useRateRequestMutation,
+  useAcceptOfferMutation,
 } = siteApi;

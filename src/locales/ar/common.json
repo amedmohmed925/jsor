@@ -28,8 +28,13 @@
         "contact_driver": "الاتصال بالسائق",
         "order_again": "الطلب مرة أخرى",
         "shipping": "قيد الشحن",
-        "completed": "تم الشحن"
+        "accept_offer": "قبول العرض",
+        "completed": "تم الشحن",
+        "details": "التفاصيل",
+        "rate": "تقييم",
+        "currency": "$"
     },
+    "provider": "مقدم الخدمة",
     "messages": {
         "loading": "جاري التحميل...",
         "success": "تمت العملية بنجاح",
@@ -79,6 +84,9 @@
         "cancelled": "ملغي",
         "inProgress": "قيد التنفيذ"
     },
+    "placeholders": {
+        "write_comment": "اكتب تعليقك هنا..."
+    },
     "faq": {
         "title": "الأسئلة الشائعة"
     },
@@ -93,7 +101,7 @@
         "deliveryPlaceholder": "ادخل موقع التسليم"
     },
     "requestTypes": {
-        "normal": "توصيل عادى",
+        "normal": "طلبات عادية",
         "trips": "طلب باقة رحلات",
         "contract": "طلب باقة عقد",
         "singleLocation": "موقع توصيل واحد",

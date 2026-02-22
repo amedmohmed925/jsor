@@ -14,15 +14,28 @@
             "rating_placeholder": "اكتب تقييمك...",
             "rating_button": "تقييم",
             "truck_driver": "سائق تريلا",
+            "driver_title": "سائق",
+            "cancelConfirmTitle": "تأكيد الإلغاء",
+            "cancelConfirmMessage": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟",
+            "cancelSuccess": "تم إلغاء الطلب بنجاح",
+            "acceptSuccess": "تم قبول العرض بنجاح",
+            "rating_success": "تم إرسال التقييم بنجاح",
+            "rating_error_no_stars": "يرجى اختيار النجوم للتقييم",
             "status": {
                 "new": "طلب جديد",
-                "waiting": "في انتظار التحميل",
+                "waiting": "قيد الشحن",
                 "shipped": "تم الشحن",
                 "cancelled": "ملغي"
             }
         },
         "balance": "الرصيد",
         "profile": "الملف الشخصي",
+        "navbar": {
+            "profile": "الملف الشخصي",
+            "basicUpload": "شحن عادي",
+            "tripUpload": "شحن باقة رحلات",
+            "contractUpload": "شحن باقة عقود"
+        },
         "notifications": "الإشعارات",
         "tracking": "تتبع الطلب",
         "providerAccount": "حساب مزود الخدمة",

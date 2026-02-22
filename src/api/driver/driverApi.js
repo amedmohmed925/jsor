@@ -19,6 +19,39 @@ export const driverApi = baseApi.injectEndpoints({
       }),
       providesTags: ['Order'],
     }),
+
+    /**
+     * Get Driver New Orders
+     * GET /api/web/v1/site/driver-new-order
+     */
+    getDriverNewOrders: builder.query({
+      query: (token) => ({
+        url: `${API_ENDPOINTS.DRIVER_NEW_ORDERS}?access-token=${token}`,
+      }),
+      providesTags: ['Order'],
+    }),
+
+    /**
+     * Get Driver Shipping Orders
+     * GET /api/web/v1/site/driver-shipping-order
+     */
+    getDriverShippingOrders: builder.query({
+      query: (token) => ({
+        url: `${API_ENDPOINTS.DRIVER_SHIPPING_ORDERS}?access-token=${token}`,
+      }),
+      providesTags: ['Order'],
+    }),
+
+    /**
+     * Get Driver Completed Orders
+     * GET /api/web/v1/site/driver-complete-order
+     */
+    getDriverCompletedOrders: builder.query({
+      query: (token) => ({
+        url: `${API_ENDPOINTS.DRIVER_COMPLETE_ORDERS}?access-token=${token}`,
+      }),
+      providesTags: ['Order'],
+    }),
     
     /**
      * Get Driver Balance
@@ -77,12 +110,29 @@ export const driverApi = baseApi.injectEndpoints({
     }),
     
     /**
-     * Get Order Details
-     * GET /driver/orders/:id
+     * Create Offer
+     * POST /api/web/v1/site/create-offer
      */
-    getDriverOrderDetails: builder.query({
-      query: (orderId) => `${API_ENDPOINTS.DRIVER_ORDERS}/${orderId}`,
-      providesTags: (result, error, orderId) => [{ type: 'Order', id: orderId }],
+    createOffer: builder.mutation({
+      query: ({ token, body }) => ({
+        url: `${API_ENDPOINTS.CREATE_OFFER}?access-token=${token}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Order'],
+    }),
+
+    /**
+     * Rate Customer
+     * POST /api/web/v1/site/rate-customer
+     */
+    rateCustomer: builder.mutation({
+      query: ({ token, body }) => ({
+        url: `${API_ENDPOINTS.RATE_CUSTOMER}?access-token=${token}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Order'],
     }),
   }),
 });
@@ -90,10 +140,14 @@ export const driverApi = baseApi.injectEndpoints({
 // Export hooks for usage in components
 export const {
   useGetDriverOrdersQuery,
+  useGetDriverNewOrdersQuery,
+  useGetDriverShippingOrdersQuery,
+  useGetDriverCompletedOrdersQuery,
   useGetDriverBalanceQuery,
   useGetDriverProfileQuery,
   useUpdateDriverProfileMutation,
   useUpdateOrderStatusMutation,
   useAcceptOrderMutation,
-  useGetDriverOrderDetailsQuery,
+  useCreateOfferMutation,
+  useRateCustomerMutation,
 } = driverApi;
