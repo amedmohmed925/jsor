@@ -141,6 +141,7 @@ export const API_ENDPOINTS = {
   ADMIN_DRIVERS: '/admin/drivers',
   ADMIN_USERS: '/admin/users',
   ADMIN_COMPANY_DRIVERS: '/api/web/v1/site/company-driver',
+  ADMIN_COMPANY_VEHICLES: '/api/web/v1/site/company-vehicle',
   ADD_VEHICLE: '/api/web/v1/site/add-vehicle',
   UPDATE_VEHICLE: '/api/web/v1/site/update-vehicle',
   VIEW_VEHICLE: '/api/web/v1/site/veiw-vehicle',

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useGetListsQuery, useGetSubTrucksQuery } from '../../api/site/siteApi';
-import { useGetCompanyDriversQuery, useAddVehicleMutation } from '../../api/admin/adminApi';
+import { useGetCompanyDriversMutation, useAddVehicleMutation } from '../../api/admin/adminApi';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const AddTruckComponent = () => {
@@ -46,10 +46,14 @@ const AddTruckComponent = () => {
 
   // API Queries
   const { data: listsData, isLoading: listsLoading } = useGetListsQuery();
-  const { data: driversData, isLoading: driversLoading } = useGetCompanyDriversQuery();
+  const [getCompanyDrivers, { data: driversData, isLoading: driversLoading }] = useGetCompanyDriversMutation();
   const { data: subTrucksData, isFetching: subTrucksLoading } = useGetSubTrucksQuery(formData.truck_id, {
     skip: !formData.truck_id
   });
+
+  useEffect(() => {
+    getCompanyDrivers({});
+  }, [getCompanyDrivers]);
 
   const [addVehicle, { isLoading: isSubmitting }] = useAddVehicleMutation();
 
@@ -129,6 +133,7 @@ const AddTruckComponent = () => {
   const trucks = listsData?.Truck || [];
   const drivers = driversData?.data?.[0]?.items || [];
   const subTrucks = subTrucksData || [];
+  const vehicleTypes = listsData?.VehicleType || {};
 
   if (listsLoading || driversLoading) {
     return <LoadingSpinner />;
@@ -330,8 +335,9 @@ const AddTruckComponent = () => {
                     required
                 >
                   <option value="">{t('addVehicle.selectType')}</option>
-                  <option value="1">{t('addVehicle.new')}</option>
-                  <option value="2">{t('addVehicle.used')}</option>
+                  {Object.entries(vehicleTypes).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                  ))}
                 </select>
                 <div className={`select-icon position-absolute ${isRtl ? 'start-0' : 'end-0'} top-50 translate-middle-y px-2`}>
                   <ExpandMoreIcon />

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { useAddDriverMutation } from '../../api/admin/adminApi';
 import { useGetListsQuery } from '../../api/auth/authApi';
 
@@ -9,20 +10,22 @@ const AddDriverComponent = () => {
   const { t, i18n } = useTranslation(['admin', 'common']);
   const [addDriver, { isLoading: isAdding }] = useAddDriverMutation();
   const { data: listsData } = useGetListsQuery();
+  const location = useLocation();
+  const prefill = location.state?.prefill || {};
 
   const initialState = {
-    name: '',
-    last_name: '',
-    username: '',
-    email: '',
-    mobile: '',
+    name: prefill.name || '',
+    last_name: prefill.last_name || '',
+    username: prefill.username || '',
+    email: prefill.email || '',
+    mobile: prefill.mobile || '',
     password: '',
     password_repeat: '',
-    country_id: '',
-    city_id: '',
-    license_number: '',
-    experience_year: '',
-    address: ''
+    country_id: prefill.country_id || '',
+    city_id: prefill.city_id || '',
+    license_number: prefill.license_number || '',
+    experience_year: prefill.experience_year || '',
+    address: prefill.address || ''
   };
 
   const [formData, setFormData] = useState(initialState);

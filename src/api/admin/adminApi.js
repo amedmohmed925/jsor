@@ -132,14 +132,17 @@ export const adminApi = baseApi.injectEndpoints({
 
     /**
      * Get Company Drivers
-     * GET /api/web/v1/site/company-driver
+     * POST /api/web/v1/site/company-driver
+     * Body: { name, status }
      */
-    getCompanyDrivers: builder.query({
-      query: () => ({
+    getCompanyDrivers: builder.mutation({
+      query: ({ name = '', status = '' } = {}) => ({
         url: API_ENDPOINTS.ADMIN_COMPANY_DRIVERS,
+        method: 'POST',
         params: { 'access-token': localStorage.getItem('josur_auth_token') },
+        body: { name, status },
       }),
-      providesTags: ['Driver'],
+      invalidatesTags: ['Driver'],
     }),
 
     /**
@@ -165,12 +168,56 @@ export const adminApi = baseApi.injectEndpoints({
      */
     addVehicle: builder.mutation({
       query: (vehicleData) => ({
-        url: API_ENDPOINTS.ADMIN_ADD_VEHICLE,
+        url: API_ENDPOINTS.ADD_VEHICLE,
         method: 'POST',
         params: { 'access-token': localStorage.getItem('josur_auth_token') },
         body: vehicleData,
       }),
       invalidatesTags: ['Admin'],
+    }),
+
+    /**
+     * Get Company Vehicles
+     * POST /api/web/v1/site/company-vehicle
+     * Body: { name, status }
+     */
+    getCompanyVehicles: builder.mutation({
+      query: ({ name = '', status = '' } = {}) => ({
+        url: API_ENDPOINTS.ADMIN_COMPANY_VEHICLES,
+        method: 'POST',
+        params: { 'access-token': localStorage.getItem('josur_auth_token') },
+        body: { name, status },
+      }),
+      invalidatesTags: ['Admin'],
+    }),
+
+    /**
+     * Update Vehicle
+     * POST /api/web/v1/site/update-vehicle
+     */
+    updateVehicle: builder.mutation({
+      query: (vehicleData) => ({
+        url: API_ENDPOINTS.UPDATE_VEHICLE,
+        method: 'POST',
+        params: { 'access-token': localStorage.getItem('josur_auth_token') },
+        body: vehicleData,
+      }),
+      invalidatesTags: ['Admin'],
+    }),
+
+    /**
+     * View Vehicle
+     * GET /api/web/v1/site/veiw-vehicle
+     */
+    viewVehicle: builder.query({
+      query: (vehicleId) => ({
+        url: API_ENDPOINTS.VIEW_VEHICLE,
+        params: { 
+          id: vehicleId,
+          'access-token': localStorage.getItem('josur_auth_token') 
+        },
+      }),
+      providesTags: ['Admin'],
     }),
   }),
 });
@@ -187,7 +234,10 @@ export const {
   useGetAllDriversQuery,
   useUpdateDriverMutation,
   useDeleteDriverMutation,
-  useGetCompanyDriversQuery,
+  useGetCompanyDriversMutation,
   useGetSubTrucksQuery,
   useAddVehicleMutation,
+  useGetCompanyVehiclesMutation,
+  useUpdateVehicleMutation,
+  useViewVehicleQuery,
 } = adminApi;

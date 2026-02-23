@@ -42,6 +42,8 @@ import OrderDetails from "./driver/pages/OrderDetails";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import AddTruck from "./admin/pages/AddTruck";
 import AddDriver from "./admin/pages/AddDriver";
+import UpdateVehicle from "./admin/pages/UpdateVehicle";
+import VehicleDetails from "./admin/pages/VehicleDetails";
 
 // User Roles
 import { USER_ROLES } from "./utils/constants";
@@ -49,6 +51,13 @@ import { USER_ROLES } from "./utils/constants";
 function App() {
   return (
     <Routes>
+      {/* Admin Routes - High Priority */}
+      <Route path="/admin/dashboard" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AdminDashboard /></RoleBasedRoute>} />
+      <Route path="/admin/add-truck" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AddTruck /></RoleBasedRoute>} />
+      <Route path="/admin/add-driver" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AddDriver /></RoleBasedRoute>} />
+      <Route path="/admin/update-vehicle/:id" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><UpdateVehicle /></RoleBasedRoute>} />
+      <Route path="/admin/vehicle-details/:id" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><VehicleDetails /></RoleBasedRoute>} />
+
       {/* Public Routes - Accessible to everyone */}
       <Route path="/" element={<Home />} />
       <Route path="/contact" element={<Contact />} />
@@ -82,11 +91,6 @@ function App() {
       <Route path="/driver/mission-started" element={<RoleBasedRoute allowedRoles={[USER_ROLES.DRIVER]}><MissionStarted /></RoleBasedRoute>} />
       <Route path="/driver/mission-arrived" element={<RoleBasedRoute allowedRoles={[USER_ROLES.DRIVER]}><MissionArrived /></RoleBasedRoute>} />
       <Route path="/driver/order-details/:id" element={<RoleBasedRoute allowedRoles={[USER_ROLES.DRIVER]}><OrderDetails /></RoleBasedRoute>} />
-      
-      {/* Admin Routes - Only accessible to authenticated users with 'admin' role */}
-      <Route path="/admin/dashboard" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AdminDashboard /></RoleBasedRoute>} />
-      <Route path="/admin/add-truck" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AddTruck /></RoleBasedRoute>} />
-      <Route path="/admin/add-driver" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AddDriver /></RoleBasedRoute>} />
     </Routes>
   );
 }
