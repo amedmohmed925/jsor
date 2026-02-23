@@ -95,6 +95,11 @@ export const API_ENDPOINTS = {
   DRIVER_COMPLETE_ORDERS: '/api/web/v1/site/driver-complete-order',
   CREATE_OFFER: '/api/web/v1/site/create-offer',
   RATE_CUSTOMER: '/api/web/v1/site/rate-customer',
+  START_ORDER: '/api/web/v1/site/start-order',
+  UPLOAD_IMAGE_BEFORE: '/api/web/v1/site/upload-image-before',
+  UPLOAD_IMAGE_AFTER: '/api/web/v1/site/upload-image-after',
+  CUSTOMER_SIGNATURE: '/api/web/v1/site/customer-signature',
+  END_ORDER: '/api/web/v1/site/end-order',
   
   // User
   USER_ORDERS: '/user/orders',

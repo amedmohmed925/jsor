@@ -28,6 +28,8 @@
             "truckStatus": "Truck Status",
             "changeTruckPhoto": "Change Truck Photo",
             "edit": "Edit",
+            "driving_license": "Driving License",
+            "car_registration": "Car Registration",
             "save": "Save Changes",
             "cancel": "Cancel",
             "submitting": "Saving...",

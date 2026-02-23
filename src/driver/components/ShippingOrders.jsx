@@ -3,10 +3,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDownLong, faCircle } from "@fortawesome/free-solid-svg-icons";
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ShippingOrders = ({ orders, isLoading }) => {
-  const { t } = useTranslation(['driver', 'common']);
+  const { t, i18n } = useTranslation(['driver', 'common']);
+  const isRtl = i18n.language === 'ar';
+  const navigate = useNavigate();
+
+  const getName = (obj) => {
+    if (!obj) return '';
+    if (typeof obj === 'string') return obj;
+    return isRtl ? (obj.name || '') : (obj.name_en || obj.name || '');
+  };
 
   if (isLoading) {
     return <div className="text-center py-4">{t('common:loading')}...</div>;
@@ -49,7 +57,7 @@ const ShippingOrders = ({ orders, isLoading }) => {
                         {userRate} <img src="/assets/star.svg" alt="rate" />
                     </div>
                   </div>
-                  <p className="user-desc m-0">{order.city_from || '--'}</p>
+                  <p className="user-desc m-0">{getName(order.city_from) || order.city_from || '--'}</p>
                 </div>
               </div>
 
@@ -65,8 +73,8 @@ const ShippingOrders = ({ orders, isLoading }) => {
                   </div>
                 </div>
                 <div className="from-to-text">
-                  <span>{order.city_from || '--'}</span>
-                  <span>{order.city_to || '--'}</span>
+                  <span>{getName(order.city_from) || order.city_from || '--'}</span>
+                  <span>{getName(order.city_to) || order.city_to || '--'}</span>
                 </div>
               </div>
 
@@ -79,9 +87,13 @@ const ShippingOrders = ({ orders, isLoading }) => {
 
               <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 w-100">
                 <div className="d-flex align-items-center gap-2">
-                  <Link to='/tracking' className="offers-dropdown text-decoration-none d-flex align-items-center justify-content-center gap-2">
+                  <div 
+                    className="offers-dropdown text-decoration-none d-flex align-items-center justify-content-center gap-2"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => navigate('/driver/mission-started', { state: { order } })}
+                  >
                     <h6 className='offers-dropdown-text m-0'>{t('driver:orders.track_location') || 'تتبع موقعك'}</h6>
-                  </Link>
+                  </div>
                   <div className="contact-driver-button">
                     <p className='m-0'>{t('driver:orders.call_client') || 'الاتصال بالعميل'}</p>
                   </div>

@@ -29,7 +29,7 @@ const truckIcon = new L.Icon({
 });
 
 const storeIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-blue.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
@@ -38,7 +38,7 @@ const storeIcon = new L.Icon({
 });
 
 const locationIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-green.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
@@ -274,12 +274,12 @@ const Tracking = () => {
                         {/* الأيقونات */}
                         <div className="from-to-icons">
                             <div className="location-icon">
-                                <LocationOnOutlinedIcon className='fs-6' />
+                                <FontAwesomeIcon icon={faLocationDot} className="fs-6 text-primary" />
                             </div>
                             <div className="circle"></div>
                             <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
                             <div className="location-icon">
-                                <LocationOnOutlinedIcon className='fs-6' />
+                                <FontAwesomeIcon icon={faLocationDot} className="fs-6 text-danger" />
                             </div>
                         </div>
                         {/* النص */}

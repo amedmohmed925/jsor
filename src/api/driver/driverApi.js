@@ -148,6 +148,71 @@ export const driverApi = baseApi.injectEndpoints({
     }),
 
     /**
+     * Start Order
+     * POST /api/web/v1/site/start-order
+     */
+    startOrder: builder.mutation({
+      query: ({ token, body }) => ({
+        url: `${API_ENDPOINTS.START_ORDER}?access-token=${token}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Order'],
+    }),
+
+    /**
+     * Upload Image Before
+     * POST /api/web/v1/site/upload-image-before
+     */
+    uploadImageBefore: builder.mutation({
+      query: ({ token, body }) => ({
+        url: `${API_ENDPOINTS.UPLOAD_IMAGE_BEFORE}?access-token=${token}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Order'],
+    }),
+
+    /**
+     * Upload Image After
+     * POST /api/web/v1/site/upload-image-after
+     */
+    uploadImageAfter: builder.mutation({
+      query: ({ token, body }) => ({
+        url: `${API_ENDPOINTS.UPLOAD_IMAGE_AFTER}?access-token=${token}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Order'],
+    }),
+
+    /**
+     * Customer Signature
+     * POST /api/web/v1/site/customer-signature
+     */
+    customerSignature: builder.mutation({
+      query: ({ token, body }) => ({
+        url: `${API_ENDPOINTS.CUSTOMER_SIGNATURE}?access-token=${token}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Order'],
+    }),
+
+    /**
+     * End Order
+     * POST /api/web/v1/site/end-order
+     */
+    endOrder: builder.mutation({
+      query: ({ token, body }) => ({
+        url: `${API_ENDPOINTS.END_ORDER}?access-token=${token}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Order'],
+    }),
+
+    /**
      * Add Vehicle
      * POST /api/web/v1/site/add-vehicle
      */
@@ -193,4 +258,9 @@ export const {
   useGetVehicleQuery,
   useAddVehicleMutation,
   useUpdateVehicleMutation,
+  useStartOrderMutation,
+  useUploadImageBeforeMutation,
+  useUploadImageAfterMutation,
+  useCustomerSignatureMutation,
+  useEndOrderMutation,
 } = driverApi;

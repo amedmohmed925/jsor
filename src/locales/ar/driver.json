@@ -29,6 +29,8 @@
             "truckStatus": "حالة الشاحنة",
             "changeTruckPhoto": "تغيير صورة الشاحنة",
             "edit": "تعديل",
+            "driving_license": "رخصة القيادة",
+            "car_registration": "استمارة السيارة",
             "save": "حفظ التعديلات",
             "cancel": "إلغاء",
             "submitting": "جاري الحفظ...",
