@@ -136,6 +136,7 @@ export const API_ENDPOINTS = {
   DRIVER_NEW_ORDERS: '/api/web/v1/site/driver-new-order',
   DRIVER_SHIPPING_ORDERS: '/api/web/v1/site/driver-shipping-order',
   DRIVER_COMPLETE_ORDERS: '/api/web/v1/site/driver-complete-order',
+  DRIVER_INFO: '/api/web/v1/site/driver-info',
 
   // Admin
   ADMIN_DASHBOARD: '/admin/dashboard',
@@ -152,6 +153,7 @@ export const API_ENDPOINTS = {
   // Site
   SITE_HOME: '/api/web/v1/site/home-web',
   SITE_CONTACT: '/api/web/v1/site/contact',
+  CONTACT_INFO: '/api/web/v1/site/contact-info',
   SITE_TERMS: '/api/web/v1/site/term',
   NOTIFICATION_BADGE: '/api/web/v1/site/notification-budge',
   CREATE_NORMAL_REQUEST: '/api/web/v1/site/create-normal-request',

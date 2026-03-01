@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import { useEffect } from 'react';
+import { useGetContactInfoQuery } from './api/site/siteApi';
 import './index.css'
 
 // Route Components
@@ -50,6 +52,39 @@ import VehicleDetails from "./admin/pages/VehicleDetails";
 import { USER_ROLES } from "./utils/constants";
 
 function App() {
+  const { data: contactInfo } = useGetContactInfoQuery();
+
+  useEffect(() => {
+    if (contactInfo) {
+      // Update Title
+      if (contactInfo._site_name) {
+        document.title = contactInfo._site_name;
+      }
+      
+      // Update Meta Description
+      if (contactInfo._description) {
+        let metaDesc = document.querySelector('meta[name="description"]');
+        if (!metaDesc) {
+          metaDesc = document.createElement('meta');
+          metaDesc.name = "description";
+          document.head.appendChild(metaDesc);
+        }
+        metaDesc.content = contactInfo._description;
+      }
+
+      // Update Meta Keywords
+      if (contactInfo.key_words) {
+        let metaKeywords = document.querySelector('meta[name="keywords"]');
+        if (!metaKeywords) {
+          metaKeywords = document.createElement('meta');
+          metaKeywords.name = "keywords";
+          document.head.appendChild(metaKeywords);
+        }
+        metaKeywords.content = contactInfo.key_words;
+      }
+    }
+  }, [contactInfo]);
+
   return (
     <Routes>
       {/* Admin Routes - High Priority */}

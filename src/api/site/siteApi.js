@@ -58,6 +58,31 @@ export const siteApi = baseApi.injectEndpoints({
     }),
 
     /**
+     * Get Contact Info
+     * GET /api/web/v1/site/contact-info
+     */
+    getContactInfo: builder.query({
+      query: () => API_ENDPOINTS.CONTACT_INFO,
+      transformResponse: (response) => {
+        return response.status === 1 ? response.data[0].setting : null;
+      },
+    }),
+
+    /**
+     * Get Driver Info
+     * GET /api/web/v1/site/driver-info
+     */
+    getDriverInfo: builder.query({
+      query: ({ token, id }) => ({
+        url: API_ENDPOINTS.DRIVER_INFO,
+        params: { 'access-token': token, id },
+      }),
+      transformResponse: (response) => {
+        return response.status === 1 ? response.data[0] : null;
+      },
+    }),
+
+    /**
      * Get Sub Trucks by Truck ID
      * GET /api/web/v1/site/sub-truck?id={id}
      */
@@ -156,6 +181,7 @@ export const {
   useSubmitContactMutation,
   useGetTermsDataQuery,
   useGetListsQuery,
+  useGetDriverInfoQuery,
   useGetSubTrucksQuery,
   useCreateNormalRequestMutation,
   useCreateTripRequestMutation,
@@ -163,4 +189,5 @@ export const {
   useCancelRequestMutation,
   useRateRequestMutation,
   useAcceptOfferMutation,
+  useGetContactInfoQuery,
 } = siteApi;

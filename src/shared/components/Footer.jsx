@@ -1,17 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useGetHomeDataQuery } from '../../api/site/siteApi';
+import { useGetHomeDataQuery, useGetContactInfoQuery } from '../../api/site/siteApi';
 
 // Import Material Icons for social media
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/Twitter'; // X is the new name for Twitter
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Footer = ({ isProviderPage = false }) => {
   const { t, i18n } = useTranslation(['common', 'auth']);
   const { data: homeData, isLoading } = useGetHomeDataQuery();
+  const { data: contactInfo } = useGetContactInfoQuery();
 
   // Helper to get localized field from API
   const getLangField = (item, field) => {
@@ -60,14 +66,43 @@ const Footer = ({ isProviderPage = false }) => {
               {isLoading ? '...' : getLangField(aboutData, 'content') || t('footer.aboutDescription')}
             </p>
             <div className="d-flex justify-content-start align-items-center flex-wrap gap-3 mb-4">
-              <img src="assets/Google Play.png" alt="Google" />
-              <img src="assets/App Store.png" alt="App" />
+              {contactInfo?.android_url && (
+                <a href={contactInfo.android_url} target="_blank" rel="noopener noreferrer">
+                  <img src="assets/Google Play.png" alt="Google Play" />
+                </a>
+              )}
+              {contactInfo?.ios_url && (
+                <a href={contactInfo.ios_url} target="_blank" rel="noopener noreferrer">
+                  <img src="assets/App Store.png" alt="App Store" />
+                </a>
+              )}
             </div>
             <div className="d-flex gap-5 align-items-center mb-3">
-              <GitHubIcon className='fs-2 icon-color' />
-              <InstagramIcon className='fs-2 icon-color' />
-              <FacebookIcon className='fs-2 icon-color' />
-              <XIcon className='fs-2 icon-color' />
+              {contactInfo?.facebook && contactInfo.facebook !== '#' && (
+                <a href={contactInfo.facebook} target="_blank" rel="noopener noreferrer" className='text-decoration-none'>
+                  <FacebookIcon className='fs-2 icon-color' />
+                </a>
+              )}
+              {contactInfo?.instegram && contactInfo.instegram !== '#' && (
+                <a href={contactInfo.instegram} target="_blank" rel="noopener noreferrer" className='text-decoration-none'>
+                  <InstagramIcon className='fs-2 icon-color' />
+                </a>
+              )}
+              {contactInfo?.twitter && contactInfo.twitter !== '#' && (
+                <a href={contactInfo.twitter} target="_blank" rel="noopener noreferrer" className='text-decoration-none'>
+                  <XIcon className='fs-2 icon-color' />
+                </a>
+              )}
+              {contactInfo?.youtube && contactInfo.youtube !== '#' && (
+                <a href={contactInfo.youtube} target="_blank" rel="noopener noreferrer" className='text-decoration-none'>
+                  <YouTubeIcon className='fs-2 icon-color' />
+                </a>
+              )}
+               {contactInfo?.snapchat && contactInfo.snapchat !== '#' && (
+                <a href={contactInfo.snapchat} target="_blank" rel="noopener noreferrer" className='text-decoration-none'>
+                  <i className="fab fa-snapchat fs-2 icon-color"></i>
+                </a>
+              )}
             </div>
           </div>
 
@@ -78,18 +113,30 @@ const Footer = ({ isProviderPage = false }) => {
             <Link to="/service-provider" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.providers')}</Link>
             <Link to="/contact" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.contact')}</Link>
           </div>
-          <div className="col-md-1 d-none d-md-block"></div>
           
-          <div className="col-md-2 col-6 pe-md-4 mt-4">
-            <h6 className='mb-3 footer-link-title'>{t('footer.links.shortcuts')}</h6>
-            <Link to="/" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.home')}</Link>
-            <Link to="/works" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.business')}</Link>
-            <Link to="/service-provider" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.providers')}</Link>
-            <Link to="/contact" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.contact')}</Link>
+          <div className="col-md-3 col-6 pe-md-4 mt-4">
+             <h6 className='mb-3 footer-link-title'>{t('footer.links.contact')}</h6>
+             {contactInfo?._address && (
+                <div className="d-flex align-items-start gap-2 mb-3 footer-link">
+                  <LocationOnIcon fontSize="small" className="mt-1" />
+                  <span>{contactInfo._address}</span>
+                </div>
+             )}
+             {contactInfo?.mobile && (
+                <div className="d-flex align-items-center gap-2 mb-3 footer-link">
+                  <PhoneIcon fontSize="small" />
+                  <a href={`tel:${contactInfo.mobile}`} className="text-decoration-none text-inherit" style={{ color: 'inherit' }}>{contactInfo.mobile}</a>
+                </div>
+             )}
+             {contactInfo?.whatsap && (
+                <div className="d-flex align-items-center gap-2 mb-3 footer-link">
+                  <WhatsAppIcon fontSize="small" />
+                  <a href={`https://wa.me/${contactInfo.whatsap}`} target="_blank" rel="noopener noreferrer" className="text-decoration-none text-inherit" style={{ color: 'inherit' }}>{contactInfo.whatsap}</a>
+                </div>
+             )}
           </div>
-          <div className="col-md-1 d-none d-md-block"></div>
 
-          <div className="col-md-2 col-6 pe-md-4 mt-4">
+          <div className="col-md-3 col-6 pe-md-4 mt-4">
             <h6 className='mb-3 footer-link-title'>{t('footer.links.shortcuts')}</h6>
             <Link to="/" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.home')}</Link>
             <Link to="/works" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.business')}</Link>

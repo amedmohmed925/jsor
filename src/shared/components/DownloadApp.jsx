@@ -1,10 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetHomeDataQuery } from '../../api/site/siteApi';
+import { useGetHomeDataQuery, useGetContactInfoQuery } from '../../api/site/siteApi';
 
 const DownloadApp = () => {
   const { i18n } = useTranslation();
   const { data: homeData, isLoading } = useGetHomeDataQuery();
+  const { data: contactInfo } = useGetContactInfoQuery();
 
   // Helper to get localized field from API
   const getLangField = (item, field) => {
@@ -28,8 +29,22 @@ const DownloadApp = () => {
           </p>
 
           <div className="d-flex justify-content-center align-items-center gap-3 mb-5">
-            <img src="assets/Google Play.png" alt="Google" />
-            <img src="assets/App Store.png" alt="App" />
+            {contactInfo?.android_url && (
+              <a href={contactInfo.android_url} target="_blank" rel="noopener noreferrer">
+                <img src="assets/Google Play.png" alt="Google Play" />
+              </a>
+            )}
+            {contactInfo?.ios_url && (
+              <a href={contactInfo.ios_url} target="_blank" rel="noopener noreferrer">
+                <img src="assets/App Store.png" alt="App Store" />
+              </a>
+            )}
+            {!contactInfo && (
+              <>
+                 <img src="assets/Google Play.png" alt="Google Play" />
+                 <img src="assets/App Store.png" alt="App Store" />
+              </>
+            )}
           </div>
           <div className="app-mobiles-wrapper">
             <img src={appSection?.image || "assets/mobiles.jpg"} className='img-fluid' alt="mobiles" />
