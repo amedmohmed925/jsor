@@ -68,12 +68,12 @@ const Footer = ({ isProviderPage = false }) => {
             <div className="d-flex justify-content-start align-items-center flex-wrap gap-3 mb-4">
               {contactInfo?.android_url && (
                 <a href={contactInfo.android_url} target="_blank" rel="noopener noreferrer">
-                  <img src="assets/Google Play.png" alt="Google Play" />
+                  <img src="/assets/Google Play.png" alt="Google Play" style={{ maxHeight: '45px' }} />
                 </a>
               )}
               {contactInfo?.ios_url && (
                 <a href={contactInfo.ios_url} target="_blank" rel="noopener noreferrer">
-                  <img src="assets/App Store.png" alt="App Store" />
+                  <img src="/assets/App Store.png" alt="App Store" style={{ maxHeight: '45px' }} />
                 </a>
               )}
             </div>
