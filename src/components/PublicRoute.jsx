@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ROUTES, USER_ROLES } from '../utils/constants';
 
@@ -9,9 +9,14 @@ import { ROUTES, USER_ROLES } from '../utils/constants';
  */
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, role } = useAuth();
+  const location = useLocation();
   
-  // If authenticated, redirect to appropriate dashboard
+  // If authenticated, redirect back to the page that triggered the auth modal (if any),
+  // otherwise redirect to the appropriate default dashboard
   if (isAuthenticated) {
+    const from = location.state?.from;
+    if (from) return <Navigate to={from} replace />;
+
     switch (role) {
       case USER_ROLES.ADMIN:
         return <Navigate to={ROUTES.ADMIN_DASHBOARD} replace />;

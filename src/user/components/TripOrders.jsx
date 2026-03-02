@@ -4,6 +4,7 @@ import { faArrowDownLong, faCircle, faChevronDown, faChevronUp } from "@fortawes
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { OrderLocations } from '../../components/OrderLocations';
 import { 
   useGetTripNewOrdersQuery, 
   useGetTripShippingOrdersQuery, 
@@ -113,22 +114,7 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                     <h3 className='orders-card-title m-0'>{getName(order.type) || t('requestTypes:trips')}</h3>
                     <div className="new-order-badge py-1 px-2 rounded-2 text-nowrap">{t('user:orders.newOrder')}</div>
                   </div>
-                  <div className="from-to-wrapper">
-                    <div className="from-to-icons">
-                      <div className="location-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
-                      </div>
-                      <div className="circle"></div>
-                      <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
-                      <div className="location-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
-                      </div>
-                    </div>
-                    <div className="from-to-text">
-                      <span>{getName(order.city_from) || t('user:tripUpload.selectCityPlaceholder')}</span>
-                      <span>{getName(order.city_from) || t('user:tripUpload.selectCityPlaceholder')}</span>
-                    </div>
-                  </div>
+                  <OrderLocations order={order} currentLanguage={currentLanguage} getName={getName} />
                   <div className="d-flex gap-2 align-items-center">
                     <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
                     <h6 className='user-desc m-0'>{order.date !== '0000-00-00' ? order.date : '--'}</h6>
@@ -279,22 +265,7 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                     <h6 className='driver-truck-type m-0'>{getName(order.truck_id)} - {getName(order.sub_truck_id)}</h6>
                   </div>
 
-                  <div className="from-to-wrapper">
-                    <div className="from-to-icons">
-                      <div className="location-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
-                      </div>
-                      <div className="circle"></div>
-                      <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
-                      <div className="location-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
-                      </div>
-                    </div>
-                    <div className="from-to-text">
-                      <span>{getName(order.city_from) || '--'}</span>
-                      <span>{getName(order.city_from) || '--'}</span>
-                    </div>
-                  </div>
+                  <OrderLocations order={order} currentLanguage={currentLanguage} getName={getName} />
 
                   <div className="d-flex gap-2 align-items-center">
                     <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
@@ -361,22 +332,7 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                     )}
                   </div>
 
-                  <div className="from-to-wrapper">
-                    <div className="from-to-icons">
-                      <div className="location-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
-                      </div>
-                      <div className="circle"></div>
-                      <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
-                      <div className="location-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
-                      </div>
-                    </div>
-                    <div className="from-to-text">
-                      <span>{getName(order.city_from) || '--'}</span>
-                      <span>{getName(order.city_from) || '--'}</span>
-                    </div>
-                  </div>
+                  <OrderLocations order={order} currentLanguage={currentLanguage} getName={getName} />
 
                   <div className="d-flex gap-2 align-items-center">
                     <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
@@ -432,22 +388,7 @@ const TripOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRati
                     </div>
                   </div>
 
-                  <div className="from-to-wrapper">
-                    <div className="from-to-icons">
-                      <div className="location-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
-                      </div>
-                      <div className="circle"></div>
-                      <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
-                      <div className="location-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
-                      </div>
-                    </div>
-                    <div className="from-to-text">
-                      <span>{getName(order.city_from) || '--'}</span>
-                      <span>{getName(order.city_to) || '--'}</span>
-                    </div>
-                  </div>
+                  <OrderLocations order={order} currentLanguage={currentLanguage} getName={getName} />
 
                   <div className="d-flex gap-2 align-items-center">
                     <img src="../assets/calendar.svg" className='mb-1' alt="calender" />

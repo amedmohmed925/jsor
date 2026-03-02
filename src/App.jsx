@@ -113,9 +113,9 @@ function App() {
       <Route path="/user/balance" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><Balance /></RoleBasedRoute>} />
       <Route path="/user/profile" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><Profile /></RoleBasedRoute>} />
       <Route path="/user/provider-account" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><ProviderAccount /></RoleBasedRoute>} />
-      <Route path="/user/basic-upload" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><BasicUpload /></RoleBasedRoute>} />
-      <Route path="/user/trip-upload" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><TripUpload /></RoleBasedRoute>} />
-      <Route path="/user/contract-upload" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><ContractUpload /></RoleBasedRoute>} />
+      <Route path="/user/basic-upload" element={<BasicUpload />} />
+      <Route path="/user/trip-upload" element={<TripUpload />} />
+      <Route path="/user/contract-upload" element={<ContractUpload />} />
       <Route path="/user/notifications" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><Notifications /></RoleBasedRoute>} />
       <Route path="/user/tracking" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><Tracking /></RoleBasedRoute>} />
       <Route path="/user/providerAccount" element={<RoleBasedRoute allowedRoles={[USER_ROLES.USER]}><ProviderAccount /></RoleBasedRoute>} />

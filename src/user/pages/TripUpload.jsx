@@ -1,10 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from 'react-router-dom';
 import UserNavbar from '../components/UserNavbar'
+import Navbar from '../../shared/components/Navbar'
 import Footer from '../../shared/components/Footer'
+import AuthModal from '../../components/AuthModal';
+import { useAuth } from "../../hooks/useAuth";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useGetListsQuery, useGetSubTrucksQuery, useCreateTripRequestMutation } from "../../api/site/siteApi";
@@ -18,8 +22,50 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
+// Flies to new coordinates without remounting the map
+const MapViewController = ({ lat, lng }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo([lat, lng], map.getZoom());
+  }, [lat, lng, map]);
+  return null;
+};
+
+// Handles map click — defined outside to stay stable across renders
+const MapClickHandler = ({ onMapClick }) => {
+  useMapEvents({
+    click: (e) => {
+      onMapClick(e.latlng.lat, e.latlng.lng);
+    },
+  });
+  return null;
+};
+
+// Stable map component: defined outside TripUpload so React never remounts it on state changes
+const TripMapComponent = ({ locationCoords, pickupAddress, onMapClick }) => (
+  <MapContainer
+    center={locationCoords}
+    zoom={13}
+    className="rounded-3"
+    style={{ height: '95%', minHeight: '400px', width: '100%' }}
+  >
+    <TileLayer
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    />
+    <MapViewController lat={locationCoords[0]} lng={locationCoords[1]} />
+    <MapClickHandler onMapClick={onMapClick} />
+    <Marker position={locationCoords}>
+      <Popup>{pickupAddress}</Popup>
+    </Marker>
+  </MapContainer>
+);
+
 const TripUpload = () => {
     const { t, i18n } = useTranslation('user');
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { isAuthenticated, role } = useAuth();
     const { data: listsData } = useGetListsQuery();
     const [truckId, setTruckId] = useState("");
     const { data: subTrucksData } = useGetSubTrucksQuery(truckId, { skip: !truckId });
@@ -32,10 +78,38 @@ const TripUpload = () => {
     const [numTrips, setNumTrips] = useState("1");
     const [goodTypeId, setGoodTypeId] = useState("");
     const [date, setDate] = useState("");
-    
-    // State for map markers (mostly static for now as payload doesn't need coords)
-    const [location, setLocation] = useState([24.7136, 46.6753]);
 
+    // Handle initial state from Hero search or saved form
+    useEffect(() => {
+      const savedForm = sessionStorage.getItem('jsor_pending_order');
+      if (savedForm) {
+        try {
+          const parsed = JSON.parse(savedForm);
+          if (parsed.type === 'trip') {
+            setCityId(parsed.cityId || "");
+            setTruckId(parsed.truckId || "");
+            setNumTrips(parsed.numTrips || "1");
+            setGoodTypeId(parsed.goodTypeId || "");
+            setDate(parsed.date || "");
+            setSelectedService(parsed.selectedService || null);
+            setPickupAddress(parsed.pickupAddress || "");
+            setLocationCoords(parsed.locationCoords || [24.7136, 46.6753]);
+          }
+        } catch (e) {
+          console.error("Error parsing saved form", e);
+        }
+      } else if (location.state) {
+        if (location.state.pickup) {
+          setPickupAddress(location.state.pickup);
+        }
+      }
+    }, [location.state]);
+
+    const [locationCoords, setLocationCoords] = useState([24.7136, 46.6753]);
+    const [pickupAddress, setPickupAddress] = useState("");
+
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
     const [open, setOpen] = useState(false);
     const [selectedTruck, setSelectedTruck] = useState(null);
     const isRtl = i18n.language === 'ar';
@@ -60,9 +134,63 @@ const TripUpload = () => {
       setSelectedService(null);
     };
 
+    const getAddress = async (lat, lng) => {
+      try {
+        const lang = i18n.language.startsWith('en') ? 'en' : 'ar';
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=${lang}`);
+        const data = await response.json();
+        return data.display_name || (lang === 'en' ? "Unknown address" : "عنوان غير معروف");
+      } catch (error) {
+        console.error("Error fetching address:", error);
+        return i18n.language.startsWith('en') ? "Error fetching address" : "خطأ في جلب العنوان";
+      }
+    };
+
+    const searchTimeoutRef = useRef(null);
+    const handleSearchAddress = (query) => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+      if (!query || query.length < 3) { setSearchResults([]); return; }
+      searchTimeoutRef.current = setTimeout(async () => {
+        try {
+          const lang = i18n.language.startsWith('en') ? 'en' : 'ar';
+          const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&accept-language=${lang}`);
+          const data = await response.json();
+          setSearchResults(data);
+        } catch (e) {
+          console.error(e);
+        }
+      }, 500);
+    };
+
+    const handleMapClick = useCallback(async (lat, lng) => {
+      const address = await getAddress(lat, lng);
+      setLocationCoords([lat, lng]);
+      setPickupAddress(address);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language]);
+
     const handleSubmit = async () => {
       if (!cityId || !truckId || !selectedService || !numTrips || !goodTypeId || !date) {
         toast.error(t('tripUpload.errorFillAll'));
+        return;
+      }
+
+      // Check if user is authenticated and is a client
+      if (!isAuthenticated || role !== 'user') {
+        // Save form data to session storage
+        sessionStorage.setItem('jsor_pending_order', JSON.stringify({
+          type: 'trip',
+          cityId,
+          truckId,
+          numTrips,
+          goodTypeId,
+          date,
+          selectedService,
+          pickupAddress,
+          locationCoords
+        }));
+        
+        setShowAuthModal(true);
         return;
       }
 
@@ -83,6 +211,9 @@ const TripUpload = () => {
         if (response.status === 1) {
           toast.success(t('tripUpload.successMessage'));
           
+          // Clear saved form if any
+          sessionStorage.removeItem('jsor_pending_order');
+
           // Clear all fields
           setCityId("");
           setTruckId("");
@@ -99,33 +230,65 @@ const TripUpload = () => {
       }
     };
   
-  // Map component
-  const MapComponent = React.useMemo(() => () => (
-    <MapContainer 
-      center={location} 
-      zoom={13} 
-      className="rounded-3"
-      style={{ height: '95%', minHeight: '400px', width: '100%' }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <Marker position={location}>
-        <Popup>{t('tripUpload.title')}</Popup>
-      </Marker>
-    </MapContainer>
-  ), [location, t]);
-
   return (
     <>
-      <UserNavbar />
+      {isAuthenticated && role === 'user' ? <UserNavbar /> : <Navbar />}
+
+      <AuthModal 
+        show={showAuthModal} 
+        onHide={() => setShowAuthModal(false)} 
+        returnPath={location.pathname} 
+      />
 
       <div className="container mb-5">
         <div className="row mt-3">
           <div className="col-md-6">
             <div className="shadow p-3 rounded-3 h-100">
               <h2 className='orders-title mb-3'>{t('tripUpload.title')}</h2>
+              
+              {/* Pickup Location with select from map hint */}
+              <div className="mb-3">
+                <label className="form-label mb-1">
+                  {i18n.language === 'ar' ? 'موقع التحميل' : 'Pickup Location'}
+                </label>
+                <div className="input-with-icon border border-primary rounded position-relative" style={{ cursor: 'text' }}>
+                  <div className="location-icon map-icon">
+                    <i className="fas fa-map-marker-alt"></i>
+                  </div>
+                  <input
+                    type="text"
+                    className="form-control form-input location-input"
+                    placeholder={(i18n.language === 'ar' ? 'ابحث أو حدد من الخريطة' : 'Search or select from map')}
+                    value={pickupAddress}
+                    onChange={(e) => {
+                      setPickupAddress(e.target.value);
+                      handleSearchAddress(e.target.value);
+                    }}
+                  />
+                  {searchResults.length > 0 && (
+                    <div className="list-group position-absolute w-100 shadow-lg mt-1" style={{ zIndex: 1100, maxHeight: '200px', overflowY: 'auto', left: 0 }}>
+                      {searchResults.map((res, i) => (
+                        <button 
+                          key={i} 
+                          className="list-group-item list-group-item-action text-start fs-7"
+                          onClick={() => {
+                            setPickupAddress(res.display_name);
+                            setLocationCoords([parseFloat(res.lat), parseFloat(res.lon)]);
+                            setSearchResults([]);
+                          }}
+                        >
+                          {res.display_name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <small className="text-muted mt-1 d-block">
+                  <i className="fas fa-info-circle me-1"></i>
+                  {i18n.language === 'ar' ? 'يمكنك الكتابة للبحث أو الضغط على الخريطة' : 'You can type to search or click on the map'}
+                </small>
+              </div>
+
               {/* Truck Data */}
                 <div className="row">
                 <div className="col-12">
@@ -301,7 +464,11 @@ const TripUpload = () => {
             <div className="shadow p-3 rounded-3 h-100">
             <h2 className='orders-title'>{t('basicUpload.mapTitle')}</h2>
             <div className="mt-3 pb-3 h-100">
-              <MapComponent />
+              <TripMapComponent
+                locationCoords={locationCoords}
+                pickupAddress={pickupAddress}
+                onMapClick={handleMapClick}
+              />
             </div>
             </div>
           </div>

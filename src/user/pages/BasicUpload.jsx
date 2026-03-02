@@ -1,11 +1,15 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from 'react-router-dom';
 import UserNavbar from '../components/UserNavbar'
+import Navbar from '../../shared/components/Navbar'
 import Footer from '../../shared/components/Footer'
+import AuthModal from '../../components/AuthModal';
+import { useAuth } from "../../hooks/useAuth";
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useGetListsQuery, useGetSubTrucksQuery, useCreateNormalRequestMutation } from "../../api/site/siteApi";
@@ -19,25 +23,49 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
+// Handles map click — defined outside to stay stable across renders
+const MapClickHandler = ({ onMapClick }) => {
+  useMapEvents({
+    click: (e) => {
+      onMapClick(e.latlng.lat, e.latlng.lng);
+    },
+  });
+  return null;
+};
+
+// Stable map component: defined outside BasicUpload so React never remounts it on state changes
+const BasicMapComponent = ({ pickup, destinations, onMapClick, pickupLabel, deliveryLabel }) => (
+  <MapContainer
+    center={[24.7136, 46.6753]}
+    zoom={13}
+    className="rounded-3"
+    style={{ height: '95%', minHeight: '400px', width: '100%' }}
+  >
+    <TileLayer
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    />
+    <MapClickHandler onMapClick={onMapClick} />
+    <Marker position={[pickup.lat, pickup.lng]}>
+      <Popup>{pickupLabel}</Popup>
+    </Marker>
+    {destinations.map((dest, index) => (
+      <Marker key={index} position={[dest.lat, dest.lng]}>
+        <Popup>{deliveryLabel} {index + 1}</Popup>
+      </Marker>
+    ))}
+  </MapContainer>
+);
+
 const BasicUpload = () => {
     const { t, i18n } = useTranslation('user');
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { isAuthenticated, role } = useAuth();
     const { data: listsData } = useGetListsQuery();
     const [truckId, setTruckId] = useState("");
     const { data: subTrucksData } = useGetSubTrucksQuery(truckId, { skip: !truckId });
     const [createNormalRequest, { isLoading: isSubmitting }] = useCreateNormalRequestMutation();
-
-    // Helper to get localized field from API
-    const getLangField = (item, field) => {
-      if (!item) return '';
-      const isEn = i18n.language && i18n.language.startsWith('en');
-      const enField = `${field}_en`;
-      const arField = `${field}_ar`;
-      
-      if (isEn && item[enField]) return item[enField];
-      if (!isEn && item[arField]) return item[arField];
-      
-      return item[field] || '';
-    };
 
     const [selectedService, setSelectedService] = useState(null);
     const dateRef = useRef(null);
@@ -54,9 +82,56 @@ const BasicUpload = () => {
     const [destinations, setDestinations] = useState([{ lat: 24.7136, lng: 46.6753, address: "" }]);
     const [selectingTarget, setSelectingTarget] = useState({ type: 'pickup' });
 
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
+
+    // Handle initial state from Hero search
+    useEffect(() => {
+      const savedForm = sessionStorage.getItem('jsor_pending_order');
+      if (savedForm) {
+        try {
+          const parsed = JSON.parse(savedForm);
+          if (parsed.type === 'basic') {
+            setPickup(parsed.pickup);
+            setDestinations(parsed.destinations);
+            setTruckId(parsed.truckId || "");
+            setNumTrucks(parsed.numTrucks || "1");
+            setGoodTypeId(parsed.goodTypeId || "");
+            setGoodPrice(parsed.goodPrice || "");
+            setDate(parsed.date || "");
+            setTime(parsed.time || "");
+            setSelectedService(parsed.selectedService || null);
+            // Don't clear yet, wait for successful submit
+          }
+        } catch (e) {
+          console.error("Error parsing saved form", e);
+        }
+      } else if (location.state) {
+        if (location.state.pickup) {
+          setPickup(prev => ({ ...prev, address: location.state.pickup }));
+        }
+        if (location.state.destinations && location.state.destinations.length > 0) {
+          setDestinations(location.state.destinations.map(d => ({ lat: 24.7136, lng: 46.6753, address: d })));
+        }
+      }
+    }, [location.state]);
+
     const [open, setOpen] = useState(false);
     const [selectedTruck, setSelectedTruck] = useState(null);
     const isRtl = i18n.language === 'ar';
+
+    // Helper to get localized field from API
+    const getLangField = (item, field) => {
+      if (!item) return '';
+      const isEn = i18n.language && i18n.language.startsWith('en');
+      const enField = `${field}_en`;
+      const arField = `${field}_ar`;
+      
+      if (isEn && item[enField]) return item[enField];
+      if (!isEn && item[arField]) return item[arField];
+      
+      return item[field] || '';
+    };
 
     const getAddress = async (lat, lng) => {
       try {
@@ -70,11 +145,39 @@ const BasicUpload = () => {
       }
     };
 
+    const searchTimeoutRef = useRef(null);
+    const handleSearchAddress = (query) => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+      if (!query || query.length < 3) { setSearchResults([]); return; }
+      searchTimeoutRef.current = setTimeout(async () => {
+        try {
+          const lang = i18n.language.startsWith('en') ? 'en' : 'ar';
+          const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&accept-language=${lang}`);
+          const data = await response.json();
+          setSearchResults(data);
+        } catch (e) {
+          console.error(e);
+        }
+      }, 500);
+    };
+
+    const handleMapClick = useCallback(async (lat, lng) => {
+      const address = await getAddress(lat, lng);
+      if (selectingTarget.type === 'pickup') {
+        setPickup({ lat, lng, address });
+      } else if (selectingTarget.type === 'destination') {
+        const newDests = [...destinations];
+        newDests[selectingTarget.index] = { lat, lng, address };
+        setDestinations(newDests);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectingTarget, destinations, i18n.language]);
+
     const addDestination = () => {
-      if (destinations.length < 5) { // Limit to 5 destinations
+      if (destinations.length < 3) { // Limit to 3 destinations
         setDestinations([...destinations, { lat: 24.7136, lng: 46.6753, address: "" }]);
       } else {
-        toast.info(i18n.language.startsWith('en') ? "Maximum is 5 points" : "الحد الأقصى للنقاط هو 5");
+        toast.info(i18n.language.startsWith('en') ? "Maximum is 3 points" : "الحد الأقصى للنقاط هو 3");
       }
     };
 
@@ -88,6 +191,26 @@ const BasicUpload = () => {
     const handleSubmit = async () => {
       if (!truckId || !selectedService || !date || !time || !goodTypeId || !goodPrice) {
         toast.error(t('basicUpload.errorFillAll'));
+        return;
+      }
+
+      // Check if user is authenticated and is a client
+      if (!isAuthenticated || role !== 'user') {
+        // Save form data to session storage
+        sessionStorage.setItem('jsor_pending_order', JSON.stringify({
+          type: 'basic',
+          pickup,
+          destinations,
+          truckId,
+          numTrucks,
+          goodTypeId,
+          goodPrice,
+          date,
+          time,
+          selectedService
+        }));
+        
+        setShowAuthModal(true);
         return;
       }
 
@@ -117,6 +240,9 @@ const BasicUpload = () => {
         if (response.status === 1) {
           toast.success(t('basicUpload.successMessage'));
           
+          // Clear saved form if any
+          sessionStorage.removeItem('jsor_pending_order');
+
           // Clear all fields
           setTruckId("");
           setSelectedTruck(null);
@@ -138,52 +264,15 @@ const BasicUpload = () => {
       }
     };
 
-  // Map events component
-  const MapEvents = () => {
-    useMapEvents({
-      click: async (e) => {
-        const { lat, lng } = e.latlng;
-        const address = await getAddress(lat, lng);
-        
-        if (selectingTarget.type === 'pickup') {
-          setPickup({ lat, lng, address });
-        } else if (selectingTarget.type === 'destination') {
-          const newDests = [...destinations];
-          newDests[selectingTarget.index] = { lat, lng, address };
-          setDestinations(newDests);
-        }
-      },
-    });
-    return null;
-  };
-  
-  // Map component
-  const MapComponent = React.useMemo(() => () => (
-    <MapContainer 
-      center={[24.7136, 46.6753]} 
-      zoom={13} 
-      className="rounded-3"
-      style={{ height: '95%', minHeight: '400px', width: '100%' }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <MapEvents />
-      <Marker position={[pickup.lat, pickup.lng]}>
-        <Popup>{t('basicUpload.pickupPopup')}</Popup>
-      </Marker>
-      {destinations.map((dest, index) => (
-        <Marker key={index} position={[dest.lat, dest.lng]}>
-          <Popup>{t('basicUpload.deliveryPopup')} {index + 1}</Popup>
-        </Marker>
-      ))}
-    </MapContainer>
-  ), [pickup.lat, pickup.lng, destinations, selectingTarget, t]); // Only re-render if locations or translations change
-
   return (
     <>
-      <UserNavbar />
+      {isAuthenticated && role === 'user' ? <UserNavbar /> : <Navbar />}
+      
+      <AuthModal 
+        show={showAuthModal} 
+        onHide={() => setShowAuthModal(false)} 
+        returnPath={location.pathname} 
+      />
 
       <div className="container mb-5">
         <div className="row mt-3">
@@ -196,7 +285,7 @@ const BasicUpload = () => {
               {/* Locations */}
               <div className="d-flex align-items-center justify-content-between gap-2 mb-2">
                 <div className='w-100'>
-                  <div className={`input-with-icon mb-2 ${selectingTarget.type === 'pickup' ? 'border border-primary' : ''}`} 
+                  <div className={`input-with-icon mb-2 position-relative ${selectingTarget.type === 'pickup' ? 'border border-primary' : ''}`} 
                        onClick={() => setSelectingTarget({ type: 'pickup' })} style={{ cursor: 'pointer' }}>
                     <div className="location-icon map-icon">
                       <LocationOnOutlinedIcon className='fs-6' />
@@ -204,15 +293,35 @@ const BasicUpload = () => {
                     <input
                       type="text"
                       className="form-control form-input location-input"
-                      placeholder={t('basicUpload.pickupPlaceholder')}
+                      placeholder={t('basicUpload.pickupPlaceholder') + " (" + (i18n.language === 'ar' ? 'حدد من الخريطة' : 'Select from map') + ")"}
                       value={pickup.address}
-                      readOnly
+                      onChange={(e) => {
+                        setPickup({ ...pickup, address: e.target.value });
+                        handleSearchAddress(e.target.value);
+                      }}
                     />
+                    {selectingTarget.type === 'pickup' && searchResults.length > 0 && (
+                      <div className="list-group position-absolute w-100 shadow-lg mt-1" style={{ zIndex: 1100, maxHeight: '200px', overflowY: 'auto', left: 0 }}>
+                        {searchResults.map((res, i) => (
+                          <button 
+                            key={i} 
+                            className="list-group-item list-group-item-action text-start fs-7"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPickup({ lat: parseFloat(res.lat), lng: parseFloat(res.lon), address: res.display_name });
+                              setSearchResults([]);
+                            }}
+                          >
+                            {res.display_name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {destinations.map((dest, index) => (
                     <div key={index} 
-                         className={`input-with-icon mb-2 ${selectingTarget.type === 'destination' && selectingTarget.index === index ? 'border border-primary' : ''}`}
+                         className={`input-with-icon mb-2 position-relative ${selectingTarget.type === 'destination' && selectingTarget.index === index ? 'border border-primary' : ''}`}
                          onClick={() => setSelectingTarget({ type: 'destination', index })} style={{ cursor: 'pointer' }}>
                       <div className="location-icon map-icon">
                         <LocationOnOutlinedIcon className='fs-6' />
@@ -220,10 +329,34 @@ const BasicUpload = () => {
                       <input
                         type="text"
                         className="form-control form-input location-input"
-                        placeholder={`${t('basicUpload.deliveryPlaceholder')} ${index + 1}`}
+                        placeholder={`${t('basicUpload.deliveryPlaceholder')} ${index + 1} (${i18n.language === 'ar' ? 'حدد من الخريطة' : 'Select from map'})`}
                         value={dest.address}
-                        readOnly
+                        onChange={(e) => {
+                          const newDests = [...destinations];
+                          newDests[index] = { ...newDests[index], address: e.target.value };
+                          setDestinations(newDests);
+                          handleSearchAddress(e.target.value);
+                        }}
                       />
+                      {selectingTarget.type === 'destination' && selectingTarget.index === index && searchResults.length > 0 && (
+                        <div className="list-group position-absolute w-100 shadow-lg mt-1" style={{ zIndex: 1100, maxHeight: '200px', overflowY: 'auto', left: 0 }}>
+                          {searchResults.map((res, i) => (
+                            <button 
+                              key={i} 
+                              className="list-group-item list-group-item-action text-start fs-7"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const newDests = [...destinations];
+                                newDests[index] = { lat: parseFloat(res.lat), lng: parseFloat(res.lon), address: res.display_name };
+                                setDestinations(newDests);
+                                setSearchResults([]);
+                              }}
+                            >
+                              {res.display_name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -430,7 +563,13 @@ const BasicUpload = () => {
             <div className="shadow p-3 rounded-3 h-100">
             <h2 className='orders-title'>{t('basicUpload.mapTitle')}</h2>
             <div className="mt-3 pb-3 h-100">
-              <MapComponent />
+              <BasicMapComponent
+                pickup={pickup}
+                destinations={destinations}
+                onMapClick={handleMapClick}
+                pickupLabel={t('basicUpload.pickupPopup')}
+                deliveryLabel={t('basicUpload.deliveryPopup')}
+              />
             </div>
             </div>
           </div>

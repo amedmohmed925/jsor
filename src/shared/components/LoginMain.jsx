@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
@@ -19,6 +19,7 @@ const LoginMain = () => {
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Helper to get localized field from API with fallback for bad API data
   const getLangField = (item, field) => {
@@ -69,9 +70,12 @@ const LoginMain = () => {
         // Redirect based on user_type
         const userType = userData?.user_type;
         
+        // Check for pending order and redirect back to original page
+        const redirectTo = location.state?.from;
+        
         if (userType === 3) {
           // عميل - Client/User
-          navigate('/user/orders');
+          navigate(redirectTo || '/user/orders');
         } else if (userType === 4) {
           // سائق - Driver
           navigate('/driver/orders');
