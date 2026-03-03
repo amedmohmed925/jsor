@@ -221,10 +221,12 @@ const BasicUpload = () => {
       const formData = new FormData();
       formData.append('lat_from', pickup.lat);
       formData.append('lang_from', pickup.lng);
+      formData.append('address_from', pickup.address);
       
       destinations.forEach((dest, index) => {
         formData.append(`lat_to${index + 1}`, dest.lat);
         formData.append(`lang_to${index + 1}`, dest.lng);
+        formData.append(`address_to${index + 1}`, dest.address);
       });
 
       formData.append('truck_id', truckId);

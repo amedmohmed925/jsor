@@ -203,6 +203,8 @@ const ContractUpload = () => {
       formData.append('in_city', cityId);
       formData.append('lat_from', location.lat);
       formData.append('lang_from', location.lng);
+      formData.append('address_from', location.address);
+      formData.append('address_to', location.address); // For contracts, it's usually the same address context
       formData.append('truck_id', truckId);
       formData.append('sub_truck_id', selectedService);
       formData.append('number', numTrips);
