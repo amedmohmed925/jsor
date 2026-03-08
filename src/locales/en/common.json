@@ -46,6 +46,7 @@
         "updated": "Updated successfully",
         "deleted": "Deleted successfully",
         "created": "Created successfully",
+        "copied": "Code copied successfully",
         "responseWindow": "You may receive a response within 48 hours"
     },
     "labels": {

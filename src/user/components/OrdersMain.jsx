@@ -164,8 +164,6 @@ const OrdersMain = () => {
       return (
         <BasicOrders 
           activeSubFilter={activeSubFilter} 
-          offersExpanded={offersExpanded} 
-          toggleOffers={toggleOffers} 
           setShowRating={handleShowRating} 
           setShowCancel={handleShowCancel}
         />
@@ -176,8 +174,6 @@ const OrdersMain = () => {
       return (
         <TripOrders 
           activeSubFilter={activeSubFilter} 
-          offersExpanded={offersExpanded} 
-          toggleOffers={toggleOffers}
           setShowRating={handleShowRating}
           setShowCancel={handleShowCancel}
         />
@@ -188,8 +184,6 @@ const OrdersMain = () => {
       return (
         <ContractOrders 
           activeSubFilter={activeSubFilter} 
-          offersExpanded={offersExpanded} 
-          toggleOffers={toggleOffers}
           setShowRating={handleShowRating}
           setShowCancel={handleShowCancel}
         />

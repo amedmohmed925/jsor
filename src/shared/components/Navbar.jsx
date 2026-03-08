@@ -6,7 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 const Navbar = () => {
   const location = useLocation();
-  const { t } = useTranslation(['common', 'auth', 'user']);
+  const { t, i18n } = useTranslation(['common', 'auth', 'user']);
   const { isAuthenticated, user, logout, role } = useAuth();
   
   // Navigation items with translation keys
@@ -37,54 +37,67 @@ const Navbar = () => {
             </Link>
           </div>
         )}
+        
         {isAuthenticated && (
-          <div className="d-flex d-lg-none align-items-center gap-2 ms-auto me-2">
+          // تعديل: زيادة المسافة إلى gap-3 لتسهيل اللمس
+          <div className="d-flex d-lg-none align-items-center gap-3 ms-auto me-2">
             <LanguageSwitcher isMinimal={true} />
             {(role === 'driver' || role === 'admin') ? (
                 <Link to={role === 'admin' ? "/admin/dashboard" : "/driver/profile"} className="text-decoration-none">
-                    <img src={user?.avatar || "/assets/man.png"} className='user-img border shadow-sm' alt="user" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                    <img src={user?.avatar || "/assets/avatar.png"} className='user-img border shadow-sm' alt="user" style={{ width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.src = "/assets/man.png" }}/>
                 </Link>
             ) : (
-                <div className="dropdown">
+                <div className="dropdown position-static">
+                    {/* تعديل: إزالة dropdown-toggle لمنع ظهور السهم بجوار الصورة الدائرية */}
                     <div 
-                        className="dropdown-toggle border-0 p-0" 
+                        className="border-0 p-0 d-flex align-items-center" 
                         data-bs-toggle="dropdown" 
                         aria-expanded="false"
                         style={{ cursor: 'pointer' }}
                     >
-                        <img src={user?.avatar || "/assets/man.png"} className='user-img border shadow-sm' alt="user" style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                        <img src={user?.avatar || "/assets/avatar.png"} className='user-img border shadow-sm' alt="user" style={{ width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.src = "/assets/man.png" }} />
                     </div>
-                    <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2" style={{ borderRadius: '15px' }}>
-                        <li>
-                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/profile">
-                                <i className="fas fa-user-circle"></i>
-                                <span>{t('user:user.navbar.profile')}</span>
+                    
+                    {/* تعديل: التموضع بالنسبة للشاشة في الموبايل لمنع الخروج عن الحواف */}
+                    <ul className="dropdown-menu shadow-lg border-0 mt-3 p-2" style={{ 
+                        borderRadius: '15px', 
+                        minWidth: '220px', 
+                        zIndex: 1050,
+                        position: 'absolute',
+                        right: i18n.dir() === 'rtl' ? 'auto' : '10px',
+                        left: i18n.dir() === 'rtl' ? '10px' : 'auto',
+                        transform: 'none'
+                    }}>
+                        <li className="mb-1">
+                            <Link className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3 text-start" to="/user/profile">
+                                <i className="fas fa-user-circle fs-5 text-primary"></i>
+                                <span className="fw-medium">{t('user:user.navbar.profile')}</span>
                             </Link>
                         </li>
-                        <li><hr className="dropdown-divider" /></li>
-                        <li>
-                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/basic-upload">
-                                <i className="fas fa-truck"></i>
-                                <span>{t('user:user.navbar.basicUpload')}</span>
+                        <li><hr className="dropdown-divider my-1" /></li>
+                        <li className="mb-1">
+                            <Link className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3" to="/user/basic-upload">
+                                <i className="fas fa-truck fs-5 text-secondary"></i>
+                                <span className="fw-medium">{t('user:user.navbar.basicUpload')}</span>
                             </Link>
                         </li>
-                        <li>
-                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/trip-upload">
-                                <i className="fas fa-route"></i>
-                                <span>{t('user:user.navbar.tripUpload')}</span>
+                        <li className="mb-1">
+                            <Link className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3" to="/user/trip-upload">
+                                <i className="fas fa-route fs-5 text-secondary"></i>
+                                <span className="fw-medium">{t('user:user.navbar.tripUpload')}</span>
                             </Link>
                         </li>
-                        <li>
-                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/contract-upload">
-                                <i className="fas fa-file-contract"></i>
-                                <span>{t('user:user.navbar.contractUpload')}</span>
+                        <li className="mb-1">
+                            <Link className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3" to="/user/contract-upload">
+                                <i className="fas fa-file-contract fs-5 text-secondary"></i>
+                                <span className="fw-medium">{t('user:user.navbar.contractUpload')}</span>
                             </Link>
                         </li>
-                        <li><hr className="dropdown-divider" /></li>
+                        <li><hr className="dropdown-divider my-1" /></li>
                         <li>
-                            <button className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3 text-danger border-0 bg-transparent w-100 text-start" onClick={logout}>
-                                <i className="fas fa-sign-out-alt"></i>
-                                <span>{t('common:buttons.logout')}</span>
+                            <button className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3 text-danger border-0 bg-transparent w-100 text-start" onClick={logout}>
+                                <i className="fas fa-sign-out-alt fs-5"></i>
+                                <span className="fw-medium">{t('common:buttons.logout')}</span>
                             </button>
                         </li>
                     </ul>
@@ -122,7 +135,7 @@ const Navbar = () => {
             ))}
           </ul>
 
-          {/* Action items (Mobile & Desktop) */}
+          {/* Action items (Desktop) */}
           <ul className="navbar-nav align-items-lg-center gap-lg-3 mt-3 mt-lg-0 px-2 px-lg-0">
             <li className="nav-item d-none d-lg-block">
               <LanguageSwitcher />
@@ -150,10 +163,10 @@ const Navbar = () => {
                         </button>
                     </div>
                   ) : (
-                    <div className="dropdown d-flex justify-content-center">
+                    <div className="dropdown">
                         <div 
                             className="login-button text-decoration-none d-flex align-items-center justify-content-center justify-content-lg-start gap-2 px-3 py-2 rounded-pill shadow-sm dropdown-toggle border-0"
-                            id="userDropdown"
+                            id="userDropdownDesktop"
                             role="button"
                             data-bs-toggle="dropdown" 
                             aria-expanded="false"
@@ -167,37 +180,46 @@ const Navbar = () => {
                             />
                             <span className="fw-semibold">{(user?.name || t('navigation.profile'))}</span>
                         </div>
-                        <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2" aria-labelledby="userDropdown" style={{ borderRadius: '15px' }}>
-                            <li>
-                                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/profile">
-                                    <i className="fas fa-user-circle"></i>
-                                    <span>{t('user:user.navbar.profile')}</span>
+                        
+                        {/* تعديلات التصميم الداخلي لقائمة الديسكتوب */}
+                        <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-3 p-2" aria-labelledby="userDropdownDesktop" style={{ 
+                            borderRadius: '15px', 
+                            minWidth: '220px', 
+                            zIndex: 1100,
+                            position: 'absolute',
+                            right: i18n.dir() === 'rtl' ? 'auto' : '0px',
+                            left: i18n.dir() === 'rtl' ? '0px' : 'auto'
+                        }}>
+                            <li className="mb-1">
+                                <Link className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3 text-start" to="/user/profile">
+                                    <i className="fas fa-user-circle fs-5 text-primary"></i>
+                                    <span className="fw-medium">{t('user:user.navbar.profile')}</span>
                                 </Link>
                             </li>
-                            <li><hr className="dropdown-divider" /></li>
-                            <li>
-                                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/basic-upload">
-                                    <i className="fas fa-truck"></i>
-                                    <span>{t('user:user.navbar.basicUpload')}</span>
+                            <li><hr className="dropdown-divider my-1" /></li>
+                            <li className="mb-1">
+                                <Link className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3" to="/user/basic-upload">
+                                    <i className="fas fa-truck fs-5 text-secondary"></i>
+                                    <span className="fw-medium">{t('user:user.navbar.basicUpload')}</span>
                                 </Link>
                             </li>
-                            <li>
-                                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/trip-upload">
-                                    <i className="fas fa-route"></i>
-                                    <span>{t('user:user.navbar.tripUpload')}</span>
+                            <li className="mb-1">
+                                <Link className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3" to="/user/trip-upload">
+                                    <i className="fas fa-route fs-5 text-secondary"></i>
+                                    <span className="fw-medium">{t('user:user.navbar.tripUpload')}</span>
                                 </Link>
                             </li>
-                            <li>
-                                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/user/contract-upload">
-                                    <i className="fas fa-file-contract"></i>
-                                    <span>{t('user:user.navbar.contractUpload')}</span>
+                            <li className="mb-1">
+                                <Link className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3" to="/user/contract-upload">
+                                    <i className="fas fa-file-contract fs-5 text-secondary"></i>
+                                    <span className="fw-medium">{t('user:user.navbar.contractUpload')}</span>
                                 </Link>
                             </li>
-                            <li><hr className="dropdown-divider" /></li>
+                            <li><hr className="dropdown-divider my-1" /></li>
                             <li>
-                                <button className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3 text-danger border-0 bg-transparent w-100 text-start" onClick={logout}>
-                                    <i className="fas fa-sign-out-alt"></i>
-                                    <span>{t('common:buttons.logout')}</span>
+                                <button className="dropdown-item d-flex align-items-center gap-3 py-2 rounded-3 text-danger border-0 bg-transparent w-100 text-start" onClick={logout}>
+                                    <i className="fas fa-sign-out-alt fs-5"></i>
+                                    <span className="fw-medium">{t('common:buttons.logout')}</span>
                                 </button>
                             </li>
                         </ul>
@@ -209,7 +231,7 @@ const Navbar = () => {
                   <Link to="/login" className="login-button text-decoration-none px-4 py-2 rounded-pill text-center">
                     {t('auth:login.loginButton')}
                   </Link>
-                  <Link to="/login" className="join-button text-decoration-none px-4 py-2 rounded-pill shadow-sm text-center">
+                  <Link to="/signup-driver" className="join-button text-decoration-none px-4 py-2 rounded-pill shadow-sm text-center">
                     {t('common:hero.joinDriver')}
                   </Link>
                 </>

@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight, faMapMarkerAlt, faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faMapMarkerAlt, faTimes, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Defined outside Hero to avoid remounting the map on every state change
 const HeroMapClickHandler = ({ onMapClick }) => {
@@ -51,8 +52,14 @@ const Hero = () => {
 
   const handleIsMultipleChange = (val) => {
     setIsMultiple(val);
-    if (!val && destinations.length > 1) {
-      setDestinations([destinations[0]]);
+    if (val) {
+      if (destinations.length < 2) {
+        setDestinations(['', '']);
+      }
+    } else {
+      if (destinations.length > 1) {
+        setDestinations([destinations[0]]);
+      }
     }
   };
 
@@ -135,10 +142,10 @@ const Hero = () => {
     setSearchResults([]);
   };
 
+  // تعديل: هنا نجعل الضغط على الخريطة يغير الإحداثيات فقط ولا يغلق المودال
   const handleMapModalClick = useCallback((lat, lng) => {
-    handleModalSelect(lat, lng);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeModalTarget]);
+    setTempCoords([lat, lng]);
+  }, []);
 
   const handleSearch = () => {
     let targetPath = '/user/basic-upload';
@@ -178,7 +185,8 @@ const Hero = () => {
         spaceBetween={0}
         slidesPerView={1}
         loop={sliders.length > 1}
-        autoHeight={true}
+        autoHeight={false}
+        style={{ height: '100%', minHeight: '85vh' }}
         autoplay={{
           delay: 4000,
           disableOnInteraction: false,
@@ -209,18 +217,34 @@ const Hero = () => {
                 }}
               >
                 <div className="container hero-text-container">
-                  <div className="hero-content text-center my-4 mx-auto text-white" style={{ maxWidth: '850px' }}>
-                    <h1 className="hero-title fw-bold" style={{color:"#1a73e8"}}>
+                  {/* تعديل: تمت إضافة paddingBottom لرفع النصوص والأزرار وتفادي تداخلها مع الكارت */}
+<div className="hero-content text-center my-4 mx-auto text-white" style={{ maxWidth: '850px' }}>                    <motion.h1 
+                      className="hero-title fw-bold" 
+                      style={{color:"#1a73e8"}}
+                      initial={{ opacity: 0, y: -30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8 }}
+                    >
                       {getLangField(slider, 'title') || slider.title}
-                    </h1>
-                    <p className="hero-description fs-5 text-white">
+                    </motion.h1>
+                    <motion.p 
+                      className="hero-description fs-5 text-white"
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                    >
                       {getLangField(slider, 'content') || slider.content}
-                    </p>
+                    </motion.p>
 
-                    <div className="hero-buttons d-flex justify-content-center align-items-center gap-2">
+                    <motion.div 
+                      className="hero-buttons d-flex justify-content-center align-items-center gap-2"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                    >
                       <Link to="/user/basic-upload" className="login-button text-decoration-none">{t('hero.orderTruck')}</Link>
-                      <Link to="/login" className="join-button text-decoration-none">{t('common:hero.joinDriver', 'انضم كسائق')}</Link>
-                    </div>
+                      <Link to="/signup-driver" className="join-button text-decoration-none">{t('common:hero.joinDriver', 'انضم كسائق')}</Link>
+                    </motion.div>
                   </div>
                 </div>
               </div>
@@ -249,9 +273,15 @@ const Hero = () => {
         )}
       </Swiper>
 
-      {/* Filter box - Static and positioned absolutely on top of the slider */}
-      <div className="container position-absolute start-50 translate-middle-x filter-box-container" style={{ bottom: '50px', zIndex: 110 }}>
-        <div className="filter-box text-start mx-auto mt-0">
+      {/* Filter box - Restored to absolute positioning */}
+      <motion.div 
+  className="container filter-box-container position-absolute start-50 translate-middle-x" 
+  style={{ top: '46%', zIndex: 110 }} // التثبيت من الأعلى يجعله يتمدد للأسفل
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+      >
+        <div className="filter-box text-start mx-auto mt-0 shadow-lg">
           <h6 className="search-filter-title text-start">{t('hero.orderNow')}</h6>
 
           {/* Filter Checkboxes */}
@@ -261,10 +291,12 @@ const Hero = () => {
               { id: "travel", label: t('requestTypes.trips') },
               { id: "contract", label: t('requestTypes.contract') }
             ].map((item) => (
-              <div
+              <motion.div
                 key={item.id}
                 className={`filter-checkbox-box ${activeFilter === item.id ? 'active' : ''}`}
                 onClick={() => toggleFilter(item.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <input
                   type="radio"
@@ -283,7 +315,7 @@ const Hero = () => {
                 >
                   {item.label}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -342,20 +374,28 @@ const Hero = () => {
                   }}
                 />
                 {!showMapModal && pickupLocation && activeModalTarget.type === 'pickup' && searchResults.length > 0 && (
-                  <div className="list-group position-absolute w-100 shadow-lg mt-1" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
-                    {searchResults.map((res, i) => (
-                      <button 
-                        key={i} 
-                        className="list-group-item list-group-item-action text-start fs-7"
-                        onClick={() => {
-                          setPickupLocation(res.display_name);
-                          setSearchResults([]);
-                        }}
-                      >
-                        {res.display_name}
-                      </button>
-                    ))}
-                  </div>
+                  <AnimatePresence>
+                    <motion.div 
+                      className="list-group position-absolute w-100 shadow-lg mt-1" 
+                      style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      {searchResults.map((res, i) => (
+                        <button 
+                          key={i} 
+                          className="list-group-item list-group-item-action text-start fs-7"
+                          onClick={() => {
+                            setPickupLocation(res.display_name);
+                            setSearchResults([]);
+                          }}
+                        >
+                          {res.display_name}
+                        </button>
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
                 )}
               </div>
 
@@ -363,73 +403,108 @@ const Hero = () => {
               <i className={`material-icons arrow-icon d-none d-md-block ${i18n.language === 'en' ? 'rotate-180' : ''}`}>keyboard_backspace</i>
 
               {/* Delivery Location Input(s) */}
-              <div className="w-100 d-flex flex-column gap-2">
-                {destinations.map((dest, idx) => (
-                  <div key={idx} className="input-with-icon w-100 position-relative">
-                    <FontAwesomeIcon icon={faMapMarkerAlt} className="map-icon" onClick={() => openMapModal('destination', idx)} style={{ cursor: 'pointer' }} />
-                    <input
-                      type="text"
-                      className="form-control location-input"
-                      placeholder={t('hero.deliveryPlaceholder')}
-                      value={dest}
-                      onChange={(e) => {
-                        updateDestination(idx, e.target.value);
-                        handleSearchAddress(e.target.value);
-                        setActiveModalTarget({ type: 'destination', index: idx });
-                      }}
-                    />
-                    {!showMapModal && dest && activeModalTarget.type === 'destination' && activeModalTarget.index === idx && searchResults.length > 0 && (
-                      <div className="list-group position-absolute w-100 shadow-lg mt-1" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
-                        {searchResults.map((res, i) => (
-                          <button 
-                            key={i} 
-                            className="list-group-item list-group-item-action text-start fs-7"
-                            onClick={() => {
-                              updateDestination(idx, res.display_name);
-                              setSearchResults([]);
-                            }}
-                          >
-                            {res.display_name}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                    {isMultiple && idx > 0 && (
-                      <button className="btn btn-sm text-danger position-absolute end-0 top-50 translate-middle-y me-5" onClick={() => removeDestination(idx)}>
-                        <FontAwesomeIcon icon={faTimes} />
-                      </button>
-                    )}
-                  </div>
-                ))}
+{/* تم إضافة maxHeight و overflowY لمنع الكارت من التمدد للأعلى */}
+<div className="w-100 d-flex flex-column gap-2 custom-scrollbar" style={{ maxHeight: '115px', overflowY: 'auto', overflowX: 'hidden', paddingRight: i18n.language === 'ar' ? '0' : '5px', paddingLeft: i18n.language === 'ar' ? '5px' : '0' }}>
+  <AnimatePresence mode="popLayout">
+                      {destinations.map((dest, idx) => (
+                    <motion.div 
+                      key={idx} 
+                      className="input-with-icon w-100 position-relative"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <FontAwesomeIcon icon={faMapMarkerAlt} className="map-icon" onClick={() => openMapModal('destination', idx)} style={{ cursor: 'pointer' }} />
+                      <input
+                        type="text"
+                        className="form-control location-input"
+                        placeholder={t('hero.deliveryPlaceholder')}
+                        value={dest}
+                        onChange={(e) => {
+                          updateDestination(idx, e.target.value);
+                          handleSearchAddress(e.target.value);
+                          setActiveModalTarget({ type: 'destination', index: idx });
+                        }}
+                      />
+                      {!showMapModal && dest && activeModalTarget.type === 'destination' && activeModalTarget.index === idx && searchResults.length > 0 && (
+                        <motion.div 
+                          className="list-group position-absolute w-100 shadow-lg mt-1" 
+                          style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                        >
+                          {searchResults.map((res, i) => (
+                            <button 
+                              key={i} 
+                              className="list-group-item list-group-item-action text-start fs-7"
+                              onClick={() => {
+                                updateDestination(idx, res.display_name);
+                                setSearchResults([]);
+                              }}
+                            >
+                              {res.display_name}
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                      {isMultiple && idx > 0 && (
+                        <button 
+                          type="button"
+                          className="btn btn-sm btn-light border shadow-sm text-danger position-absolute top-50 translate-middle-y d-flex align-items-center justify-content-center" 
+                          onClick={(e) => { e.preventDefault(); removeDestination(idx); }}
+                          style={{ 
+                            width: '26px', 
+                            height: '26px', 
+                            borderRadius: '50%', 
+                            zIndex: 10,
+                            right: i18n.language === 'ar' ? 'auto' : '42px',
+                            left: i18n.language === 'ar' ? '42px' : 'auto'
+                          }}
+                          title={i18n.language === 'ar' ? 'حذف الوجهة' : 'Remove Destination'}
+                        >
+                          <FontAwesomeIcon icon={faTimes} style={{ fontSize: '10px' }} />
+                        </button>
+                      )}
+                      {isMultiple && idx === destinations.length - 1 && destinations.length < 3 && (
+                        <button 
+                          type="button"
+                          className="btn btn-sm btn-primary shadow-sm text-white position-absolute top-50 translate-middle-y d-flex align-items-center justify-content-center" 
+                          onClick={(e) => { e.preventDefault(); addDestination(); }}
+                          style={{ 
+                            width: '26px', 
+                            height: '26px', 
+                            borderRadius: '50%', 
+                            zIndex: 10,
+                            right: i18n.language === 'ar' ? 'auto' : '10px',
+                            left: i18n.language === 'ar' ? '10px' : 'auto'
+                          }}
+                          title={i18n.language === 'ar' ? 'إضافة وجهة أخرى' : 'Add another destination'}
+                        >
+                          <FontAwesomeIcon icon={faPlus} style={{ fontSize: '10px' }} />
+                        </button>
+                      )}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </div>
 
             <div className="d-flex w-100 flex-column flex-md-row gap-3">
-              {isMultiple && destinations.length < 3 && (
-                <button 
-                  className="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center gap-2"
-                  onClick={addDestination}
-                  style={{ minWidth: '150px' }}
-                >
-                  <i className="fas fa-plus"></i>
-                  {i18n.language === 'ar' ? 'أضف موقعاً (بحد أقصى 3)' : 'Add Location (Max 3)'}
-                </button>
-              )}
-
               {/* Search Button */}
-              <button 
+              <motion.button 
                 className="login-button d-flex align-items-center justify-content-center gap-2 search-width w-100 ms-auto"
                 onClick={handleSearch}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <i className="fas fa-search"></i>
                 {t('hero.search')}
-              </button>
+              </motion.button>
             </div>
           </div>
-
         </div>
-      </div>
-      
+      </motion.div>      
       {/* Map Selection Modal */}
       {showMapModal && (
         <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 9999 }}>
@@ -480,12 +555,19 @@ const Hero = () => {
                   </MapContainer>
                 </div>
                 
-                <div className="p-3 bg-light text-center">
-                  <p className="small text-muted mb-0">
+                {/* تعديل: إضافة زر تأكيد الموقع (Confirm Button) */}
+                <div className="p-3 bg-light d-flex justify-content-between align-items-center gap-3">
+                  <p className="small text-muted mb-0 text-start" style={{ flex: 1 }}>
                     {i18n.language === 'ar' 
                       ? 'يمكنك الضغط مباشرة على الخريطة لتحديد الموقع أو استخدام البحث أعلاه.' 
                       : 'You can click directly on the map to set the location or use the search above.'}
                   </p>
+                  <button 
+                    className="btn btn-primary px-4 fw-bold"
+                    onClick={() => handleModalSelect(tempCoords[0], tempCoords[1])}
+                  >
+                    {i18n.language === 'ar' ? 'تأكيد وإضافة' : 'Confirm & Add'}
+                  </button>
                 </div>
               </div>
             </div>
@@ -495,6 +577,5 @@ const Hero = () => {
     </section>
   );
 };
-
 
 export default Hero;

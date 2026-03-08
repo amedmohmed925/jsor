@@ -378,8 +378,15 @@ const DriverTruckInfo = ({ user }) => {
               {['driving_license', 'insurance', 'car_registration'].map(field => (
                 <div className="col-md-4" key={field}>
                   <label className="form-label mb-1 small text-muted">{t(`admin:addVehicle.${field}`)}</label>
-                  <div className={`card text-center p-3 border-dashed position-relative ${(!isEditing && !isAdding) ? 'bg-light border-0' : 'cursor-pointer'}`} style={{ minHeight: '120px' }}>
-                      <label className={`d-flex flex-column align-items-center justify-content-center h-100 m-0 ${(!isEditing && !isAdding) ? '' : 'cursor-pointer'}`}>
+                  <div 
+                      className={`card text-center p-3 position-relative ${(!isEditing && !isAdding) ? 'bg-light' : 'cursor-pointer'}`} 
+                      style={{ 
+                          minHeight: '140px',
+                          border: (isEditing || isAdding) ? '2px dashed #0d6efd' : '2px dashed #dee2e6',
+                          borderRadius: '12px'
+                      }}
+                  >
+                      <label className={`d-flex flex-column align-items-center justify-content-center h-100 w-100 m-0 ${(!isEditing && !isAdding) ? '' : 'cursor-pointer'}`} style={{ minHeight: '120px' }}>
                           {(isEditing || isAdding) && <input type="file" hidden onChange={(e) => handleFileChange(e, field)} accept="image/*,.pdf" />}
                           {previews[field] ? (
                               <div className="position-relative">
@@ -391,10 +398,10 @@ const DriverTruckInfo = ({ user }) => {
                                   )}
                               </div>
                           ) : (
-                              <>
-                                  <i className="fas fa-cloud-upload-alt text-primary mb-1"></i>
+                              <div className="d-flex flex-column align-items-center justify-content-center gap-2">
+                                  <i className="fas fa-cloud-upload-alt text-primary" style={{ fontSize: '2rem' }}></i>
                                   <span className="small text-muted">{t('admin:addVehicle.uploadFile')}</span>
-                              </>
+                              </div>
                           )}
                       </label>
                   </div>

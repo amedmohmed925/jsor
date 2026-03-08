@@ -255,7 +255,7 @@ const ContractUpload = () => {
               <h2 className='orders-title'>{t('contractUpload.title')}</h2>
               
               {/* Added location display with map hint */}
-              <div className="mb-2">
+              {/* <div className="mb-2">
                 <label className="form-label mb-1">
                   {i18n.language === 'ar' ? 'موقع العقد' : 'Contract Location'}
                 </label>
@@ -290,7 +290,7 @@ const ContractUpload = () => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               <div className="row">
                 <div className="col-12">

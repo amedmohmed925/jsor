@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { motion } from 'framer-motion';
 
 const WorksDocuments = () => {
   const { i18n } = useTranslation();
@@ -34,29 +35,48 @@ const WorksDocuments = () => {
   const isEn = i18n.language && i18n.language.startsWith('en');
 
   return (
-    <section>
+    <section className='overflow-hidden py-4'>
       <div className="container provider-documents rounded-5 my-5">
         <div className="row align-items-center">
-          <div className="col-md-5 px-4">
-            <h3 className='login-title'>
+          <motion.div 
+            className="col-md-5 px-4"
+            initial={{ opacity: 0, x: i18n.dir() === 'rtl' ? 50 : -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h3 className='login-title text-start'>
               {isLoading ? '...' : (isEn ? (docsSection?.title_en || docsSection?.title) : (docsSection?.title || 'الوثائق المطلوبة لإتمام الاتفاق'))}
             </h3>
             
             {docItems.map((item, index) => (
-              <div key={index} className='document-li d-flex gap-1 align-items-center'>
+              <motion.div 
+                key={index} 
+                className='document-li d-flex gap-1 align-items-center'
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+              >
                 <FontAwesomeIcon icon={faCheckSquare} className='document-icon' />
-                <div>{item}</div>
-              </div>
+                <div className='text-start'>{item}</div>
+              </motion.div>
             ))}
-          </div>
-          <div className="col-md-7">
+          </motion.div>
+          <motion.div 
+            className="col-md-7"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
           
             <img 
               src={docsSection?.image || "assets/provider-document-img.png"} 
               className='img-fluid works-document-img w-100' 
               alt="truck" 
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -247,7 +247,7 @@ const TripUpload = () => {
               <h2 className='orders-title mb-3'>{t('tripUpload.title')}</h2>
               
               {/* Pickup Location with select from map hint */}
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <label className="form-label mb-1">
                   {i18n.language === 'ar' ? 'موقع التحميل' : 'Pickup Location'}
                 </label>
@@ -287,7 +287,7 @@ const TripUpload = () => {
                   <i className="fas fa-info-circle me-1"></i>
                   {i18n.language === 'ar' ? 'يمكنك الكتابة للبحث أو الضغط على الخريطة' : 'You can type to search or click on the map'}
                 </small>
-              </div>
+              </div> */}
 
               {/* Truck Data */}
                 <div className="row">

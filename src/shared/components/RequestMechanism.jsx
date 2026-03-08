@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Import Material Icons
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -12,8 +13,17 @@ import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 const RequestMechanism = () => {
   const { i18n } = useTranslation();
   const { data: homeData, isLoading } = useGetHomeDataQuery();
+  const [activeStep, setActiveStep] = useState(0);
 
-  // Helper to get localized field from API
+  const processSection = homeData?.Sections?.[17]; // ID 31: آلية الطلب
+  const processSteps = homeData?.Process || [];
+
+  useEffect(() => {
+    if (processSteps.length > 0) {
+      setActiveStep(0);
+    }
+  }, [processSteps]);
+
   const getLangField = (item, field) => {
     if (!item) return '';
     const isEn = i18n.language === 'en';
@@ -21,76 +31,255 @@ const RequestMechanism = () => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  const processSection = homeData?.Sections?.[17]; // ID 31: آلية الطلب
-  const processSteps = homeData?.Process || [];
+  const progressHeight = processSteps.length > 1 
+    ? (activeStep / (processSteps.length - 1)) * 100 
+    : 0;
 
-  // Default icons mapping if needed
   const defaultIcons = [
-    <LocationOnOutlinedIcon className="fs-1" key="loc" />,
-    <FullscreenOutlinedIcon className="fs-1" key="full" />,
-    <PaidOutlinedIcon className="fs-1" key="paid" />,
-    <ScheduleOutlinedIcon className="fs-1" key="sched" />,
-    <PhoneOutlinedIcon className="fs-1" key="phone" />
+    <LocationOnOutlinedIcon key="loc" />,
+    <FullscreenOutlinedIcon key="full" />,
+    <PaidOutlinedIcon key="paid" />,
+    <ScheduleOutlinedIcon key="sched" />,
+    <PhoneOutlinedIcon key="phone" />
   ];
 
+  const renderStepContent = (step, isActive) => (
+    <motion.div 
+      className={`p-3 rounded-4 border-2 border ${isActive ? 'border-primary bg-white shadow' : 'border-transparent text-muted'}`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      animate={{ scale: isActive ? 1.05 : 1 }}
+    >
+      <h3 className="fw-bold fs-6 fs-md-5 mb-1">{getLangField(step, 'title')}</h3>
+      <p className="small mb-0" style={{ fontSize: '0.85rem' }}>{getLangField(step, 'content')}</p>
+    </motion.div>
+  );
+
   return (
-    <section className="request-mechanism py-5">
+    <section className="request-mechanism py-5 overflow-hidden">
+      {/* تم استبدال نظام الـ Bootstrap المعقد بستايل Flexbox مخصص 
+        لمنع أي تشوه في الأيقونات أو الكروت في الموبايل
+      */}
+      <style>{`
+        .custom-timeline-container {
+          position: relative;
+          padding: 20px 0;
+        }
+        
+        /* الخط العمودي */
+        .custom-timeline-line {
+          position: absolute;
+          top: 20px;
+          bottom: 20px;
+          width: 4px;
+          background-color: #eee;
+          z-index: 0;
+          border-radius: 10px;
+          /* موقع الخط في الموبايل - LTR */
+          left: 23px; 
+        }
+        /* موقع الخط في الموبايل - RTL */
+        html[dir="rtl"] .custom-timeline-line,
+        body[dir="rtl"] .custom-timeline-line {
+          left: auto;
+          right: 23px;
+        }
+
+        /* العنصر الواحد (أيقونة + كارت) */
+        .custom-timeline-item {
+          display: flex;
+          align-items: flex-start; /* لمنع تمدد الأيقونة عمودياً */
+          margin-bottom: 1.5rem;
+          position: relative;
+          width: 100%;
+        }
+
+        /* حاوية الأيقونة - حجم ثابت لا يتأثر بطول النص */
+        .custom-timeline-icon {
+          width: 50px;
+          height: 50px;
+          min-width: 50px;
+          min-height: 50px;
+          flex-shrink: 0; /* يمنع المط أو الانكماش تماماً */
+          z-index: 2;
+          margin-right: 15px; /* مسافة بين الأيقونة والكارت في LTR */
+        }
+        html[dir="rtl"] .custom-timeline-icon,
+        body[dir="rtl"] .custom-timeline-icon {
+          margin-right: 0;
+          margin-left: 15px; /* RTL */
+        }
+
+        /* حاوية الكارت النصي */
+        .custom-timeline-content {
+          flex-grow: 1;
+          width: calc(100% - 65px);
+          text-align: start;
+        }
+
+        /* الفراغ المستخدم في شاشات الكمبيوتر لعمل الشكل المتعرج */
+        .custom-timeline-spacer {
+          display: none;
+        }
+
+        /* === إعدادات الشاشات الكبيرة (كمبيوتر) === */
+        @media (min-width: 768px) {
+          .custom-timeline-item {
+            align-items: center; /* محاذاة في المنتصف عمودياً في الكمبيوتر */
+          }
+          .custom-timeline-line {
+            left: 50%;
+            transform: translateX(-50%);
+          }
+          html[dir="rtl"] .custom-timeline-line,
+          body[dir="rtl"] .custom-timeline-line {
+            left: auto;
+            right: 50%;
+            transform: translateX(50%);
+          }
+          
+          .custom-timeline-icon {
+            margin: 0 30px !important;
+          }
+          
+          .custom-timeline-spacer {
+            display: block;
+            width: calc(50% - 40px);
+            flex-grow: 0;
+          }
+          
+          .custom-timeline-content {
+            width: calc(50% - 40px);
+            flex-grow: 0;
+          }
+          
+          /* محاذاة النصوص في الشاشات الكبيرة */
+          .item-even .custom-timeline-content { text-align: end; }
+          .item-odd .custom-timeline-content { text-align: start; }
+          
+          html[dir="rtl"] .item-even .custom-timeline-content,
+          body[dir="rtl"] .item-even .custom-timeline-content { text-align: start; }
+          
+          html[dir="rtl"] .item-odd .custom-timeline-content,
+          body[dir="rtl"] .item-odd .custom-timeline-content { text-align: end; }
+        }
+      `}</style>
+
       <div className="container">
-        <div className="row align-items-end">
+        <div className="row align-items-center">
+          
+          {/* جزء الخطوات (Timeline) */}
           <div className="col-md-7 text-center mt-3">
-            <h2 className="section-title">
+            <motion.h2 
+              className="section-title mb-4 fw-bold"
+              initial={{ opacity: 0, y: -20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+            >
               {isLoading ? '...' : (getLangField(processSection, 'title') || 'آلية الطلب')}
-            </h2>
-            <p className="section-desc">
+            </motion.h2>
+            <motion.p 
+              className="section-desc mb-5 text-muted"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
               {isLoading ? '...' : getLangField(processSection, 'content')}
-            </p>
-            <div className="flow-chart">
-              {processSteps.map((step, index) => (
-                <div key={step.id} className="flow-step">
-                  {/* Left box for even steps (starting with index 0) */}
-                  {index % 2 === 0 && (
-                    <div className="step-box left-box">
-                      <h3>{getLangField(step, 'title')}</h3>
-                      <p>{getLangField(step, 'content')}</p>
+            </motion.p>
+
+            <div className="custom-timeline-container text-start">
+              
+              {/* الخط العمودي والخلفية */}
+              <div className="custom-timeline-line">
+                <motion.div 
+                   className="bg-primary"
+                   style={{ width: '100%', borderRadius: '10px' }}
+                   initial={{ height: 0 }}
+                   animate={{ height: `${progressHeight}%` }}
+                   transition={{ duration: 0.5 }}
+                />
+              </div>
+
+              {processSteps.map((step, index) => {
+                const isActive = activeStep === index;
+                const isEven = index % 2 === 0;
+
+                return (
+                  <div 
+                    key={step.id} 
+                    className={`custom-timeline-item ${isEven ? 'item-even' : 'item-odd'}`} 
+                    onClick={() => setActiveStep(index)} 
+                    style={{ cursor: 'pointer' }}
+                  >
+                    
+                    {/* في الشاشات الكبيرة: الفراغ الأيسر للعناصر الفردية */}
+                    {!isEven && <div className="custom-timeline-spacer"></div>}
+
+                    {/* الكارت (يظهر قبل الأيقونة إذا كان العنصر زوجياً في الكمبيوتر، وفي الموبايل يظهر دائماً بعد الأيقونة بفضل Flexbox order) */}
+                    {isEven && (
+                       <div className="custom-timeline-content d-none d-md-block">
+                          {renderStepContent(step, isActive)}
+                       </div>
+                    )}
+
+                    {/* الأيقونة بحجم ثابت ومقاوم للتمدد */}
+                    <div className="custom-timeline-icon">
+                      <motion.div 
+                        className={`rounded-circle d-flex align-items-center justify-content-center shadow-sm w-100 h-100 ${isActive ? 'bg-primary text-white' : 'bg-white text-primary border border-primary'}`}
+                        animate={{ scale: isActive ? 1.15 : 1 }}
+                      >
+                        {step.image_icon ? (
+                          <img src={step.image_icon} alt="icon" style={{ width: '25px', height: '25px', filter: isActive ? 'brightness(0) invert(1)' : 'none' }} />
+                        ) : (
+                          defaultIcons[index % defaultIcons.length]
+                        )}
+                      </motion.div>
                     </div>
-                  )}
-                  
-                  {/* Empty space for odd steps */}
-                  {index % 2 !== 0 && <div className="empty-space"></div>}
-                  
-                  {/* Center icon with line */}
-                  <div className="step-icon-container">
-                    <div className="step-icon">
-                      {step.image ? (
-                        <img 
-                          src={step.image} 
-                          alt={getLangField(step, 'title')} 
-                          style={{ width: '40px', height: '40px', objectFit: 'contain' }} 
-                        />
-                      ) : (
-                        defaultIcons[index % defaultIcons.length]
-                      )}
-                    </div>
-                    {index < processSteps.length - 1 && <div className="step-line"></div>}
+
+                    {/* الكارت (للعناصر الفردية في الكمبيوتر، ولجميع العناصر في الموبايل) */}
+                    {(!isEven || true) && (
+                       <div className={`custom-timeline-content ${isEven ? 'd-md-none' : ''}`}>
+                          {renderStepContent(step, isActive)}
+                       </div>
+                    )}
+
+                    {/* في الشاشات الكبيرة: الفراغ الأيمن للعناصر الزوجية */}
+                    {isEven && <div className="custom-timeline-spacer"></div>}
+
                   </div>
-                  
-                  {/* Right box for odd steps */}
-                  {index % 2 !== 0 && (
-                    <div className="step-box right-box">
-                      <h3>{getLangField(step, 'title')}</h3>
-                      <p>{getLangField(step, 'content')}</p>
-                    </div>
-                  )}
-                  
-                  {/* Empty space for even steps */}
-                  {index % 2 === 0 && <div className="empty-space"></div>}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
-          <div className="col-md-5 text-center mt-3">
-            <img src="assets/iPhone.png" className="img-fluid" alt="iphone" />
+
+          {/* جزء هاتف الـ iPhone */}
+          <div className="col-md-5 text-center mt-5 mt-md-3 position-relative">
+            <div className="iphone-wrapper mx-auto" style={{ maxWidth: '300px' }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStep}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="position-relative d-inline-block w-100"
+                >
+                  <img src="assets/iPhone.png" className="img-fluid" alt="iphone" style={{ position: 'relative', zIndex: 2 }} />
+                  <motion.img 
+                    src={processSteps[activeStep]?.image} 
+                    className="position-absolute"
+                    style={{
+                      top: '2%', left: '5%', right: '5%', bottom: '2%',
+                      width: '90%', height: '96%', objectFit: 'cover',
+                      borderRadius: '32px', zIndex: 1
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
+
         </div>
       </div>
     </section>

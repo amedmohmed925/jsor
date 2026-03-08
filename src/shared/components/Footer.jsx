@@ -36,7 +36,7 @@ const Footer = ({ isProviderPage = false }) => {
         {/* General Footer - Hidden on Provider Page */}
         <div className={`d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 general-footer ${isProviderPage ? 'd-none' : ''}`}>
           <h3 className='footer-title'>{t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
-          <Link to='/login' className="login-button text-decoration-none">{t('common:hero.joinDriver', 'انضم الينا الان')}</Link>
+          <Link to='/signup-driver' className="login-button text-decoration-none">{t('common:hero.joinDriver', 'انضم الينا الان')}</Link>
         </div>
         
         {/* Provider Footer - Only Shown on Provider Page */}
@@ -44,7 +44,7 @@ const Footer = ({ isProviderPage = false }) => {
           <h3 className='login-title'>
             {isLoading ? '...' : getLangField(footerSection, 'title') || 'هل أنت مستعد لبدء العمل وزيادة دخلك؟'}
           </h3>
-          <Link to='/login' className="login-button text-decoration-none">
+          <Link to='/signup-driver' className="login-button text-decoration-none">
             {isLoading ? '...' : getLangField(footerSection, 'content') || 'ابدأ الآن كمزود خدمة'}
           </Link>
         </div>
@@ -106,12 +106,13 @@ const Footer = ({ isProviderPage = false }) => {
             </div>
           </div>
 
-          <div className="col-md-2 col-6 pe-md-5 mt-4">
+          <div className="col-md-3 col-6 pe-md-4 mt-4">
             <h6 className='mb-3 footer-link-title'>{t('footer.links.shortcuts')}</h6>
             <Link to="/" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.home')}</Link>
             <Link to="/works" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.business')}</Link>
             <Link to="/service-provider" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.providers')}</Link>
             <Link to="/contact" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.contact')}</Link>
+            <Link to="/terms" className='mb-3 footer-link d-block text-decoration-none'>{i18n.language === 'en' ? 'Terms & Conditions' : 'الشروط والأحكام'}</Link>
           </div>
           
           <div className="col-md-3 col-6 pe-md-4 mt-4">
@@ -136,14 +137,7 @@ const Footer = ({ isProviderPage = false }) => {
              )}
           </div>
 
-          <div className="col-md-3 col-6 pe-md-4 mt-4">
-            <h6 className='mb-3 footer-link-title'>{t('footer.links.shortcuts')}</h6>
-            <Link to="/" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.home')}</Link>
-            <Link to="/works" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.business')}</Link>
-            <Link to="/service-provider" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.providers')}</Link>
-            <Link to="/contact" className='mb-3 footer-link d-block text-decoration-none'>{t('footer.links.contact')}</Link>
-            <Link to="/terms" className='mb-3 footer-link d-block text-decoration-none'>{i18n.language === 'en' ? 'Terms & Conditions' : 'الشروط والأحكام'}</Link>
-          </div>
+         
         </div>
       </div>
     </footer>

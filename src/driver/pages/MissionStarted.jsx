@@ -67,6 +67,17 @@ const MissionStarted = () => {
     const [images, setImages] = useState([]);
     const [previews, setPreviews] = useState([]);
     const fileInputRef = useRef(null);
+    const cameraInputRef = useRef(null);
+
+    const handleCameraCapture = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            stream.getTracks().forEach(t => t.stop());
+            cameraInputRef.current?.click();
+        } catch {
+            cameraInputRef.current?.click();
+        }
+    };
 
     useEffect(() => {
         if (!order) { navigate('/driver/orders'); return; }
@@ -189,14 +200,40 @@ const MissionStarted = () => {
                             </div>
 
                             {/* Photo Upload */}
-                            <button type='button'
-                                className="login-button text-decoration-none w-100 mt-3 d-flex align-items-center gap-1 justify-content-center take-img-btn"
-                                onClick={() => fileInputRef.current?.click()}
-                            >
-                                <img src="/assets/camera.svg" alt="camera" />
-                                {isRtl ? 'التقاط صورة للحمولة' : 'Take cargo photo'}
-                            </button>
-                            <input type="file" ref={fileInputRef} hidden multiple accept="image/*" onChange={handleImageChange} />
+                            <div className="d-flex gap-2 mt-3">
+                                <button type='button'
+                                    className="login-button text-decoration-none flex-grow-1 d-flex align-items-center gap-1 justify-content-center take-img-btn"
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    <img src="/assets/camera.svg" alt="camera" />
+                                    {isRtl ? 'التقاط صورة للحمولة' : 'Take cargo photo'}
+                                </button>
+                                <button type='button'
+                                    className="orange-btn text-decoration-none px-3 d-flex align-items-center justify-content-center"
+                                    style={{ borderRadius: '10px' }}
+                                    onClick={handleCameraCapture}
+                                    title={isRtl ? 'فتح الكاميرا' : 'Open Camera'}
+                                >
+                                    <i className="fas fa-camera fs-5"></i>
+                                </button>
+                            </div>
+                            <input 
+                                type="file" 
+                                ref={fileInputRef} 
+                                hidden 
+                                multiple 
+                                accept="image/*" 
+                                onChange={handleImageChange} 
+                            />
+                            <input 
+                                type="file" 
+                                ref={cameraInputRef} 
+                                hidden 
+                                multiple 
+                                accept="image/*" 
+                                capture="environment"
+                                onChange={handleImageChange} 
+                            />
 
                             {previews.length > 0 && (
                                 <div className="taken-imgs d-flex gap-2 align-items-center flex-wrap mt-3">

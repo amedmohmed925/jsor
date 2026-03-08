@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { motion } from 'framer-motion';
 
 const WorksMain = () => {
   const { t, i18n } = useTranslation(['common', 'auth']);
@@ -27,16 +28,22 @@ const WorksMain = () => {
   const isEn = i18n.language && i18n.language.startsWith('en');
 
   return (
-    <section className=''>
+    <section className='overflow-hidden py-4'>
       <div className="container">
         <div className="row align-items-center">
-          <div className="col-md-6 mt-4 order-2 order-md-1">
-            <div className="shadow p-3 rounded-4 h-100">
+          <motion.div 
+            className="col-md-6 mt-4 order-2 order-md-1"
+            initial={{ opacity: 0, x: i18n.dir() === 'rtl' ? 50 : -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="shadow p-3 rounded-4 h-100 bg-white">
               <h2 className='services-card-title mb-3'>
                 {isLoading ? '...' : (getLangField(worksMainSection, 'title') || (isEn ? 'Choose Service' : 'اختر الخدمة'))}
               </h2>
               <div className="row">
-                <div className="col-12">
+                <div className="col-12 text-start">
                   <div className="mb-3">
                     <label className="form-label mb-1">{t('auth:register.name')}</label>
                     <input
@@ -46,7 +53,7 @@ const WorksMain = () => {
                     />
                   </div>
                 </div>
-                <div className="col-12">
+                <div className="col-12 text-start">
                   <div className="mb-3">
                     <label className="form-label mb-1">{t('auth:register.phone')}</label>
                     <input
@@ -56,7 +63,7 @@ const WorksMain = () => {
                     />
                   </div>
                 </div>
-                <div className="col-12">
+                <div className="col-12 text-start">
                   <div className="mb-3">
                     <label className="form-label mb-1">{t('common:labels.requiredService')}</label>
                     <div className="select-wrapper position-relative">
@@ -70,7 +77,7 @@ const WorksMain = () => {
                     </div>
                   </div>
                 </div>
-                <div className="col-12">
+                <div className="col-12 text-start">
                   <div className="mb-3">
                     <div className="works-note">
                       <h3 className='footer-link-title'>{t('common:labels.note')}</h3>
@@ -79,14 +86,24 @@ const WorksMain = () => {
                   </div>
                 </div>
                 <div className="col-12 text-start">
-                  <button className="login-button py-2 rounded-3">
+                  <motion.button 
+                    className="login-button py-2 rounded-3"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
                     {t('common:buttons.sendRequest')}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-6 mt-4 order-1 order-md-2">
+          </motion.div>
+          <motion.div 
+            className="col-md-6 mt-4 order-1 order-md-2"
+            initial={{ opacity: 0, x: i18n.dir() === 'rtl' ? -50 : 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <div className='h-100 position-relative'>
               <div className="works-overlay rounded-4"></div>
               <div className="works-img-texts px-4">
@@ -105,7 +122,7 @@ const WorksMain = () => {
                 style={{ objectFit: 'cover', minHeight: '465px' }}
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

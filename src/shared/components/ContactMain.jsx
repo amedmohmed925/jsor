@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery, useSubmitContactMutation } from '../../api/site/siteApi';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 const ContactMain = () => {
   const { i18n } = useTranslation();
@@ -52,10 +53,16 @@ const ContactMain = () => {
   };
 
   return (
-    <section className='pt-md-5 pb-5'>
+    <section className='pt-md-5 pb-5 overflow-hidden'>
       <div className="container">
         <div className="row align-items-center">
-          <div className="col-md-6 mt-4">
+          <motion.div 
+            className="col-md-6 mt-4"
+            initial={{ opacity: 0, x: i18n.dir() === 'rtl' ? 50 : -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <h2 className='contact-main-title'>
               {isHomeLoading ? '...' : getLangField(contactSection, 'title') || 'تواصل معنا'}
             </h2>
@@ -75,18 +82,6 @@ const ContactMain = () => {
                   />
                 </div>
               </div>
-              {/* الهاتف الموجود في الفورم قم بتهميشه ك كومنت كما طلب المستخدم */}
-              {/* 
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control form-input py-2"
-                    placeholder={i18n.language === 'en' ? 'Phone Number*' : 'رقم الجوال*'}
-                  />
-                </div>
-              </div> 
-              */}
               <div className="col-12">
                 <div className="mb-3">
                   <input
@@ -112,25 +107,33 @@ const ContactMain = () => {
                 </div>
               </div>
               <div className="col-12">
-                <button 
+                <motion.button 
                   type="submit" 
                   disabled={isSubmitting}
                   className="login-button w-100 py-2 rounded-3"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   {isSubmitting 
                     ? (i18n.language === 'en' ? 'Sending...' : 'جاري الإرسال...') 
                     : (i18n.language === 'en' ? 'Send' : 'إرسال')}
-                </button>
+                </motion.button>
               </div>
             </form>
-          </div>
-          <div className="col-md-6 mt-4">
+          </motion.div>
+          <motion.div 
+            className="col-md-6 mt-4"
+            initial={{ opacity: 0, x: i18n.dir() === 'rtl' ? -50 : 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <img 
               src={contactSection?.image || "assets/contact-man-img.png"} 
               className='img-fluid w-100 contact-man-img' 
               alt="contact" 
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

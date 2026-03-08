@@ -929,9 +929,24 @@ body {
   height: auto;
 }
 .partners-img {
-  width: auto;
+  width: 100%;
   height: 80px;
   object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.partner-slide {
+  background: #f3f4f6;
+  border-radius: 20px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 160px;
+  height: 100%;
+  padding: 1.5rem !important;
 }
 .app-title{
   font-size: 48px;
@@ -1183,7 +1198,7 @@ footer{
   background: url(../public/assets/provider-bg.png);
   background-size: cover;
   background-repeat: no-repeat;
-  z-index: 1100000000000 !important;
+  z-index: 10 !important;
 }
 .provider-overlay{
   position: absolute;
@@ -1223,13 +1238,20 @@ footer{
   align-items: center;
   flex: 0 0 auto;
   margin-right: 20px;
+  position: relative;
 }
+
+[dir="rtl"] .icons-column {
+  margin-right: 0px;
+  margin-left: 20px;
+}
+
 @media (max-width:767px) {
   .icons-column{
     margin-right: 0;
   }
-  .provider-step-box{
-    width: 250px;
+  [dir="rtl"] .icons-column {
+    margin-left: 0;
   }
 }
 
@@ -1237,19 +1259,42 @@ footer{
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 .step-icon {
   width: 50px;
   height: 50px;
-  margin-bottom: 15px;
-  margin-top: 15px;
   color: #687180;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
   border-radius: 50%;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.step-icon.active-icon {
+  background: var(--primary-color, #007bff);
+  color: white;
+  border-color: var(--primary-color, #007bff);
+  box-shadow: 0 0 15px rgba(var(--primary-rgb, 0, 123, 255), 0.3);
+}
+
+.step-line-bg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #e9ecef;
+  z-index: 1;
+}
+
+.step-line-fill {
+  width: 100%;
+  background: var(--primary-color, #007bff);
 }
 
 
@@ -2139,4 +2184,17 @@ select.form-select {
 .upload-box:hover .upload-content {
   border-color: #1a73e8;
   background-color: #f5f9ff;
+}
+
+
+
+/* الحفاظ على انسيابية الحركة الخطية */
+.partners-swiper .swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+/* التأكيد على أن العرض تلقائي بناءً على محتوى السلايد */
+.partners-swiper .swiper-slide {
+  width: 279px !important; /* الحجم الذي طلبته */
+  display: flex;
 }

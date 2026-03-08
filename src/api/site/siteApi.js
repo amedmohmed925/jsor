@@ -147,6 +147,33 @@ export const siteApi = baseApi.injectEndpoints({
     }),
 
     /**
+     * Driver Signup
+     * POST /api/web/v1/site/signup-driver
+     */
+    driverSignup: builder.mutation({
+      query: (signupData) => ({
+        url: API_ENDPOINTS.SIGNUP_DRIVER,
+        method: 'POST',
+        body: signupData,
+      }),
+    }),
+
+    /**
+     * Get Cities by Country ID
+     * GET /api/web/v1/site/city-of-country?id={id}
+     */
+    getCities: builder.query({
+      query: (countryId) => `/api/web/v1/site/city-of-country?id=${countryId}`,
+      transformResponse: (response) => {
+        // Based on the nested structure: response.data[0][0] contains the city list
+        if (response.status === 1 && response.data && response.data[0]) {
+          return Array.isArray(response.data[0][0]) ? response.data[0][0] : response.data[0];
+        }
+        return [];
+      },
+    }),
+
+    /**
      * Rate Request
      * POST /api/web/v1/site/rate-request
      * Body: { request_id, rate, comment }
@@ -190,4 +217,6 @@ export const {
   useRateRequestMutation,
   useAcceptOfferMutation,
   useGetContactInfoQuery,
+  useDriverSignupMutation,
+  useGetCitiesQuery,
 } = siteApi;

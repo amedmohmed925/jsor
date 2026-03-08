@@ -45,7 +45,11 @@ const UserNavbar = () => {
         {/* Mobile Action Icons (Visible on mobile only) */}
         <div className="d-flex d-lg-none align-items-center gap-2 ms-auto me-1">
             <div className="nav-labg-mode bg-light rounded-pill p-2" onClick={handleToggleTheme} style={{ cursor: 'pointer', display: 'flex' }}>
-              <img src={currentTheme === 'light' ? "/assets/moon.svg" : "/assets/sun.svg"} alt="mode" width="16" />
+              {currentTheme === 'light' ? (
+                <img src="/assets/moon.svg" alt="moon" width="16" />
+              ) : (
+                <i className="fas fa-sun text-warning" style={{ fontSize: '16px' }}></i>
+              )}
             </div>
             <LanguageSwitcher isMinimal={true} />
             <Link to="/user/notifications" className="nav-labg-mode position-relative bg-light rounded-pill p-2">
@@ -102,8 +106,12 @@ const UserNavbar = () => {
                         </span>
                       )}
                     </Link>
-                    <div className="nav-labg-mode bg-light rounded-pill p-2" onClick={handleToggleTheme} style={{ cursor: 'pointer' }}>
-                      <img src={currentTheme === 'light' ? "/assets/moon.svg" : "/assets/sun.svg"} alt="mode" width="20" />
+                    <div className="nav-labg-mode bg-light rounded-pill p-2" onClick={handleToggleTheme} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {currentTheme === 'light' ? (
+                        <img src="/assets/moon.svg" alt="moon" width="20" />
+                      ) : (
+                        <i className="fas fa-sun text-warning" style={{ fontSize: '20px' }}></i>
+                      )}
                     </div>
                 </div>
                 

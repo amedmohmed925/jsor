@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
+import { motion } from 'framer-motion';
 
 const TruckDriver = () => {
   const { i18n } = useTranslation();
@@ -19,33 +20,69 @@ const TruckDriver = () => {
   const driverCards = homeData?.Drivers || [];
 
   return (
-    <section className="container-fluid">
+    <section className="container-fluid overflow-hidden">
       <div className='truck-driver'>
-        <div className="truck-overlay"></div>
+        <motion.div 
+          className="truck-overlay"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 0.6 }}
+          viewport={{ once: true }}
+        ></motion.div>
         <div className="py-5 position-relative">
-          <h3 className='driver-title text-center mb-3'>
+          <motion.h3 
+            className='driver-title text-center mb-3'
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 100 }}
+          >
             {isLoading ? '...' : getLangField(driverSection, 'title') || 'سائقي الشركات'}
-          </h3>
-          <p className='driver-desc text-center'>
+          </motion.h3>
+          <motion.p 
+            className='driver-desc text-center'
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
             {isLoading ? '...' : getLangField(driverSection, 'content')}
-          </p>
+          </motion.p>
           <div className="container">
-            <div className="row">
+            <motion.div 
+              className="row"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ staggerChildren: 0.2 }}
+            >
               {driverCards.map((card) => (
                 <div className="col-lg-3 col-md-6 mt-3" key={card.id}>
-                  <div className="driver-card h-100 d-flex flex-column align-items-start gap-2">
+                  <motion.div 
+                    className="driver-card h-100 d-flex flex-column align-items-start gap-2"
+                    initial={{ x: 100, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ rotate: [0, -1, 1, -1, 0] }}
+                  >
                     <img src={card.image} alt={getLangField(card, 'title')} />
                     <h4 className='driver-card-title m-0'>{getLangField(card, 'title')}</h4>
                     <p className='driver-card-desc m-0'>{getLangField(card, 'content')}</p>
-                  </div>
+                  </motion.div>
                 </div>
               ))}
-            </div>
+            </motion.div>
             <div className="text-center">
-              <Link to='/login'>
-                <button className="login-button mt-4">
+              <Link to='/signup-driver' className="d-inline-block">
+                <motion.button 
+                  className="login-button mt-4"
+                  whileHover={{ scale: 1.1, backgroundColor: "#0056b3" }}
+                  whileTap={{ scale: 0.9 }}
+                  initial={{ y: 50, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true }}
+                >
                   {i18n.language === 'en' ? 'Join Us Now' : 'انضم الينا الان'}
-                </button>
+                </motion.button>
               </Link>
             </div>
           </div>

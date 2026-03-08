@@ -43,6 +43,7 @@ export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   REGISTER: '/create-account',
+  DRIVER_REGISTER: '/signup-driver',
   ACTIVATE_ACCOUNT: '/activate-account',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',

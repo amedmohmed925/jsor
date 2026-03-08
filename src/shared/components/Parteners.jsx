@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
+import { Modal } from 'react-bootstrap';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -8,13 +9,26 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import 'swiper/css/free-mode';
 
 // Import required modules
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { Navigation, Pagination, Autoplay, FreeMode } from 'swiper/modules';
 
-const Parteners = () => {
+const Partners = () => {
   const { t, i18n } = useTranslation('common');
   const { data: homeData, isLoading } = useGetHomeDataQuery();
+  const [selectedPartner, setSelectedPartner] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const handlePartnerClick = (partner) => {
+    setSelectedPartner(partner);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setTimeout(() => setSelectedPartner(null), 300); // Clear after fade out
+  };
 
   // Helper to get localized field from API
   const getLangField = (item, field) => {
@@ -30,72 +44,117 @@ const Parteners = () => {
     }
   };
 
-  const partnersSection = homeData?.Sections?.find(s => s.id === 67); // Using find by ID 67
+  const partnersSection = homeData?.Sections?.find(s => s.id === 67);
   const partnerLogos = homeData?.Partners || [];
 
+  // مضاعفة المصفوفة لضمان عمل السلايدر في الشاشات الكبيرة دائماً
+  // قمنا بنسخها 5 مرات لضمان تغطية أي شاشة مهما كان حجمها
+  const duplicatedLogos = [...partnerLogos, ...partnerLogos, ...partnerLogos, ...partnerLogos, ...partnerLogos];
+
   const isEn = i18n.language && i18n.language.startsWith('en');
+
+  // تنظيف شروط العنوان والوصف لتسهيل قراءة الكود
+  const renderTitle = () => {
+    if (isLoading) return '...';
+    if (isEn && partnersSection?.title_en !== partnersSection?.title) return partnersSection?.title_en;
+    return partnersSection?.title || t('partners.title');
+  };
+
+  const renderContent = () => {
+    if (isLoading) return '...';
+    if (isEn && partnersSection?.content_en !== partnersSection?.content) return partnersSection?.content_en;
+    return partnersSection?.content || t('partners.content');
+  };
 
   return (
     <section>
       <div className="container my-5 text-center">
         <h2 className='parteners-title mb-3'>
-          {isLoading ? '...' : (isEn ? (partnersSection?.title_en !== partnersSection?.title ? partnersSection?.title_en : t('partners.title')) : (partnersSection?.title || t('partners.title')))}
+          {renderTitle()}
         </h2>
         <p className='parteners-desc mb-5 mx-auto'>
-          {isLoading ? '...' : (isEn ? (partnersSection?.content_en !== partnersSection?.content ? partnersSection?.content_en : t('partners.content')) : (partnersSection?.content || t('partners.content')))}
+          {renderContent()}
         </p>
       </div>
       
       {/* Use container-fluid for a full-width slider */}
+    {/* عرض السلايدر فقط إذا انتهى التحميل وهناك بيانات بالفعل */}
       <div className="container-fluid mb-5">
-        <Swiper
-          // Install modules
-          modules={[Navigation, Pagination, Autoplay]}
-          // Slider configuration
-          spaceBetween={30}
-          slidesPerView={5} // Show 5 slides on desktop
-          loop={partnerLogos.length > 5} // Enable infinite loop only if enough slides
-          autoplay={{
-            delay: 2500, // Delay between transitions (in ms)
-            disableOnInteraction: false, // Continue autoplay after user interaction
-          }}
-          // Responsive breakpoints
-          breakpoints={{
-            // when window width is >= 320px (mobile)
-            320: {
-              slidesPerView: 2,
-              spaceBetween: 20,
-            },
-            // when window width is >= 640px (tablet)
-            640: {
-              slidesPerView: 3,
-              spaceBetween: 30,
-            },
-            // when window width is >= 1024px (desktop)
-            1024: {
-              slidesPerView: 5,
-              spaceBetween: 30,
-            },
-          }}
-          className="partners-swiper"
-        >
-          {partnerLogos.map((partner) => (
-            <SwiperSlide key={partner.id} className="d-flex align-items-stretch">
-              <div className="partner-slide text-center p-3 w-100">
-                <img src={partner.image} alt={getLangField(partner, 'title')} className="img-fluid partners-img mb-3" />
-                <h5 className="partner-name mb-2">
-                  {getLangField(partner, 'title')}
-                </h5>
-                <p className="partner-content small text-muted mb-0">
-                  {getLangField(partner, 'content')}
-                </p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {!isLoading && partnerLogos.length > 0 ? (
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay, FreeMode]}
+            spaceBetween={20}
+            slidesPerView={'auto'}
+            loop={true}
+            speed={5000}
+            autoplay={{
+              delay: 0,
+              disableOnInteraction: false,
+            }}
+            freeMode={true}
+            // إضافات هامة جداً لمراقبة التغييرات في الشاشة
+            observer={true}
+            observeParents={true}
+            className="partners-swiper"
+          >
+            {duplicatedLogos.map((partner, index) => (
+              <SwiperSlide 
+                key={`${partner.id}-${index}`} 
+                className="d-flex align-items-stretch"
+                style={{ width: '279px' }} 
+              >
+                <div 
+                  className="partner-slide text-center w-100" 
+                  onClick={() => handlePartnerClick(partner)} 
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="partner-img-wrapper w-100 d-flex align-items-center justify-content-center" style={{ height: '80px' }}>
+                    <img src={partner.image} alt={getLangField(partner, 'title')} className="img-fluid partners-img" />
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          // يمكنك ترك هذا فارغاً أو وضع تصميم "جاري التحميل" لطيف هنا
+          <div style={{ height: '80px' }}></div> 
+        )}
       </div>
+
+      {/* Partner Detail Modal */}
+      <Modal 
+        show={showModal} 
+        onHide={closeModal} 
+        centered 
+        className="partner-detail-modal"
+        backdrop="static"
+      >
+        <Modal.Header closeButton style={{ border: 'none' }}>
+        </Modal.Header>
+        <Modal.Body className="text-center p-4">
+          <div className="partner-modal-img-container mb-4 p-4 rounded-4" style={{ backgroundColor: '#f3f4f6' }}>
+            <img 
+              src={selectedPartner?.image} 
+              alt={getLangField(selectedPartner, 'title')} 
+              className="img-fluid" 
+              style={{ maxHeight: '150px', objectFit: 'contain' }} 
+            />
+          </div>
+          <h3 className="partner-modal-title mb-3" style={{ color: '#374151', fontWeight: '700' }}>
+            {getLangField(selectedPartner, 'title')}
+          </h3>
+          <p className="partner-modal-content text-muted lh-base">
+            {getLangField(selectedPartner, 'content')}
+          </p>
+        </Modal.Body>
+        <Modal.Footer style={{ border: 'none', justifyContent: 'center' }}>
+          <button className="btn btn-secondary px-4" onClick={closeModal} style={{ borderRadius: '10px' }}>
+            {isEn ? 'Close' : 'إغلاق'}
+          </button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 };
 
-export default Parteners;
+export default Partners;

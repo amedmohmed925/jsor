@@ -15,16 +15,22 @@ import { useCancelRequestMutation, useAcceptOfferMutation } from '../../api/site
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const ContractOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShowRating, setShowCancel }) => {
+const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
   const { t, i18n } = useTranslation();
   const { token } = useAuth();
   const navigate = useNavigate();
   const currentLanguage = i18n.language || 'ar';
   const [page, setPage] = useState(1);
+  const [expandedOfferId, setExpandedOfferId] = useState(null);
 
   useEffect(() => {
     setPage(1);
+    setExpandedOfferId(null);
   }, [activeSubFilter]);
+
+  const toggleOffers = (orderId) => {
+    setExpandedOfferId(prev => prev === orderId ? null : orderId);
+  };
 
   const [acceptOffer, { isLoading: isAccepting }] = useAcceptOfferMutation();
 
@@ -177,18 +183,33 @@ const ContractOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShow
             <div className="order-actions d-flex flex-wrap gap-2 mt-3 pt-2 border-top">
               {activeSubFilter === 'new-request' && (
                 <>
-                  <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={toggleOffers} style={{ cursor: 'pointer' }}>
+                  <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={() => toggleOffers(order.id)} style={{ cursor: 'pointer' }}>
                      <h6 className='offers-dropdown-text m-0'>{t('common:buttons.offers')}</h6>
-                     <FontAwesomeIcon icon={offersExpanded ? faChevronUp : faChevronDown} />
+                     <FontAwesomeIcon icon={expandedOfferId === order.id ? faChevronUp : faChevronDown} />
                   </div>
                   <div className="cancel-order-btn" onClick={() => setShowCancel(order)}>
                      <p className='m-0'>{t('common:buttons.cancel_order')}</p>
                   </div>
-                </>
+                </> 
               )}
               {activeSubFilter === 'waiting' && (
-                <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2">
-                  <h6 className='offers-dropdown-text m-0'>{t('user:user.tracking')}</h6>
+                <div className="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
+                  <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2">
+                    <h6 className='offers-dropdown-text m-0'>{t('user:user.tracking')}</h6>
+                  </div>
+                  <div 
+                    className="code-badge d-flex align-items-center gap-2"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      if (order.confirm_code) {
+                        navigator.clipboard.writeText(order.confirm_code);
+                        toast.success(t('common:messages.copied') || 'تم النسخ');
+                      }
+                    }}
+                  >
+                    <img src="../assets/document-copy.svg" alt="" />
+                    {order.confirm_code || order.id}
+                  </div>
                 </div>
               )}
               {activeSubFilter === 'shipped' && (
@@ -213,7 +234,7 @@ const ContractOrders = ({ activeSubFilter, offersExpanded, toggleOffers, setShow
               )}
             </div>
             
-            {activeSubFilter === 'new-request' && offersExpanded && (
+            {activeSubFilter === 'new-request' && expandedOfferId === order.id && (
               <div className="orders-new-offers mt-2 p-2 border-top">
                  {order.requestOffers && order.requestOffers.length > 0 ? (
                      order.requestOffers.map((offer) => (

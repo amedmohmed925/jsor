@@ -6,6 +6,7 @@ import ProviderFeatures from '../components/ProviderFeatures';
 import ProviderMechanism from '../components/ProviderMechanism';
 import ProviderDocuments from '../components/ProviderDocuments';
 import Footer from '../components/Footer';
+import { motion } from 'framer-motion';
 
 const ServiceProvider = () => {
   const { i18n } = useTranslation();
@@ -22,17 +23,27 @@ const ServiceProvider = () => {
   const providerHero = homeData?.Sections?.[8]; // ID 72: انضم كمزود خدمة
 
   return (
-    <div>
+    <div className='overflow-hidden'>
       <Navbar />
       <div className="provider-container position-relative d-flex justify-content-center align-items-center">
         <div className="provider-overlay"></div>
-        <div className="position-relative d-flex flex-column align-items-center">
-          <h2 className='provider-main-title text-center'>
+        <div className="position-relative d-flex flex-column align-items-center px-3">
+          <motion.h2 
+            className='provider-main-title text-center'
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+          >
             {isLoading ? '...' : getLangField(providerHero, 'title') || 'انضم كمزود خدمة وابدأ في استقبال الطلبات مباشرة'}
-          </h2>
-          <p className='provider-main-desc text-center'>
+          </motion.h2>
+          <motion.p 
+            className='provider-main-desc text-center'
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             {isLoading ? '...' : getLangField(providerHero, 'content')}
-          </p>
+          </motion.p>
         </div>
       </div>
       <ProviderFeatures />

@@ -12,6 +12,7 @@ import RoleBasedRoute from "./components/RoleBasedRoute";
 import Home from "./shared/pages/Home";
 import Login from "./shared/pages/Login";
 import Register from "./shared/pages/Register";
+import DriverSignup from "./shared/pages/DriverSignup";
 import ActivateAccount from "./shared/pages/ActivateAccount";
 import ForgotPassword from "./shared/pages/ForgotPassword";
 import ResetPassword from "./shared/pages/ResetPassword";
@@ -19,6 +20,7 @@ import Contact from "./shared/pages/Contact";
 import ServiceProvider from "./shared/pages/ServiceProvider";
 import Works from "./shared/pages/Works";
 import Terms from "./shared/pages/Terms";
+import About from "./shared/pages/About";
 
 // User Pages
 import Oreders from "./user/pages/Orders";
@@ -100,10 +102,12 @@ function App() {
       <Route path="/service-provider" element={<ServiceProvider />} />
       <Route path="/works" element={<Works />} />
       <Route path="/terms" element={<Terms />} />
+      <Route path="/about" element={<About />} />
       
       {/* Public Routes - Only accessible when NOT authenticated */}
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/create-account" element={<PublicRoute><Register /></PublicRoute>} />
+      <Route path="/signup-driver" element={<PublicRoute><DriverSignup /></PublicRoute>} />
       <Route path="/activate-account" element={<PublicRoute><ActivateAccount /></PublicRoute>} />
       <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
       <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />

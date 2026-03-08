@@ -24,7 +24,19 @@ const MissionArrived = () => {
     const [previews, setPreviews] = useState([]);
 
     const signatureInputRef = useRef(null);
+    const signatureCameraRef = useRef(null);
     const imagesInputRef = useRef(null);
+    const imagesCameraRef = useRef(null);
+
+    const openCamera = (ref) => async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            stream.getTracks().forEach(t => t.stop());
+            ref.current?.click();
+        } catch {
+            ref.current?.click();
+        }
+    };
 
     const [customerSignature, { isLoading: sigLoading }] = useCustomerSignatureMutation();
     const [uploadImageAfter, { isLoading: imgLoading }] = useUploadImageAfterMutation();
@@ -78,6 +90,10 @@ const MissionArrived = () => {
             toast.error(t('driver:missionArrived.enterCode', 'الرجاء إدخال رمز التحقق'));
             return;
         }
+        if (!signatureFile) {
+            toast.error(isRtl ? 'يرجى رفع صورة التوقيع أولاً' : 'Please upload signature image first');
+            return;
+        }
 
         try {
             // 1. Upload after images (reqeust_id — API typo)
@@ -107,7 +123,7 @@ const MissionArrived = () => {
             const sigBody = new FormData();
             sigBody.append('request_id', order.id);
             sigBody.append('confirm_code', confirmCode);
-            if (signatureFile) sigBody.append('signature', signatureFile);
+            sigBody.append('signature', signatureFile);
 
             const sigRes = await customerSignature({ token, body: sigBody }).unwrap();
             if (sigRes.status !== 1 || sigRes.data?.[0]?.status === 0) {
@@ -145,7 +161,7 @@ const MissionArrived = () => {
                                         <img src="/assets/assigned-img.png" className="img-fluid" alt="" />
                                     )}
                                 </div>
-                                <div className="d-flex justify-content-center mt-2">
+                                <div className="d-flex justify-content-center gap-2 mt-2">
                                     <button
                                         type="button"
                                         className="login-button text-decoration-none d-flex align-items-center gap-1 justify-content-center take-img-btn"
@@ -154,10 +170,26 @@ const MissionArrived = () => {
                                         <img src="/assets/camera.svg" alt="" />
                                         {t('driver:missionArrived.uploadSignature', 'رفع صورة التوقيع')}
                                     </button>
+                                    <button
+                                        type="button"
+                                        className="orange-btn text-decoration-none px-3 d-flex align-items-center justify-content-center"
+                                        style={{ borderRadius: '10px' }}
+                                        onClick={openCamera(signatureCameraRef)}
+                                    >
+                                        <i className="fas fa-camera fs-5"></i>
+                                    </button>
                                     <input
                                         ref={signatureInputRef}
                                         type="file"
                                         accept="image/*"
+                                        className="d-none"
+                                        onChange={handleSignatureChange}
+                                    />
+                                    <input
+                                        ref={signatureCameraRef}
+                                        type="file"
+                                        accept="image/*"
+                                        capture="environment"
                                         className="d-none"
                                         onChange={handleSignatureChange}
                                     />
@@ -188,18 +220,37 @@ const MissionArrived = () => {
                                         <label className="form-label mb-1">
                                             {t('driver:missionArrived.capturePhotos', 'التقط صورة للحمولة')}
                                         </label>
-                                        <button
-                                            type='button'
-                                            className="login-button text-decoration-none w-100 d-flex align-items-center gap-1 justify-content-center take-img-btn"
-                                            onClick={() => imagesInputRef.current?.click()}
-                                        >
-                                            <img src="/assets/camera.svg" alt="" />
-                                            {t('driver:missionArrived.capturePhotos', 'التقاط صورة للحمولة')}
-                                        </button>
+                                        <div className="d-flex gap-2">
+                                            <button
+                                                type='button'
+                                                className="login-button text-decoration-none flex-grow-1 d-flex align-items-center gap-1 justify-content-center take-img-btn"
+                                                onClick={() => imagesInputRef.current?.click()}
+                                            >
+                                                <img src="/assets/camera.svg" alt="" />
+                                                {t('driver:missionArrived.capturePhotos', 'التقاط صورة للحمولة')}
+                                            </button>
+                                            <button
+                                                type='button'
+                                                className="orange-btn text-decoration-none px-3 d-flex align-items-center justify-content-center"
+                                                style={{ borderRadius: '10px' }}
+                                                onClick={openCamera(imagesCameraRef)}
+                                            >
+                                                <i className="fas fa-camera fs-5"></i>
+                                            </button>
+                                        </div>
                                         <input
                                             ref={imagesInputRef}
                                             type="file"
                                             accept="image/*"
+                                            multiple
+                                            className="d-none"
+                                            onChange={handleImagesChange}
+                                        />
+                                        <input
+                                            ref={imagesCameraRef}
+                                            type="file"
+                                            accept="image/*"
+                                            capture="environment"
                                             multiple
                                             className="d-none"
                                             onChange={handleImagesChange}
