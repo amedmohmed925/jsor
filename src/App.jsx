@@ -91,6 +91,7 @@ function App() {
     <Routes>
       {/* Admin Routes - High Priority */}
       <Route path="/admin/dashboard" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AdminDashboard /></RoleBasedRoute>} />
+      <Route path="/admin/notifications" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><Notifications /></RoleBasedRoute>} />
       <Route path="/admin/add-truck" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AddTruck /></RoleBasedRoute>} />
       <Route path="/admin/add-driver" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><AddDriver /></RoleBasedRoute>} />
       <Route path="/admin/update-vehicle/:id" element={<RoleBasedRoute allowedRoles={[USER_ROLES.ADMIN]}><UpdateVehicle /></RoleBasedRoute>} />

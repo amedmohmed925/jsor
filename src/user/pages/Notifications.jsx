@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import UserNavbar from '../components/UserNavbar'
+import AdminNavbar from '../../admin/components/AdminNavbar'
+import DriverNavbar from '../../driver/components/DriverNavbar'
 import Footer from '../../shared/components/Footer'
+import { useAuth } from '../../hooks/useAuth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from '@fortawesome/free-regular-svg-icons'
@@ -16,6 +19,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 
 const Notifications = () => {
     const { t, i18n } = useTranslation(['user', 'common']);
+    const { role } = useAuth();
     const [showRating, setShowRating] = useState(false);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
@@ -94,7 +98,7 @@ const Notifications = () => {
 
   return (
     <>
-        <UserNavbar />
+        {role === 'admin' ? <AdminNavbar /> : role === 'driver' ? <DriverNavbar /> : <UserNavbar />}
         <div className="container my-5">
             <h2 className='orders-title'>{t('notification.title')}</h2>
             

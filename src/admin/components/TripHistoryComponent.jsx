@@ -161,9 +161,13 @@ const TripHistoryComponent = () => {
     { value: 'all', label: t('admin:tripHistory.allTime') },
   ];
 
+  // PDF Download State
+  const [isDownloading, setIsDownloading] = useState(false);
+
   // PDF Download — render HTML off-screen so the browser handles Arabic shaping natively,
   // then snapshot with html2canvas and embed in jsPDF.
   const handleDownloadReport = async () => {
+    setIsDownloading(true);
     const lang   = i18n.language;
     const rtl    = lang === 'ar';
     const locale = rtl ? 'ar-SA' : 'en-US';
@@ -268,8 +272,11 @@ const TripHistoryComponent = () => {
       const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
       doc.addImage(imgData, 'PNG', margin + (maxW - w) / 2, margin, w, h);
       doc.save('trip-history-report-' + new Date().toISOString().split('T')[0] + '.pdf');
+    } catch (error) {
+      console.error('PDF Generation Error:', error);
     } finally {
       document.body.removeChild(wrapper);
+      setIsDownloading(false);
     }
   };
 
@@ -286,9 +293,13 @@ const TripHistoryComponent = () => {
             type='button'
             className="login-button text-decoration-none d-flex align-items-center gap-2 justify-content-center take-img-btn"
             onClick={handleDownloadReport}
-            disabled={isLoading || filteredItems.length === 0}
+            disabled={isLoading || isDownloading || filteredItems.length === 0}
           > 
-            <img src="/assets/document-download.svg" alt="download" /> {t('admin:tripHistory.downloadReport')}
+            {isDownloading ? (
+               <><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> {isRtl ? 'جاري التحميل...' : 'Downloading...'}</>
+            ) : (
+               <><img src="/assets/document-download.svg" alt="download" /> {t('admin:tripHistory.downloadReport')}</>
+            )}
           </button>
         </div>
 

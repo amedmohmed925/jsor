@@ -62,12 +62,13 @@ const UserNavbar = () => {
             </Link>
             <div className="dropdown position-static">
               <div
-                className="border-0 p-0 d-flex align-items-center"
+                className="border-0 p-0 d-flex align-items-center gap-1"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
                 style={{ cursor: 'pointer' }}
               >
                 <img src={user?.avatar || "/assets/man.png"} alt="user" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }} />
+                <i className="fas fa-chevron-down text-muted" style={{ fontSize: '0.6rem' }}></i>
               </div>
               <ul className="dropdown-menu shadow-lg border-0 mt-2 p-2" style={{ borderRadius: '15px', minWidth: '200px', zIndex: 1050, position: 'absolute', right: i18n.dir() === 'rtl' ? 'auto' : '10px', left: i18n.dir() === 'rtl' ? '10px' : 'auto', transform: 'none' }}>
                 <li>
@@ -173,6 +174,7 @@ const UserNavbar = () => {
                             <div className="text-start">
                                 <h6 className="user-name m-0" style={{ fontSize: '0.85rem' }}>{(user?.name || 'User')}</h6>
                             </div>
+                            <i className="fas fa-chevron-down ms-1" style={{ fontSize: '0.7rem', opacity: 0.8 }}></i>
                         </div>
                         <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2" aria-labelledby="profileDropdown" style={{ 
                             borderRadius: '15px', 

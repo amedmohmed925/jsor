@@ -9,8 +9,8 @@ import { useGetNotificationBadgeQuery } from '../../api/site/notificationApi';
 
 const AdminNavbar = () => {
   const location = useLocation();
-  const { t } = useTranslation('common');
-  const { user, role } = useAuth();
+  const { t } = useTranslation(['common', 'admin']);
+  const { user, role, logout } = useAuth();
   const dispatch = useDispatch();
   const currentTheme = useSelector(selectTheme);
   
@@ -73,7 +73,7 @@ const AdminNavbar = () => {
               <LanguageSwitcher />
             </li>
             <li className="nav-item d-flex align-items-center gap-2">
-                <Link to="/admin/dashboard" className="nav-labg-mode position-relative">
+                <Link to="/admin/notifications" className="nav-labg-mode position-relative">
                   <img src="/assets/notification.svg" alt="notification" />
                   {badgeCount > 0 && (
                     <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '0.6rem' }}>
@@ -81,16 +81,45 @@ const AdminNavbar = () => {
                     </span>
                   )}
                 </Link>
-                <div className="nav-labg-mode" onClick={handleToggleTheme} style={{ cursor: 'pointer' }}>
-                  <img src="/assets/moon.svg" alt="mode" />
+                <div className="nav-labg-mode d-flex align-items-center justify-content-center" onClick={handleToggleTheme} style={{ cursor: 'pointer' }}>
+                  {currentTheme === 'light' ? (
+                    <img src="/assets/moon.svg" alt="moon" width="20" />
+                  ) : (
+                    <i className="fas fa-sun text-warning" style={{ fontSize: '20px' }}></i>
+                  )}
                 </div>
-                <Link to="/admin/dashboard" className="d-flex gap-2 align-items-center text-decoration-none">
-                    <img src={user?.avatar || "/assets/man.png"} className='user-img' alt="user" />
-                    <div className="d-none d-md-block">
-                        <h6 className="user-name m-0">{user?.name || 'Habib M'}</h6>
-                        <p className="user-desc m-0">{t(`roles.${role}`, 'مشرف')}</p>
+                
+                <div className="dropdown">
+                    <div 
+                        className="d-flex gap-2 align-items-center text-decoration-none dropdown-toggle border-0 bg-transparent p-0" 
+                        id="adminProfileDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <img src={user?.avatar || "/assets/man.png"} className='user-img border border-white' alt="user" style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <div className="d-none d-md-block text-start">
+                            <h6 className="user-name m-0" style={{ fontSize: '0.9rem' }}>{user?.name || 'Admin'}</h6>
+                            <p className="user-desc m-0" style={{ fontSize: '0.75rem' }}>{t(`common:roles.${role}`, 'مشرف')}</p>
+                        </div>
                     </div>
-                </Link>
+                    <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2" aria-labelledby="adminProfileDropdown" style={{ borderRadius: '12px', minWidth: '180px' }}>
+                        <li>
+                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3" to="/admin/dashboard">
+                                <i className="fas fa-th-large text-primary"></i>
+                                <span>{t('admin:dashboard.title', 'لوحة التحكم')}</span>
+                            </Link>
+                        </li>
+                        <li><hr className="dropdown-divider" /></li>
+                        <li>
+                            <button className="dropdown-item d-flex align-items-center gap-2 py-2 rounded-3 text-danger border-0 bg-transparent w-100 text-start" onClick={logout}>
+                                <i className="fas fa-sign-out-alt"></i>
+                                <span>{t('common:buttons.logout')}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </li>
           </ul>
         </div>
