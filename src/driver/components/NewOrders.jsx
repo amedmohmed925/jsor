@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 
 const NewOrders = ({ orders, isLoading }) => {
   const { t } = useTranslation(['driver', 'common']);
+  const currency = t('common:buttons.currency');
   const navigate = useNavigate();
   const { token } = useAuth();
   const [createOffer, { isLoading: isCreatingOffer }] = useCreateOfferMutation();
@@ -133,7 +134,7 @@ const NewOrders = ({ orders, isLoading }) => {
                       onClick={() => handleApplyOffer(order.id, 120)}
                       disabled={isCreatingOffer}
                     >
-                        {t('driver:orders.apply_with') || 'التقدم ب '} 120$
+                        {t('driver:orders.apply_with') || 'التقدم ب '} 120 {currency}
                     </button>
                     <button 
                       type='button' 
@@ -141,7 +142,7 @@ const NewOrders = ({ orders, isLoading }) => {
                       onClick={() => handleApplyOffer(order.id, 150)}
                       disabled={isCreatingOffer}
                     >
-                        {t('driver:orders.apply_with') || 'التقدم ب '} 150$
+                        {t('driver:orders.apply_with') || 'التقدم ب '} 150 {currency}
                     </button>
                     {prices[order.id] && (
                          <button 
@@ -150,7 +151,7 @@ const NewOrders = ({ orders, isLoading }) => {
                          onClick={() => handleApplyOffer(order.id, prices[order.id])}
                          disabled={isCreatingOffer}
                        >
-                           {t('driver:orders.apply_with') || 'إرسال عرض ب'} {prices[order.id]}$
+                           {t('driver:orders.apply_with') || 'إرسال عرض ب'} {prices[order.id]} {currency}
                        </button>
                     )}
                   </div>

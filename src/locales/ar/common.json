@@ -32,7 +32,7 @@
         "completed": "تم الشحن",
         "details": "التفاصيل",
         "rate": "تقييم",
-        "currency": "$",
+        "currency": "ريال",
         "or": "أو"
     },
     "provider": "مقدم الخدمة",

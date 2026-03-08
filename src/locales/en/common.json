@@ -32,7 +32,7 @@
         "completed": "Completed",
         "details": "Details",
         "rate": "Rate",
-        "currency": "$",
+        "currency": "SAR",
         "or": "Or"
     },
     "provider": "Service Provider",
