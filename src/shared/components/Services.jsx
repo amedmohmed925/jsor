@@ -32,8 +32,26 @@ const Services = () => {
     }
   };
 
+  const getServiceLink = (service) => {
+    const title = (service.title || '').toLowerCase();
+    const titleEn = (service.title_en || '').toLowerCase();
+    
+    // Check if it's for service providers (drivers/truck owners) - ID 64
+    if (title.includes('مقدم') || titleEn.includes('provider')) {
+      return '/signup-driver';
+    }
+    
+    // Check if it's for companies/contract - ID 62
+    if (title.includes('شركات') || titleEn.includes('companies')) {
+      return '/user/contract-upload';
+    }
+
+    // Default for individuals / regular orders - ID 63
+    return '/user/basic-upload';
+  };
+
   return (
-    <section className='my-5'>
+    <section className='my-5 overflow-hidden'>
       <div className="container">
         <motion.h2 
           className="section-title text-center"
@@ -53,7 +71,7 @@ const Services = () => {
           {isLoading ? '...' : getLangField(servicesSection, 'content')}
         </motion.p>
         <motion.div 
-          className="row"
+          className="row overflow-hidden"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
@@ -76,7 +94,7 @@ const Services = () => {
                 </div>
                 <h5 className='services-card-title m-0'>{getLangField(service, 'title')}</h5>
                 <p className='services-card-desc m-0'>{getLangField(service, 'content')}</p>
-                <Link to='/login' className="services-btn text-decoration-none">
+                <Link to={getServiceLink(service)} className="services-btn text-decoration-none">
                   {i18n.language === 'en' ? 'Order Now' : 'اطلب الآن'}
                 </Link>
               </motion.div>

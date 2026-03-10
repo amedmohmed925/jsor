@@ -8,6 +8,8 @@ import store from './store'
 import './i18n'
 import ErrorBoundary from './components/ErrorBoundary'
 import ToastNotification from './components/ToastNotification'
+import { NotificationProvider } from './components/NotificationProvider'
+import NotificationDisplay from './components/NotificationDisplay'
 
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -21,8 +23,11 @@ createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <ErrorBoundary>
         <BrowserRouter>
-          <App />
-          <ToastNotification />
+          <NotificationProvider>
+            <App />
+            <ToastNotification />
+            <NotificationDisplay />
+          </NotificationProvider>
         </BrowserRouter>
       </ErrorBoundary>
     </Provider>

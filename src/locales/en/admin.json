@@ -68,11 +68,16 @@
     },
     "liveTracking": {
         "title": "Live Vehicle Tracking",
-        "searchPlaceholder": "Search for a driver ...",
+        "searchPlaceholder": "Search for driver or order ID...",
         "allStatuses": "All Statuses",
         "mapView": "Map View",
         "expectedDelivery": "Expected Delivery Time:",
-        "minutesAgo": "2 minutes ago"
+        "minutesAgo": "2 minutes ago",
+        "noDriver": "No Driver",
+        "customer": "Customer:",
+        "pickup": "Pickup Location",
+        "delivery": "Delivery Location",
+        "noOrders": "No orders available"
     },
     "updateVehicle": {
         "title": "Update Vehicle Data",

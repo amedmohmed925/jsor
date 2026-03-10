@@ -68,11 +68,16 @@
     },
     "liveTracking": {
         "title": "تتبع المركبات المباشر",
-        "searchPlaceholder": "البحث عن السائق ...",
+        "searchPlaceholder": "البحث عن السائق أو رقم الطلب...",
         "allStatuses": "كل الحالات",
         "mapView": "عرض الخريطة",
         "expectedDelivery": "الوقت المتوقع للتسليم:",
-        "minutesAgo": "منذ دقيقتين"
+        "minutesAgo": "منذ دقيقتين",
+        "noDriver": "لا يوجد سائق",
+        "customer": "العميل:",
+        "pickup": "موقع الاستلام",
+        "delivery": "موقع التوصيل",
+        "noOrders": "لا توجد طلبات متوفرة"
     },
     "updateVehicle": {
         "title": "تعديل بيانات المركبة",

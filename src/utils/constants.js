@@ -157,6 +157,7 @@ export const API_ENDPOINTS = {
   CONTACT_INFO: '/api/web/v1/site/contact-info',
   SITE_TERMS: '/api/web/v1/site/term',
   NOTIFICATION_BADGE: '/api/web/v1/site/notification-budge',
+  SAVE_FCM_TOKEN: '/api/web/v1/site/save-fcm-token',
   CREATE_NORMAL_REQUEST: '/api/web/v1/site/create-normal-request',
   CREATE_TRIP_REQUEST: '/api/web/v1/site/create-trip-request',
   CREATE_CONTRACT_REQUEST: '/api/web/v1/site/create-contract-request',

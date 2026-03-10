@@ -12,7 +12,7 @@ const OrderDetails = () => {
     const { id } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
-    const { t } = useTranslation(['driver', 'common']);
+    const { t, i18n } = useTranslation(['driver', 'common']);
     
     // Get order from location state
     const order = location.state?.order;
@@ -48,7 +48,16 @@ const OrderDetails = () => {
             <div className="container mb-5">
                 <div className="row">
                     <div className="col-12 mt-3">
-                        <h2 className='orders-title mb-2'>{t('driver:orders.details_title') || 'تفاصيل الطلب'}</h2>
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <h2 className='orders-title m-0'>{t('driver:orders.details_title') || 'تفاصيل الطلب'}</h2>
+                            <button 
+                                onClick={() => navigate(-1)} 
+                                className="login-button text-decoration-none py-1 px-3 d-flex align-items-center gap-2"
+                                style={{ fontSize: '0.9rem' }}
+                            >
+                                {i18n.language === 'ar' ? 'رجوع' : 'Back'}
+                            </button>
+                        </div>
                         <div className="shadow p-3 rounded-3">
                             <div className='d-flex align-items-center justify-content-between w-100 mb-1'>
                             <h3 className='orders-card-title m-0'>{orderTitle}</h3>

@@ -41,11 +41,22 @@ const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
   const { data: listsResponse } = useGetListsQuery();
   const truckList = listsResponse?.Truck || [];
 
+  // Call all hooks to follow Rules of Hooks, but use 'skip' to only fire the active one
+  const newRequests = useGetNormalNewOrdersQuery({ token, page }, { skip: activeSubFilter !== 'new-request' });
+  const shippingRequests = useGetNormalShippingOrdersQuery({ token, page }, { skip: activeSubFilter !== 'waiting' });
+  const completeRequests = useGetNormalCompleteOrdersQuery({ token, page }, { skip: activeSubFilter !== 'shipped' });
+  const canceledRequests = useGetNormalCanceledOrdersQuery({ token, page }, { skip: activeSubFilter !== 'cancelled' });
+
   const handleAcceptOffer = async (offerId) => {
     try {
       const response = await acceptOffer(offerId).unwrap();
       if (response.status === 1) {
         toast.success(t('user:user.orders.acceptSuccess') || 'Offer accepted successfully');
+        // Refresh all potentially active queries
+        newRequests.refetch();
+        shippingRequests.refetch();
+        completeRequests.refetch();
+        canceledRequests.refetch();
       } else {
         toast.error(response.message || t('common:messages.error'));
       }
@@ -53,16 +64,6 @@ const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
       toast.error(error?.data?.message || t('common:messages.error'));
     }
   };
-
-  const handleOrderAgain = () => {
-    navigate('/user/basic-upload');
-  };
-
-  // Call all hooks to follow Rules of Hooks, but use 'skip' to only fire the active one
-  const newRequests = useGetNormalNewOrdersQuery({ token, page }, { skip: activeSubFilter !== 'new-request' });
-  const shippingRequests = useGetNormalShippingOrdersQuery({ token, page }, { skip: activeSubFilter !== 'waiting' });
-  const completeRequests = useGetNormalCompleteOrdersQuery({ token, page }, { skip: activeSubFilter !== 'shipped' });
-  const canceledRequests = useGetNormalCanceledOrdersQuery({ token, page }, { skip: activeSubFilter !== 'cancelled' });
 
   // Select the active query result
   const activeQueryResult = 
@@ -299,9 +300,11 @@ const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                       <Link to='/user/tracking' state={{ order }} className="offers-dropdown text-decoration-none d-flex align-items-center justify-content-center gap-2">
                         <h6 className='offers-dropdown-text m-0'>{t('user:user.tracking')}</h6>
                       </Link>
-                      <div className="contact-driver-button">
-                        <p className='m-0'>{t('common:buttons.contact_driver')}</p>
-                      </div>
+                      {driverObj?.mobile && (
+                        <a href={`tel:${driverObj.mobile}`} className="contact-driver-button text-decoration-none">
+                          <p className='m-0'>{t('common:buttons.contact_driver')}</p>
+                        </a>
+                      )}
                     </div>
                     <div 
                       className="code-badge d-flex align-items-center gap-2" 

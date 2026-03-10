@@ -227,6 +227,15 @@ export const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ['Order'],
     }),
+
+    saveFcmToken: builder.mutation({
+      query: ({ fcmToken, token }) => ({
+        url: API_ENDPOINTS.SAVE_FCM_TOKEN,
+        method: 'POST',
+        params: token ? { 'access-token': token } : {},
+        body: { fcm_token: fcmToken },
+      }),
+    }),
   }),
 });
 
@@ -251,4 +260,5 @@ export const {
   useGetContractShippingOrdersQuery,
   useGetContractCompleteOrdersQuery,
   useGetContractCanceledOrdersQuery,
+  useSaveFcmTokenMutation,
 } = userApi;

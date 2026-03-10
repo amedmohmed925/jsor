@@ -192,7 +192,7 @@ const DriverOrdersMain = () => {
               onClick={handleSubmitRating}
               disabled={isRating}
             >
-              {isRating ? t('common:loading') : (t('driver:orders.rate') || 'تقييم')}
+              {isRating ? t('common:messages.loading') : (t('driver:orders.rate') || 'تقييم')}
             </button>
           </div>
         </div>

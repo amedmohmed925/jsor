@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import UserNavbar from '../components/UserNavbar'
 import UserSidebar from '../components/UserSidebar'
 import ProfileMain from '../components/ProfileMain'
@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 const ProviderAccount = () => {
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
     const currentLanguage = i18n.language || 'ar';
     const location = useLocation();
     const { token } = useAuth();
@@ -132,8 +133,14 @@ const ProviderAccount = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="d-flex align-items-center gap-2">
-                                <button type='button' className="login-button text-decoration-none">{t('providerAccount.requestService')}</button>
+                            <div classNa
+                                    type='button' 
+                                    className="login-button text-decoration-none"
+                                    onClick={() => navigate('/user/basic-upload', { state: { driver_id: driverId } })}
+                                >
+                                    {t('providerAccount.requestService')}
+                                
+
                             </div>
                         </div>
                         <div className="orders-sub-filter row align-items-center border-bottom">

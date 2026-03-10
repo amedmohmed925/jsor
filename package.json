@@ -25,6 +25,7 @@
     "arabic-reshaper": "^1.1.0",
     "bidi-js": "^1.0.3",
     "bootstrap": "^5.3.8",
+    "firebase": "^12.10.0",
     "framer-motion": "^12.35.1",
     "html2canvas": "^1.4.1",
     "i18next": "^25.8.10",

@@ -38,11 +38,22 @@ const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
   const { data: listsResponse } = useGetListsQuery();
   const truckList = listsResponse?.Truck || [];
 
+  // Call all hooks to follow Rules of Hooks, but use 'skip' to only fire the active one
+  const newRequests = useGetContractNewOrdersQuery({ token, page }, { skip: activeSubFilter !== 'new-request' });
+  const shippingRequests = useGetContractShippingOrdersQuery({ token, page }, { skip: activeSubFilter !== 'waiting' });
+  const completeRequests = useGetContractCompleteOrdersQuery({ token, page }, { skip: activeSubFilter !== 'shipped' });
+  const canceledRequests = useGetContractCanceledOrdersQuery({ token, page }, { skip: activeSubFilter !== 'cancelled' });
+
   const handleAcceptOffer = async (offerId) => {
     try {
       const response = await acceptOffer(offerId).unwrap();
       if (response.status === 1) {
         toast.success(t('user:user.orders.acceptSuccess') || 'Offer accepted successfully');
+        // Refresh all potentially active queries
+        newRequests.refetch();
+        shippingRequests.refetch();
+        completeRequests.refetch();
+        canceledRequests.refetch();
       } else {
         toast.error(response.message || t('common:messages.error'));
       }
@@ -50,16 +61,6 @@ const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
       toast.error(error?.data?.message || t('common:messages.error'));
     }
   };
-
-  const handleOrderAgain = () => {
-    navigate('/user/contract-upload');
-  };
-
-  // Call all hooks to follow Rules of Hooks, but use 'skip' to only fire the active one
-  const newRequests = useGetContractNewOrdersQuery({ token, page }, { skip: activeSubFilter !== 'new-request' });
-  const shippingRequests = useGetContractShippingOrdersQuery({ token, page }, { skip: activeSubFilter !== 'waiting' });
-  const completeRequests = useGetContractCompleteOrdersQuery({ token, page }, { skip: activeSubFilter !== 'shipped' });
-  const canceledRequests = useGetContractCanceledOrdersQuery({ token, page }, { skip: activeSubFilter !== 'cancelled' });
 
   // Select the active query result
   const activeQueryResult = 
@@ -197,18 +198,25 @@ const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                   <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2">
                     <h6 className='offers-dropdown-text m-0'>{t('user:user.tracking')}</h6>
                   </div>
-                  <div 
-                    className="code-badge d-flex align-items-center gap-2"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      if (order.confirm_code) {
-                        navigator.clipboard.writeText(order.confirm_code);
-                        toast.success(t('common:messages.copied') || 'تم النسخ');
-                      }
-                    }}
-                  >
-                    <img src="../assets/document-copy.svg" alt="" />
-                    {order.confirm_code || order.id}
+                  <div className="d-flex align-items-center gap-2">
+                    {order.driver_id?.mobile && (
+                      <a href={`tel:${order.driver_id.mobile}`} className="contact-driver-button text-decoration-none">
+                        <p className='m-0'>{t('common:buttons.contact_driver')}</p>
+                      </a>
+                    )}
+                    <div 
+                      className="code-badge d-flex align-items-center gap-2"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        if (order.confirm_code) {
+                          navigator.clipboard.writeText(order.confirm_code);
+                          toast.success(t('common:messages.copied') || 'تم النسخ');
+                        }
+                      }}
+                    >
+                      <img src="../assets/document-copy.svg" alt="" />
+                      {order.confirm_code || order.id}
+                    </div>
                   </div>
                 </div>
               )}

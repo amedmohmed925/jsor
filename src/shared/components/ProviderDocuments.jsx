@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
 
 const ProviderDocuments = () => {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
   const { data: homeData, isLoading } = useGetHomeDataQuery();
 
   // Helper to get localized field from API with fallback for bad API data
@@ -47,7 +49,7 @@ const ProviderDocuments = () => {
               <div key={index} className='document-li mb-2'>{item}</div>
             ))}
             <div className="mt-auto">
-              <button className="login-button mt-3">
+              <button className="login-button mt-3" onClick={() => navigate('/signup-driver')}>
                 {isEn ? 'Attach Documents Now' : 'إرفاق الوثائق الآن'}
               </button>
             </div>

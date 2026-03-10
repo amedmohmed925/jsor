@@ -65,7 +65,7 @@ const Hero = () => {
   };
 
   const addDestination = () => {
-    if (destinations.length < 3) {
+    if (destinations.length < 2) {
       setDestinations([...destinations, '']);
     }
   };
@@ -419,7 +419,7 @@ const Hero = () => {
   <AnimatePresence mode="popLayout">
     {destinations.map((dest, idx) => {
       const hasRemove = isMultiple && idx > 0;
-      const hasAdd = isMultiple && idx === destinations.length - 1 && destinations.length < 3;
+      const hasAdd = isMultiple && idx === destinations.length - 1 && destinations.length < 2;
 
       return (
         <motion.div 
@@ -482,17 +482,6 @@ const Hero = () => {
                 title={i18n.language === 'ar' ? 'حذف الوجهة' : 'Remove Destination'}
               >
                 <FontAwesomeIcon icon={faTimes} />
-              </button>
-            )}
-            {hasAdd && (
-              <button 
-                type="button"
-                className="btn btn-primary shadow-sm text-white d-flex align-items-center justify-content-center" 
-                onClick={(e) => { e.preventDefault(); addDestination(); }}
-                style={{ width: '38px', height: '38px', borderRadius: '8px', flexShrink: 0 }}
-                title={i18n.language === 'ar' ? 'إضافة وجهة أخرى' : 'Add another destination'}
-              >
-                <FontAwesomeIcon icon={faPlus} />
               </button>
             )}
           </div>

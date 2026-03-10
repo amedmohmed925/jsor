@@ -34,7 +34,7 @@ const MapClickHandler = ({ onMapClick }) => {
 };
 
 // Stable map component: defined outside BasicUpload so React never remounts it on state changes
-const BasicMapComponent = ({ pickup, destinations, onMapClick, pickupLabel, deliveryLabel }) => (
+const BasicMapComponent = ({ pickup, destinations, onMapClick, tempLocation, pickupLabel, deliveryLabel, isAr }) => (
   <MapContainer
     center={[24.7136, 46.6753]}
     zoom={13}
@@ -46,6 +46,8 @@ const BasicMapComponent = ({ pickup, destinations, onMapClick, pickupLabel, deli
       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     />
     <MapClickHandler onMapClick={onMapClick} />
+    
+    {/* Real markers */}
     <Marker position={[pickup.lat, pickup.lng]}>
       <Popup>{pickupLabel}</Popup>
     </Marker>
@@ -54,6 +56,20 @@ const BasicMapComponent = ({ pickup, destinations, onMapClick, pickupLabel, deli
         <Popup>{deliveryLabel} {index + 1}</Popup>
       </Marker>
     ))}
+
+    {/* Temporary marker while selecting on mobile */}
+    {tempLocation && (
+      <Marker position={[tempLocation.lat, tempLocation.lng]} icon={new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      })}>
+        <Popup>{isAr ? 'موقع محدد' : 'Selected Location'}</Popup>
+      </Marker>
+    )}
   </MapContainer>
 );
 
@@ -76,11 +92,14 @@ const BasicUpload = () => {
     const [numTrucks, setNumTrucks] = useState("1");
     const [goodTypeId, setGoodTypeId] = useState("");
     const [goodPrice, setGoodPrice] = useState("");
+    const [driverId, setDriverId] = useState(null);
     
     // State for map markers and addresses
     const [pickup, setPickup] = useState({ lat: 24.7136, lng: 46.6753, address: "" });
     const [destinations, setDestinations] = useState([{ lat: 24.7136, lng: 46.6753, address: "" }]);
     const [selectingTarget, setSelectingTarget] = useState({ type: 'pickup' });
+    const [tempLocation, setTempLocation] = useState(null);
+    const [showConfirmBtn, setShowConfirmBtn] = useState(false);
 
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
@@ -101,7 +120,7 @@ const BasicUpload = () => {
             setDate(parsed.date || "");
             setTime(parsed.time || "");
             setSelectedService(parsed.selectedService || null);
-            // Don't clear yet, wait for successful submit
+            setDriverId(parsed.driver_id || null);
           }
         } catch (e) {
           console.error("Error parsing saved form", e);
@@ -112,6 +131,9 @@ const BasicUpload = () => {
         }
         if (location.state.destinations && location.state.destinations.length > 0) {
           setDestinations(location.state.destinations.map(d => ({ lat: 24.7136, lng: 46.6753, address: d })));
+        }
+        if (location.state.driver_id) {
+          setDriverId(location.state.driver_id);
         }
       }
     }, [location.state]);
@@ -163,21 +185,57 @@ const BasicUpload = () => {
 
     const handleMapClick = useCallback(async (lat, lng) => {
       const address = await getAddress(lat, lng);
-      if (selectingTarget.type === 'pickup') {
-        setPickup({ lat, lng, address });
-      } else if (selectingTarget.type === 'destination') {
-        const newDests = [...destinations];
-        newDests[selectingTarget.index] = { lat, lng, address };
-        setDestinations(newDests);
+      const newLoc = { lat, lng, address };
+      
+      const isMobile = window.innerWidth <= 768;
+
+      if (!isMobile) {
+        // Direct update on desktop
+        if (selectingTarget.type === 'pickup') {
+          setPickup(newLoc);
+          setSelectingTarget({ type: 'destination', index: 0 });
+        } else if (selectingTarget.type === 'destination') {
+          const newDests = [...destinations];
+          newDests[selectingTarget.index] = newLoc;
+          setDestinations(newDests);
+          if (selectingTarget.index < destinations.length - 1) {
+            setSelectingTarget({ type: 'destination', index: selectingTarget.index + 1 });
+          }
+        }
+        setTempLocation(null);
+        setShowConfirmBtn(false);
+      } else {
+        // Just show candidate and confirm button on mobile
+        setTempLocation(newLoc);
+        setShowConfirmBtn(true);
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectingTarget, destinations, i18n.language]);
 
+    const handleConfirmLocation = () => {
+      if (!tempLocation) return;
+
+      if (selectingTarget.type === 'pickup') {
+        setPickup(tempLocation);
+        setSelectingTarget({ type: 'destination', index: 0 });
+      } else if (selectingTarget.type === 'destination') {
+        const newDests = [...destinations];
+        newDests[selectingTarget.index] = tempLocation;
+        setDestinations(newDests);
+        
+        if (selectingTarget.index < destinations.length - 1) {
+          setSelectingTarget({ type: 'destination', index: selectingTarget.index + 1 });
+        }
+      }
+      
+      setTempLocation(null);
+      setShowConfirmBtn(false);
+    };
+
     const addDestination = () => {
-      if (destinations.length < 3) { // Limit to 3 destinations
+      if (destinations.length < 2) { 
         setDestinations([...destinations, { lat: 24.7136, lng: 46.6753, address: "" }]);
       } else {
-        toast.info(i18n.language.startsWith('en') ? "Maximum is 3 points" : "الحد الأقصى للنقاط هو 3");
+        toast.info(i18n.language.startsWith('en') ? "Maximum is 2 delivery points" : "الحد الأقصى هو نقطتي استلام");
       }
     };
 
@@ -194,9 +252,7 @@ const BasicUpload = () => {
         return;
       }
 
-      // Check if user is authenticated and is a client
       if (!isAuthenticated || role !== 'user') {
-        // Save form data to session storage
         sessionStorage.setItem('jsor_pending_order', JSON.stringify({
           type: 'basic',
           pickup,
@@ -204,6 +260,7 @@ const BasicUpload = () => {
           truckId,
           numTrucks,
           goodTypeId,
+          driver_id: driverId,
           goodPrice,
           date,
           time,
@@ -214,7 +271,6 @@ const BasicUpload = () => {
         return;
       }
 
-      // Format date to DD-MM-YYYY
       const [year, month, day] = date.split('-');
       const formattedDate = `${day}-${month}-${year}`;
 
@@ -223,11 +279,17 @@ const BasicUpload = () => {
       formData.append('lang_from', pickup.lng);
       formData.append('address_from', pickup.address);
       
-      destinations.forEach((dest, index) => {
-        formData.append(`lat_to${index + 1}`, dest.lat);
-        formData.append(`lang_to${index + 1}`, dest.lng);
-        formData.append(`address_to${index + 1}`, dest.address);
-      });
+      if (destinations[0]) {
+        formData.append('lat_to', destinations[0].lat);
+        formData.append('lang_to', destinations[0].lng);
+        formData.append('address_to', destinations[0].address);
+      }
+      
+      if (destinations[1] && destinations[1].address) {
+        formData.append('lat_to1', destinations[1].lat);
+        formData.append('lang_to1', destinations[1].lng);
+        formData.append('address_to1', destinations[1].address);
+      }
 
       formData.append('truck_id', truckId);
       formData.append('number', numTrucks);
@@ -235,17 +297,19 @@ const BasicUpload = () => {
       formData.append('date', formattedDate);
       formData.append('time', time);
       formData.append('good_type_id', goodTypeId);
+      
+      // Only append driver_id if it was passed from the provider profile (request service button)
+      if (driverId && location.state?.driver_id) {
+        formData.append('driver_id', driverId);
+      }
       formData.append('good_price', goodPrice);
 
       try {
         const response = await createNormalRequest(formData).unwrap();
         if (response.status === 1) {
           toast.success(t('basicUpload.successMessage'));
-          
-          // Clear saved form if any
           sessionStorage.removeItem('jsor_pending_order');
 
-          // Clear all fields
           setTruckId("");
           setSelectedTruck(null);
           setSelectedService(null);
@@ -372,15 +436,11 @@ const BasicUpload = () => {
                 <h6 className='choose-from-map m-0'>{t('basicUpload.mapSelectInstruction')}</h6>
               </div>
 
-              {/* Truck Data */}
               <h2 className='orders-title mt-3'>{t('basicUpload.truckData')}</h2>
                 <div className="row">
                     <div className="col-lg-8">
                         <label className="form-label mb-1">{t('basicUpload.truckType')}</label>
-
-                        {/* ✅ Custom Select */}
                         <div className="custom-select-wrapper" style={{ zIndex: open ? 1100 : 10 }}>
-                            
                             <div
                             className="custom-select form-input"
                             onClick={() => setOpen(!open)}
@@ -393,10 +453,8 @@ const BasicUpload = () => {
                             ) : (
                                 <span className="placeholder">{t('basicUpload.truckTypePlaceholder')}</span>
                             )}
-
                             <ExpandMoreIcon className={`arrow ${open ? "rotate" : ""}`} />
                             </div>
-
                             {open && (
                             <div className="custom-options">
                                 {(listsData?.Truck || []).map((option) => (
@@ -411,9 +469,7 @@ const BasicUpload = () => {
                                 ))}
                             </div>
                             )}
-
                         </div>
-
                     </div>
                     <div className="col-lg-4">
                     <div className="mb-3">
@@ -431,10 +487,8 @@ const BasicUpload = () => {
                 </div>
                     </div>
                 </div>
-                {/* Service Type Filter (Radio with Images) */}
 <div>
 <h2 className='orders-title'>{t('basicUpload.truckSize')}</h2>
-
   <div className="horizontal-scroll-wrapper">
     {(subTrucksData || []).map((item) => (
       <div
@@ -450,7 +504,6 @@ const BasicUpload = () => {
             alt={getLangField(item, 'name')}
           />
         </div>
-        
         <input
           type="radio"
           className="checkbox-style"
@@ -468,8 +521,6 @@ const BasicUpload = () => {
 <div className="mb-3">
                     <label className="form-label mb-1">{t('basicUpload.date')}</label>
                     <div className="datetime-wrapper position-relative">
-      
-      {/* Hidden native inputs */}
       <input
         ref={dateRef}
         type="date"
@@ -477,7 +528,6 @@ const BasicUpload = () => {
         value={date}
         onChange={(e) => setDate(e.target.value)}
       />
-
       <input
         ref={timeRef}
         type="time"
@@ -485,31 +535,22 @@ const BasicUpload = () => {
         value={time}
         onChange={(e) => setTime(e.target.value)}
       />
-
-      {/* Visible fake input */}
       <div className="form-input datetime-input d-flex align-items-center justify-content-between">
-
         <div className="d-flex align-items-center gap-4">
-                    {/* Right: Date */}
         <span
           className="datetime-part"
           onClick={() => dateRef.current.showPicker()}
         >
           {date || t('basicUpload.date')}
         </span>
-
         <span className="datetime-separator">/</span>
-
-        {/* Time */}
         <span
           className="datetime-part"
           onClick={() => timeRef.current.showPicker()}
         >
           {time || t('basicUpload.time')}
         </span>
-
         </div>
-        {/* Left Icon */}
         <CalendarMonthIcon className="calendar-icon" />
       </div>
     </div>
@@ -530,7 +571,6 @@ const BasicUpload = () => {
     </div>
 </div>
                 </div>
-
                     </div>
                     <div className="col-lg-3">
                     <label className="form-label mb-1">{t('basicUpload.goodPrice')}</label>
@@ -558,26 +598,37 @@ const BasicUpload = () => {
                                   {isSubmitting ? t('basicUpload.submitting') : t('basicUpload.submit')}
                                 </button>
                             </div>
-
             </div>
           </div>
           <div className="col-md-6">
-            <div className="shadow p-3 rounded-3 h-100">
+            <div className="shadow p-3 rounded-3 h-100 position-relative">
             <h2 className='orders-title'>{t('basicUpload.mapTitle')}</h2>
             <div className="mt-3 pb-3 h-100">
               <BasicMapComponent
                 pickup={pickup}
                 destinations={destinations}
                 onMapClick={handleMapClick}
+                tempLocation={tempLocation}
                 pickupLabel={t('basicUpload.pickupPopup')}
                 deliveryLabel={t('basicUpload.deliveryPopup')}
+                isAr={isRtl}
               />
             </div>
+            {showConfirmBtn && (
+              <div className="position-absolute bottom-0 start-50 translate-middle-x mb-4 pb-3 d-md-none" style={{ zIndex: 1000 }}>
+                <button 
+                  className="btn btn-primary px-4 py-2 shadow-lg fw-bold" 
+                  onClick={handleConfirmLocation}
+                  style={{ borderRadius: '10px' }}
+                >
+                  {i18n.language === 'ar' ? 'تأكيد وإضافة' : 'Confirm & Add'}
+                </button>
+              </div>
+            )}
             </div>
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   )

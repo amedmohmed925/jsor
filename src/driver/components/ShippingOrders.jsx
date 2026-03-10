@@ -94,9 +94,13 @@ const ShippingOrders = ({ orders, isLoading }) => {
                   >
                     <h6 className='offers-dropdown-text m-0'>{t('driver:orders.track_location') || 'تتبع موقعك'}</h6>
                   </div>
-                  <div className="contact-driver-button">
+                  <a 
+                    href={`tel:${order.user_id?.mobile}`} 
+                    className="contact-driver-button text-decoration-none"
+                    style={{ cursor: 'pointer' }}
+                  >
                     <p className='m-0'>{t('driver:orders.call_client') || 'الاتصال بالعميل'}</p>
-                  </div>
+                  </a>
                   <Link 
                     to={`/driver/order-details/${order.id}`} 
                     state={{ order }}
