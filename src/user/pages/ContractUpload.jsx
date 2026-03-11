@@ -188,8 +188,10 @@ const ContractUpload = () => {
       }
       setErrors({});
 
-      // Check if user is authenticated and is a client
-      if (!isAuthenticated || role !== 'user') {
+
+      
+      // Check if user is authenticated
+      if (!isAuthenticated) {
         // Save form data to session storage
         sessionStorage.setItem('jsor_pending_order', JSON.stringify({
           type: 'contract',

@@ -211,7 +211,17 @@ const Tracking = () => {
         <div className="row">
           <div className="col-12 mt-3">
             <div className="shadow p-3 rounded-3 h-100">
-            <h2 className='orders-title'>{t('user:user.tracking')}</h2>
+            <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+              <h2 className='orders-title m-0'>{t('user:user.tracking')}</h2>
+              <button 
+                onClick={() => navigate(-1)} 
+                className="btn btn-outline-primary rounded-pill px-4 py-2 d-flex align-items-center gap-2 shadow-sm"
+                style={{ fontSize: '0.9rem', fontWeight: '500', transition: 'all 0.3s ease' }}
+              >
+                <i className={`fas ${i18n.dir() === 'rtl' ? 'fa-arrow-right' : 'fa-arrow-left'}`}></i>
+                {t('common:buttons.back', 'الرجوع')}
+              </button>
+            </div>
             <div className="mt-3 pb-3 h-100">
               <MapComponent />
             </div>

@@ -184,6 +184,7 @@ const BasicUpload = () => {
       }, 500);
     };
 
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
     const handleMapClick = useCallback(async (lat, lng) => {
       const address = await getAddress(lat, lng);
       const newLoc = { lat, lng, address };
@@ -267,7 +268,10 @@ const BasicUpload = () => {
       }
       setErrors({});
 
-      if (!isAuthenticated || role !== 'user') {
+      // Form submission logic
+
+      
+      if (!isAuthenticated) {
         sessionStorage.setItem('jsor_pending_order', JSON.stringify({
           type: 'basic',
           pickup,

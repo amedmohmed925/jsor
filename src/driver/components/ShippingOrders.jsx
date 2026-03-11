@@ -86,20 +86,20 @@ const ShippingOrders = ({ orders, isLoading }) => {
               </div>
 
               <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 w-100">
-                <div className="d-flex align-items-center gap-2">
+                <div className="d-flex align-items-center flex-wrap gap-2">
                   <div 
                     className="offers-dropdown text-decoration-none d-flex align-items-center justify-content-center gap-2"
                     style={{ cursor: 'pointer' }}
                     onClick={() => navigate('/driver/mission-started', { state: { order } })}
                   >
-                    <h6 className='offers-dropdown-text m-0'>{t('driver:orders.track_location') || 'تتبع موقعك'}</h6>
+                    <h6 className='offers-dropdown-text m-0 text-nowrap'>{t('driver:orders.track_location') || 'تتبع موقعك'}</h6>
                   </div>
                   <a 
                     href={`tel:${order.user_id?.mobile}`} 
                     className="contact-driver-button text-decoration-none"
                     style={{ cursor: 'pointer' }}
                   >
-                    <p className='m-0'>{t('driver:orders.call_client') || 'الاتصال بالعميل'}</p>
+                    <p className='m-0 text-nowrap'>{t('driver:orders.call_client') || 'الاتصال بالعميل'}</p>
                   </a>
                   <Link 
                     to={`/driver/order-details/${order.id}`} 
@@ -107,7 +107,7 @@ const ShippingOrders = ({ orders, isLoading }) => {
                     className="code-badge d-flex align-items-center gap-2 text-decoration-none"
                     style={{ cursor: 'pointer', color: 'inherit' }}
                   >
-                    {t('driver:orders.details') || 'التفاصيل'}
+                    <span className="text-nowrap">{t('driver:orders.details') || 'التفاصيل'}</span>
                   </Link>
                 </div>
               </div>

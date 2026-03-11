@@ -114,15 +114,15 @@ const VehiclesComponent = () => {
                                         {getStatusText(vehicle.status)}
                                     </div>
                                 </div>
-                                <div className="d-flex gap-2 align-items-center mb-1">
+                                <div className="d-flex gap-2 align-items-center mb-1 flex-wrap">
                                     <p className="user-desc m-0">{isRtl ? 'وثائق:' : 'Docs:'}</p>
-                                    <div className={`${vehicle.car_registration ? 'document-blue' : 'document-gray'} py-2 px-3 rounded-pill`}>
+                                    <div className={`${vehicle.car_registration ? 'document-blue' : 'document-gray'} py-1 px-3 rounded-pill text-nowrap`} style={{ fontSize: '0.85rem' }}>
                                         {isRtl ? 'تسجيل' : 'Registration'}
                                     </div>
-                                    <div className={`${vehicle.insurance ? 'document-blue' : 'document-gray'} py-2 px-3 rounded-pill`}>
+                                    <div className={`${vehicle.insurance ? 'document-blue' : 'document-gray'} py-1 px-3 rounded-pill text-nowrap`} style={{ fontSize: '0.85rem' }}>
                                         {isRtl ? 'تأمين' : 'Insurance'}
                                     </div>
-                                    <div className={`${vehicle.driving_license ? 'document-blue' : 'document-gray'} py-2 px-3 rounded-pill`}>
+                                    <div className={`${vehicle.driving_license ? 'document-blue' : 'document-gray'} py-1 px-3 rounded-pill text-nowrap`} style={{ fontSize: '0.85rem' }}>
                                         {isRtl ? 'رخصة' : 'License'}
                                     </div>
                                 </div>

@@ -238,7 +238,7 @@ const Hero = () => {
                       {getLangField(slider, 'title') || slider.title}
                     </motion.h1>
                     <motion.p 
-                      className="hero-description fs-5 text-white"
+                      className={`hero-description text-white ${i18n.language.startsWith('en') ? 'fs-6' : 'fs-5'}`}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.8, delay: 0.2 }}
@@ -251,7 +251,7 @@ const Hero = () => {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.4 }}
-                      style={{ paddingBottom: '40px' }} // رفع الأزرار لتجنب تداخلها مع الكارت
+                      style={{ paddingBottom: i18n.language.startsWith('en') ? '20px' : '40px' }} // رفع الأزرار لتجنب تداخلها مع الكارت
                     >
                       <Link to="/user/basic-upload" className="login-button text-decoration-none">{t('hero.orderTruck')}</Link>
                       <Link to="/signup-driver" className="join-button text-decoration-none">{t('common:hero.joinDriver', 'انضم كسائق')}</Link>
@@ -287,7 +287,11 @@ const Hero = () => {
       {/* Filter box - Restored to absolute positioning */}
       <motion.div 
   className="container filter-box-container position-absolute start-50 translate-middle-x" 
-  style={{ top: '46%', zIndex: 110 }} // التثبيت من الأعلى يجعله يتمدد للأسفل
+  style={{ 
+    bottom: '-10%', 
+    zIndex: 110,
+    top: 'auto'
+  }} // التثبيت من الأسفل لضمان عدم التداخل مع السكشن التالي
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}

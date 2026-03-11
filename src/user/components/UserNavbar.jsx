@@ -67,7 +67,12 @@ const UserNavbar = () => {
                 aria-expanded="false"
                 style={{ cursor: 'pointer' }}
               >
-                <img src={user?.avatar || "/assets/man.png"} alt="user" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }} />
+                <img 
+                  src={user?.avatar || "/assets/user-avatar.png"} 
+                  alt="user" 
+                  style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }} 
+                  onError={(e) => { e.target.src = "/assets/user-avatar.png" }}
+                />
                 <i className="fas fa-chevron-down text-muted" style={{ fontSize: '0.6rem' }}></i>
               </div>
               <ul className="dropdown-menu shadow-lg border-0 mt-2 p-2" style={{ borderRadius: '15px', minWidth: '200px', zIndex: 1050, position: 'absolute', right: i18n.dir() === 'rtl' ? 'auto' : '10px', left: i18n.dir() === 'rtl' ? '10px' : 'auto', transform: 'none' }}>
@@ -170,7 +175,13 @@ const UserNavbar = () => {
                             aria-expanded="false"
                             style={{ cursor: 'pointer', outline: 'none', boxShadow: '0 .125rem .25rem rgba(0,0,0,.075)' }}
                         >
-                            <img src={user?.avatar || "/assets/man.png"} className='border border-white' alt="user" style={{ width: '26px', height: '26px', borderRadius: '50%', flexShrink: 0 }} />
+                            <img 
+                                src={user?.avatar || "/assets/user-avatar.png"} 
+                                className='border border-white' 
+                                alt="user" 
+                                style={{ width: '26px', height: '26px', borderRadius: '50%', flexShrink: 0 }} 
+                                onError={(e) => { e.target.src = "/assets/user-avatar.png" }}
+                            />
                             <div className="text-start">
                                 <h6 className="user-name m-0" style={{ fontSize: '0.85rem' }}>{(user?.name || 'User')}</h6>
                             </div>

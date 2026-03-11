@@ -44,7 +44,7 @@ const Navbar = () => {
             <LanguageSwitcher isMinimal={true} />
             {(role === 'driver' || role === 'admin') ? (
                 <Link to={role === 'admin' ? "/admin/dashboard" : "/driver/profile"} className="text-decoration-none">
-                    <img src={user?.avatar || "/assets/avatar.png"} className='user-img border shadow-sm' alt="user" style={{ width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.src = "/assets/man.png" }}/>
+                    <img src={user?.avatar || (role === 'admin' ? "/assets/admin-avatar.png" : "/assets/driver-avatar.png")} className='user-img border shadow-sm' alt="user" style={{ width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover' }} />
                 </Link>
             ) : (
                 <div className="dropdown position-static">
@@ -55,7 +55,7 @@ const Navbar = () => {
                         aria-expanded="false"
                         style={{ cursor: 'pointer' }}
                     >
-                        <img src={user?.avatar || "/assets/avatar.png"} className='user-img border shadow-sm' alt="user" style={{ width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.src = "/assets/man.png" }} />
+                        <img src={user?.avatar || "/assets/user-avatar.png"} className='user-img border shadow-sm' alt="user" style={{ width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover' }} />
                     </div>
                     
                     {/* تعديل: التموضع بالنسبة للشاشة في الموبايل لمنع الخروج عن الحواف */}
@@ -150,10 +150,9 @@ const Navbar = () => {
                             className="login-button text-decoration-none d-flex align-items-center justify-content-center justify-content-lg-start gap-2 px-3 py-2 rounded-pill shadow-sm"
                         >
                             <img 
-                                src={user?.avatar || "/assets/avatar.png"} 
+                                src={user?.avatar || (role === 'admin' ? "/assets/admin-avatar.png" : "/assets/driver-avatar.png")} 
                                 alt="avatar" 
                                 style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} 
-                                onError={(e) => { e.target.src = "/assets/man.png" }}
                             />
                             <span className="fw-semibold">{(user?.name || t('navigation.profile'))}</span>
                         </Link>
@@ -173,10 +172,9 @@ const Navbar = () => {
                             style={{ cursor: 'pointer' }}
                         >
                             <img 
-                                src={user?.avatar || "/assets/avatar.png"} 
+                                src={user?.avatar || "/assets/user-avatar.png"} 
                                 alt="avatar" 
                                 style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} 
-                                onError={(e) => { e.target.src = "/assets/man.png" }}
                             />
                             <span className="fw-semibold">{(user?.name || t('navigation.profile'))}</span>
                         </div>

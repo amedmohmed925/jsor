@@ -37,6 +37,15 @@ const TripOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
 
   const [acceptOffer, { isLoading: isAccepting }] = useAcceptOfferMutation();
 
+  const handleOrderAgain = (order) => {
+    // Logic for ordering again
+    if (order.type === 'trip') {
+        navigate('/user/trip-upload', { state: { reorder: order } });
+    } else {
+        navigate('/user/basic-upload', { state: { reorder: order } });
+    }
+  };
+
   // Fetch lists for truck images
   const { data: listsResponse } = useGetListsQuery();
   const truckList = listsResponse?.Truck || [];
@@ -286,8 +295,8 @@ const TripOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                     <Link to='/user/tracking' state={{ order }} className="offers-dropdown text-decoration-none d-flex align-items-center justify-content-center gap-2">
                         <h6 className='offers-dropdown-text m-0'>{t('user:user.tracking')}</h6>
                       </Link>
-                        {driverObj?.mobile && (
-                          <a href={`tel:${driverObj.mobile}`} className="contact-driver-button text-decoration-none">
+                        {order.driver_id?.mobile && (
+                          <a href={`tel:${order.driver_id.mobile}`} className="contact-driver-button text-decoration-none">
                             <p className='m-0'>{t('common:buttons.contact_driver')}</p>
                           </a>
                         )}
@@ -361,7 +370,7 @@ const TripOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                     <div className="contact-driver-button" onClick={() => setShowRating(order)}>
                       <p className='m-0'>{t('user:notification.rate')}</p>
                     </div>
-                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={handleOrderAgain}>
+                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={() => handleOrderAgain(order)}>
                       <h6 className='offers-dropdown-text m-0'>{t('common:buttons.order_again')}</h6>
                     </div>
                   </div>
@@ -419,7 +428,7 @@ const TripOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                     <div className="contact-driver-button" onClick={() => setShowRating(order)}>
                       <p className='m-0'>{t('user:notification.rate')}</p>
                     </div>
-                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={handleOrderAgain}>
+                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={() => handleOrderAgain(order)}>
                       <h6 className='offers-dropdown-text m-0'>{t('common:buttons.order_again')}</h6>
                     </div>
                   </div>

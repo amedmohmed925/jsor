@@ -37,6 +37,17 @@ const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
 
   const [acceptOffer, { isLoading: isAccepting }] = useAcceptOfferMutation();
 
+  const handleOrderAgain = (order) => {
+    // Logic for ordering again (e.g. redirecting to upload with state)
+    if (order.good_type_id) {
+        navigate('/user/basic-upload', { state: { reorder: order } });
+    } else if (order.type === 'trip') {
+        navigate('/user/trip-upload', { state: { reorder: order } });
+    } else {
+        navigate('/user/basic-upload', { state: { reorder: order } });
+    }
+  };
+
   // Fetch lists for truck images
   const { data: listsResponse } = useGetListsQuery();
   const truckList = listsResponse?.Truck || [];
@@ -373,7 +384,7 @@ const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                     <div className="contact-driver-button" onClick={() => setShowRating(order)}>
                       <p className='m-0'>{t('user:notification.rate')}</p>
                     </div>
-                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={handleOrderAgain}>
+                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={() => handleOrderAgain(order)}>
                       <h6 className='offers-dropdown-text m-0'>{t('common:buttons.order_again')}</h6>
                     </div>
                   </div>
@@ -431,7 +442,7 @@ const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                     <div className="contact-driver-button" onClick={() => setShowRating(order)}>
                       <p className='m-0'>{t('user:notification.rate')}</p>
                     </div>
-                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={handleOrderAgain}>
+                    <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={() => handleOrderAgain(order)}>
                       <h6 className='offers-dropdown-text m-0'>{t('common:buttons.order_again')}</h6>
                     </div>
                   </div>

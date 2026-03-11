@@ -60,6 +60,14 @@ const DriverNavbar = () => {
                 </span>
               )}
             </Link>
+            <Link to="/driver/profile" className="ms-1">
+              <img 
+                src={user?.avatar || "/assets/user-avatar.png"} 
+                alt="user" 
+                style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid white' }} 
+                onError={(e) => { e.target.src = "/assets/user-avatar.png" }}
+              />
+            </Link>
         </div>
         
         {/* Navbar Toggler */}
@@ -117,7 +125,13 @@ const DriverNavbar = () => {
                 
                 <div className="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2">
                     <Link to="/driver/profile" className="d-flex gap-2 align-items-center justify-content-center justify-content-lg-start text-decoration-none login-button px-3 py-2 rounded-pill shadow-sm">
-                        <img src={user?.avatar || "/assets/man.png"} className='user-img border border-white' alt="user" style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
+                        <img 
+                            src={user?.avatar || "/assets/driver-avatar.png"} 
+                            className='user-img border border-white' 
+                            alt="user" 
+                            style={{ width: '26px', height: '26px', borderRadius: '50%' }} 
+                            onError={(e) => { e.target.src = "/assets/driver-avatar.png" }}
+                        />
                         <div className="text-start">
                             <h6 className="user-name m-0" style={{ fontSize: '0.85rem' }}>{(user?.name || 'Driver')}</h6>
                         </div>

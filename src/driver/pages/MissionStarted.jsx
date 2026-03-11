@@ -167,9 +167,19 @@ const MissionStarted = () => {
                 <div className="row">
                     <div className="col-12 mt-3">
                         <div className="shadow p-3 rounded-3 h-100">
-                            <h2 className='orders-title'>
-                                {isRtl ? 'بدأ تنفيذ المهمة يمكنك تتبع موقعك' : 'Mission started, track your location'}
-                            </h2>
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                <h2 className='orders-title m-0'>
+                                    {isRtl ? 'بدأ تنفيذ المهمة يمكنك تتبع موقعك' : 'Mission started, track your location'}
+                                </h2>
+                                <button 
+                                    className="btn btn-outline-primary d-flex align-items-center gap-2"
+                                    onClick={() => navigate(-1)}
+                                    style={{ borderRadius: '10px' }}
+                                >
+                                    <i className={`bi bi-arrow-${isRtl ? 'right' : 'left'}`}></i>
+                                    <span>{isRtl ? 'الرجوع' : 'Back'}</span>
+                                </button>
+                            </div>
                             <div className="mt-3 pb-3 h-100">
                                 <MapComponent />
                             </div>

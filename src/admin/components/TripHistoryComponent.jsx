@@ -437,68 +437,80 @@ const TripHistoryComponent = () => {
 
         {/* Table */}
         {!isLoading && !isError && (
-          <div className="table-responsive border rounded-2">
-            <table className="table table-borderless align-middle text-center">
-              <thead className="table-head">
-                <tr>
-                  <th>{t('admin:tripHistory.tripId')}</th>
-                  <th>{t('admin:tripHistory.vehicle')}</th>
-                  <th>{t('admin:tripHistory.driver')}</th>
-                  <th>{t('admin:tripHistory.route')}</th>
-                  <th>{t('admin:tripHistory.status')}</th>
-                  <th>{t('admin:tripHistory.income')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredItems.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="py-4 text-muted">{t('admin:tripHistory.noTrips')}</td>
-                  </tr>
-                ) : (
-                  filteredItems.map((item) => (
-                    <tr key={item.id}>
-                      <td className='p-2'>
-                        <div className='months-filter-item'>{'#TR' + String(item.id).padStart(3, '0')}</div>
-                      </td>
-                      <td className='p-2'>
-                        <div className='months-filter-item'>{item.sub_truck_id?.name || item.truck_id?.name || '-'}</div>
-                      </td>
-                      <td className='p-2'>
-                        <div className='months-filter-item'>{item.driver_id?.name || '-'}</div>
-                      </td>
-                      <td className='p-2'>
-                        <div className="from-to-wrapper">
-                          <div className="from-to-icons">
-                            <div className="location-icon">
-                              <LocationOnOutlinedIcon className='fs-6' />
-                            </div>
-                            <div className="circle"></div>
-                            <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
-                            <div className="location-icon">
-                              <LocationOnOutlinedIcon className='fs-6' />
-                            </div>
-                          </div>
-                          <div className="from-to-text">
-                            <span>{getLocationFrom(item)}</span>
-                            <span>{getLocationTo(item)}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className='p-2'>
-                        <div className={getStatusClass(item.status) + ' py-1 px-2 rounded-2 text-nowrap text-center'}>
-                          {getStatusName(item.status)}
-                        </div>
-                      </td>
-                      <td className='p-2'>
-                        <div className='datetime-part'>{(item.driver_price || 0) + ' ' + t('admin:tripHistory.currency')}</div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+  <div className="table-responsive border rounded-3 bg-white shadow-sm mb-4">
+    <table className="table table-hover align-middle mb-0 w-100" style={{ minWidth: '800px' }}>
+      <thead className="table-light">
+        <tr>
+          {/* استخدمنا text-start لكي يتغير اتجاه النص تلقائياً مع لغة الموقع */}
+          <th className="py-3 px-3 text-start text-nowrap">{t('admin:tripHistory.tripId')}</th>
+          <th className="py-3 px-3 text-start">{t('admin:tripHistory.vehicle')}</th>
+          <th className="py-3 px-3 text-start">{t('admin:tripHistory.driver')}</th>
+          <th className="py-3 px-3 text-start">{t('admin:tripHistory.route')}</th>
+          <th className="py-3 px-3 text-center text-nowrap">{t('admin:tripHistory.status')}</th>
+          <th className="py-3 px-3 text-end text-nowrap">{t('admin:tripHistory.income')}</th>
+        </tr>
+      </thead>
+      <tbody className="border-top-0">
+        {filteredItems.length === 0 ? (
+          <tr>
+            <td colSpan="6" className="py-5 text-center text-muted">
+              {t('admin:tripHistory.noTrips')}
+            </td>
+          </tr>
+        ) : (
+          filteredItems.map((item) => (
+            <tr key={item.id}>
+              {/* رقم الرحلة */}
+              <td className="p-3 text-start">
+                <span className="fw-semibold text-secondary">
+                  {'#TR' + String(item.id).padStart(3, '0')}
+                </span>
+              </td>
+
+              {/* الشاحنة / المركبة (تم إزالة الكلاس المقيد للمساحة) */}
+              <td className="p-3 text-start fw-medium text-dark">
+                {item.sub_truck_id?.name || item.truck_id?.name || '-'}
+                {/* ملاحظة: إذا كان الاسم يعتمد على اللغة من الـ API، يمكنك استخدام شيء مثل: item.truck_id?.[`name_${i18n.language}`] */}
+              </td>
+
+              {/* السائق */}
+              <td className="p-3 text-start text-muted">
+                {item.driver_id?.name || '-'}
+              </td>
+
+              {/* المسار */}
+              <td className="p-3 text-start">
+                <div className="d-flex align-items-center gap-3">
+                  <div className="d-flex flex-column align-items-center">
+                    <LocationOnOutlinedIcon sx={{ fontSize: 18, color: '#10b981' }} />
+                    <div style={{ width: '2px', height: '15px', backgroundColor: '#e5e7eb', margin: '2px 0' }}></div>
+                    <LocationOnOutlinedIcon sx={{ fontSize: 18, color: '#ef4444' }} />
+                  </div>
+                  <div className="d-flex flex-column justify-content-between small">
+                    <span className="text-dark fw-medium mb-2">{getLocationFrom(item)}</span>
+                    <span className="text-muted">{getLocationTo(item)}</span>
+                  </div>
+                </div>
+              </td>
+
+              {/* الحالة */}
+              <td className="p-3 text-center">
+                <span className={`status-badge ${getStatusClass(item.status)}`}>
+                  {getStatusName(item.status)}
+                </span>
+              </td>
+
+              {/* الدخل / التسعيرة */}
+              <td className="p-3 text-end text-nowrap fw-bold text-dark">
+                {item.driver_price || 0} <span className="small text-muted fw-normal mx-1">{t('admin:tripHistory.currency')}</span>
+              </td>
+            </tr>
+          ))
         )}
+      </tbody>
+    </table>
+  </div>
+)}
       </div>
     </div>
   );

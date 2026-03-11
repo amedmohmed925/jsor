@@ -98,7 +98,13 @@ const AdminNavbar = () => {
                         aria-expanded="false"
                         style={{ cursor: 'pointer' }}
                     >
-                        <img src={user?.avatar || "/assets/man.png"} className='user-img border border-white' alt="user" style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <img 
+                            src={user?.avatar || "/assets/user-avatar.png"} 
+                            className='user-img border border-white' 
+                            alt="user" 
+                            style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover' }} 
+                            onError={(e) => { e.target.src = "/assets/user-avatar.png" }}
+                        />
                         <div className="d-none d-md-block text-start">
                             <h6 className="user-name m-0" style={{ fontSize: '0.9rem' }}>{user?.name || 'Admin'}</h6>
                             <p className="user-desc m-0" style={{ fontSize: '0.75rem' }}>{t(`common:roles.${role}`, 'مشرف')}</p>
