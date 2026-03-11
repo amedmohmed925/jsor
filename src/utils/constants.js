@@ -165,6 +165,7 @@ export const API_ENDPOINTS = {
   CANCEL_REQUEST: '/api/web/v1/site/cancel-request',
   RATE_REQUEST: '/api/web/v1/site/rate-request',
   ACCEPT_OFFER: '/api/web/v1/site/accept-offer',
+  DEVICE_TOKEN: '/api/web/v1/site/device-token',
 
   // Normal Orders (API per status)
   MY_NORMAL_NEW_ORDERS: '/api/web/v1/site/my-normal-new-order',

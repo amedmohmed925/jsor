@@ -4,7 +4,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useGetHomeDataQuery } from '../../api/site/siteApi';
+import { useGetHomeDataQuery, useSaveDeviceTokenMutation } from '../../api/site/siteApi';
 import { useLoginMutation } from '../../api/auth/authApi';
 import { setCredentials } from '../../store/slices/authSlice';
 
@@ -17,6 +17,7 @@ const LoginMain = () => {
   const { t, i18n } = useTranslation(['auth', 'common']);
   const { data: homeData, isLoading: isHomeLoading } = useGetHomeDataQuery();
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [saveDeviceToken] = useSaveDeviceTokenMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,11 +62,38 @@ const LoginMain = () => {
 
       if (loginData) {
         const userData = loginData.data;
+        const userToken = loginData.access_token;
         
         dispatch(setCredentials({
           user: userData,
-          token: loginData.access_token
+          token: userToken
         }));
+
+        // Send device token after successful login
+        try {
+          // Identify device type
+          let deviceType = 'web';
+          const ua = navigator.userAgent;
+          if (/android/i.test(ua)) {
+            deviceType = 'android';
+          } else if (/iPad|iPhone|iPod/.test(ua)) {
+            deviceType = 'ios';
+          }
+
+          // Use a placeholder or session-based token for web if FCM is not integrated
+          // The user specifically asked for "device_token" which is usually a unique ID
+          // For web, we can use a combination of screen resolution and user agent or just 'web-client'
+          const deviceToken = `web-${Math.random().toString(36).substring(2, 15)}`;
+
+          await saveDeviceToken({
+            token: userToken,
+            device_token: deviceToken,
+            device_type: deviceType
+          }).unwrap();
+        } catch (deviceTokenErr) {
+          console.error('Failed to save device token:', deviceTokenErr);
+          // Don't block login if device token fails
+        }
         
         // Redirect based on user_type
         const userType = userData?.user_type;

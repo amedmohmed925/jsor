@@ -200,6 +200,20 @@ export const siteApi = baseApi.injectEndpoints({
         body: { offer_id: offerId },
       }),
     }),
+
+    /**
+     * Save Device Token
+     * POST /api/web/v1/site/device-token
+     * Body: { device_token, device_type }
+     */
+    saveDeviceToken: builder.mutation({
+      query: ({ token, device_token, device_type }) => ({
+        url: API_ENDPOINTS.DEVICE_TOKEN,
+        method: 'POST',
+        params: { 'access-token': token },
+        body: { device_token, device_type },
+      }),
+    }),
   }),
 });
 
@@ -219,4 +233,5 @@ export const {
   useGetContactInfoQuery,
   useDriverSignupMutation,
   useGetCitiesQuery,
+  useSaveDeviceTokenMutation,
 } = siteApi;
