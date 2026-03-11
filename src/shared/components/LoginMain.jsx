@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useGetHomeDataQuery, useSaveDeviceTokenMutation } from '../../api/site/siteApi';
 import { useLoginMutation } from '../../api/auth/authApi';
 import { setCredentials } from '../../store/slices/authSlice';
+import { useNotifications } from '../../components/NotificationProvider';
 
 const LoginMain = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +19,7 @@ const LoginMain = () => {
   const { data: homeData, isLoading: isHomeLoading } = useGetHomeDataQuery();
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const [saveDeviceToken] = useSaveDeviceTokenMutation();
+  const { requestPermissionAndGetToken } = useNotifications();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -80,16 +82,18 @@ const LoginMain = () => {
             deviceType = 'ios';
           }
 
-          // Use a placeholder or session-based token for web if FCM is not integrated
-          // The user specifically asked for "device_token" which is usually a unique ID
-          // For web, we can use a combination of screen resolution and user agent or just 'web-client'
-          const deviceToken = `web-${Math.random().toString(36).substring(2, 15)}`;
-
-          await saveDeviceToken({
-            token: userToken,
-            device_token: deviceToken,
-            device_type: deviceType
-          }).unwrap();
+          // Request FCM token after login
+          const fcmToken = await requestPermissionAndGetToken();
+          
+          if (fcmToken) {
+            const deviceData = {
+              token: userToken,
+              device_token: fcmToken,
+              device_type: deviceType
+            };
+            
+            await saveDeviceToken(deviceData).unwrap();
+          }
         } catch (deviceTokenErr) {
           console.error('Failed to save device token:', deviceTokenErr);
           // Don't block login if device token fails

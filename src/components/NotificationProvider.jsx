@@ -72,15 +72,12 @@ export const NotificationProvider = ({ children }) => {
             if (token) {
                 setFcmToken(token);
                 localStorage.setItem('fcm_token', token);
-                if (authToken) {
-                    saveFcmToken({ fcmToken: token, token: authToken })
-                        .catch((e) => console.error('[FCM] Failed to save token:', e));
-                }
+                // Note: We are now handling saving token primarily in LoginMain for the device-token endpoint
                 isRequestingRef.current = false;
                 return token;
             }
         } catch (error) {
-            console.error('[FCM] Error getting token:', error?.message || error);
+            console.error('[FCM] Error during token process:', error);
         }
         isRequestingRef.current = false;
         return null;
