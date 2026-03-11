@@ -93,6 +93,7 @@ const BasicUpload = () => {
     const [goodTypeId, setGoodTypeId] = useState("");
     const [goodPrice, setGoodPrice] = useState("");
     const [driverId, setDriverId] = useState(null);
+    const [errors, setErrors] = useState({});
     
     // State for map markers and addresses
     const [pickup, setPickup] = useState({ lat: 24.7136, lng: 46.6753, address: "" });
@@ -247,10 +248,24 @@ const BasicUpload = () => {
     };
 
     const handleSubmit = async () => {
-      if (!truckId || !selectedService || !date || !time || !goodTypeId || !goodPrice) {
-        toast.error(t('basicUpload.errorFillAll'));
+      const newErrors = {};
+      if (!pickup.address) newErrors.pickup = true;
+      destinations.forEach((dest, idx) => {
+        if (!dest.address) newErrors[`destination_${idx}`] = true;
+      });
+      if (!truckId) newErrors.truckId = true;
+      if (!selectedService) newErrors.selectedService = true;
+      if (!date) newErrors.date = true;
+      if (!time) newErrors.time = true;
+      if (!goodTypeId) newErrors.goodTypeId = true;
+      if (!goodPrice) newErrors.goodPrice = true;
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        toast.error(i18n.language === 'ar' ? "يرجى ملء جميع الحقول المطلوبة" : "Please fill all required fields");
         return;
       }
+      setErrors({});
 
       if (!isAuthenticated || role !== 'user') {
         sessionStorage.setItem('jsor_pending_order', JSON.stringify({
@@ -279,17 +294,14 @@ const BasicUpload = () => {
       formData.append('lang_from', pickup.lng);
       formData.append('address_from', pickup.address);
       
-      if (destinations[0]) {
-        formData.append('lat_to', destinations[0].lat);
-        formData.append('lang_to', destinations[0].lng);
-        formData.append('address_to', destinations[0].address);
-      }
-      
-      if (destinations[1] && destinations[1].address) {
-        formData.append('lat_to1', destinations[1].lat);
-        formData.append('lang_to1', destinations[1].lng);
-        formData.append('address_to1', destinations[1].address);
-      }
+      destinations.forEach((dest, index) => {
+        const idx = index + 1;
+        if (dest.address) {
+          formData.append(`lat_to${idx}`, dest.lat);
+          formData.append(`lang_to${idx}`, dest.lng);
+          formData.append(`address_to${idx}`, dest.address);
+        }
+      });
 
       formData.append('truck_id', truckId);
       formData.append('number', numTrucks);
@@ -351,19 +363,20 @@ const BasicUpload = () => {
               {/* Locations */}
               <div className="d-flex align-items-center justify-content-between gap-2 mb-2">
                 <div className='w-100'>
-                  <div className={`input-with-icon mb-2 position-relative ${selectingTarget.type === 'pickup' ? 'border border-primary' : ''}`} 
+                  <div className={`input-with-icon mb-2 position-relative ${selectingTarget.type === 'pickup' ? 'border border-primary' : ''} ${errors.pickup ? 'border border-danger animate__animated animate__shakeX' : ''}`} 
                        onClick={() => setSelectingTarget({ type: 'pickup' })} style={{ cursor: 'pointer' }}>
                     <div className="location-icon map-icon">
-                      <LocationOnOutlinedIcon className='fs-6' />
+                      <LocationOnOutlinedIcon className='fs-6 text-danger' />
                     </div>
                     <input
                       type="text"
-                      className="form-control form-input location-input"
+                      className={`form-control form-input location-input ${errors.pickup ? 'is-invalid' : ''}`}
                       placeholder={t('basicUpload.pickupPlaceholder') + " (" + (i18n.language === 'ar' ? 'حدد من الخريطة' : 'Select from map') + ")"}
                       value={pickup.address}
                       onChange={(e) => {
                         setPickup({ ...pickup, address: e.target.value });
                         handleSearchAddress(e.target.value);
+                        if (e.target.value) setErrors(prev => ({ ...prev, pickup: false }));
                       }}
                     />
                     {selectingTarget.type === 'pickup' && searchResults.length > 0 && (
@@ -376,6 +389,7 @@ const BasicUpload = () => {
                               e.stopPropagation();
                               setPickup({ lat: parseFloat(res.lat), lng: parseFloat(res.lon), address: res.display_name });
                               setSearchResults([]);
+                              setErrors(prev => ({ ...prev, pickup: false }));
                             }}
                           >
                             {res.display_name}
@@ -387,14 +401,14 @@ const BasicUpload = () => {
 
                   {destinations.map((dest, index) => (
                     <div key={index} 
-                         className={`input-with-icon mb-2 position-relative ${selectingTarget.type === 'destination' && selectingTarget.index === index ? 'border border-primary' : ''}`}
+                         className={`input-with-icon mb-2 position-relative ${selectingTarget.type === 'destination' && selectingTarget.index === index ? 'border border-primary' : ''} ${errors[`destination_${index}`] ? 'border border-danger animate__animated animate__shakeX' : ''}`}
                          onClick={() => setSelectingTarget({ type: 'destination', index })} style={{ cursor: 'pointer' }}>
                       <div className="location-icon map-icon">
-                        <LocationOnOutlinedIcon className='fs-6' />
+                        <LocationOnOutlinedIcon className='fs-6 text-danger' />
                       </div>
                       <input
                         type="text"
-                        className="form-control form-input location-input"
+                        className={`form-control form-input location-input ${errors[`destination_${index}`] ? 'is-invalid' : ''}`}
                         placeholder={`${t('basicUpload.deliveryPlaceholder')} ${index + 1} (${i18n.language === 'ar' ? 'حدد من الخريطة' : 'Select from map'})`}
                         value={dest.address}
                         onChange={(e) => {
@@ -402,6 +416,7 @@ const BasicUpload = () => {
                           newDests[index] = { ...newDests[index], address: e.target.value };
                           setDestinations(newDests);
                           handleSearchAddress(e.target.value);
+                          if (e.target.value) setErrors(prev => ({ ...prev, [`destination_${index}`]: false }));
                         }}
                       />
                       {selectingTarget.type === 'destination' && selectingTarget.index === index && searchResults.length > 0 && (
@@ -416,6 +431,7 @@ const BasicUpload = () => {
                                 newDests[index] = { lat: parseFloat(res.lat), lng: parseFloat(res.lon), address: res.display_name };
                                 setDestinations(newDests);
                                 setSearchResults([]);
+                                setErrors(prev => ({ ...prev, [`destination_${index}`]: false }));
                               }}
                             >
                               {res.display_name}
@@ -440,9 +456,9 @@ const BasicUpload = () => {
                 <div className="row">
                     <div className="col-lg-8">
                         <label className="form-label mb-1">{t('basicUpload.truckType')}</label>
-                        <div className="custom-select-wrapper" style={{ zIndex: open ? 1100 : 10 }}>
+                        <div className={`custom-select-wrapper ${errors.truckId ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`} style={{ zIndex: open ? 1100 : 10 }}>
                             <div
-                            className="custom-select form-input"
+                            className={`custom-select form-input ${errors.truckId ? 'is-invalid' : ''}`}
                             onClick={() => setOpen(!open)}
                             >
                             {selectedTruck ? (
@@ -451,7 +467,7 @@ const BasicUpload = () => {
                                 <span>{getLangField(selectedTruck, 'name')}</span>
                                 </div>
                             ) : (
-                                <span className="placeholder">{t('basicUpload.truckTypePlaceholder')}</span>
+                                <span className={`placeholder ${errors.truckId ? 'text-danger' : ''}`}>{t('basicUpload.truckTypePlaceholder')}</span>
                             )}
                             <ExpandMoreIcon className={`arrow ${open ? "rotate" : ""}`} />
                             </div>
@@ -461,7 +477,10 @@ const BasicUpload = () => {
                                 <div
                                     key={option.id}
                                     className="custom-option"
-                                    onClick={() => handleSelect(option)}
+                                    onClick={() => {
+                                      handleSelect(option);
+                                      setErrors(prev => ({ ...prev, truckId: false }));
+                                    }}
                                 >
                                     {option.image && <img src={option.image} alt="" style={{ width: '24px' }} />}
                                     <span>{getLangField(option, 'name')}</span>
@@ -489,14 +508,17 @@ const BasicUpload = () => {
                 </div>
 <div>
 <h2 className='orders-title'>{t('basicUpload.truckSize')}</h2>
-  <div className="horizontal-scroll-wrapper">
+  <div className={`horizontal-scroll-wrapper ${errors.selectedService ? 'border border-danger rounded p-2 animate__animated animate__shakeX' : ''}`}>
     {(subTrucksData || []).map((item) => (
       <div
         key={item.id}
         className={`truck-size-card ${
           selectedService === item.id ? "active" : ""
         }`}
-        onClick={() => setSelectedService(item.id)}
+        onClick={() => {
+          setSelectedService(item.id);
+          setErrors(prev => ({ ...prev, selectedService: false }));
+        }}
       >
         <div className="truck-img-wrapper">
           <img
@@ -520,38 +542,46 @@ const BasicUpload = () => {
 <h2 className='orders-title mt-3'>{t('basicUpload.orderData')}</h2>
 <div className="mb-3">
                     <label className="form-label mb-1">{t('basicUpload.date')}</label>
-                    <div className="datetime-wrapper position-relative">
+                    <div className={`datetime-wrapper position-relative ${ (errors.date || errors.time) ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
       <input
         ref={dateRef}
         type="date"
         className="hidden-native-input"
         value={date}
-        onChange={(e) => setDate(e.target.value)}
+        onChange={(e) => {
+          setDate(e.target.value);
+          if (e.target.value) setErrors(prev => ({ ...prev, date: false }));
+        }}
       />
       <input
         ref={timeRef}
         type="time"
         className="hidden-native-input"
         value={time}
-        onChange={(e) => setTime(e.target.value)}
+        onChange={(e) => {
+          setTime(e.target.value);
+          if (e.target.value) setErrors(prev => ({ ...prev, time: false }));
+        }}
       />
-      <div className="form-input datetime-input d-flex align-items-center justify-content-between">
-        <div className="d-flex align-items-center gap-4">
+      <div className={`form-input datetime-input d-flex align-items-center justify-content-between ${(errors.date || errors.time) ? 'is-invalid' : ''}`}>
+        <div className="d-flex align-items-center gap-3 gap-md-4 flex-wrap">
         <span
-          className="datetime-part"
+          className={`datetime-part ${errors.date ? 'text-danger fw-bold' : ''}`}
           onClick={() => dateRef.current.showPicker()}
+          style={{ cursor: 'pointer', minWidth: '100px' }}
         >
           {date || t('basicUpload.date')}
         </span>
-        <span className="datetime-separator">/</span>
+        <span className="datetime-separator d-none d-md-inline">/</span>
         <span
-          className="datetime-part"
+          className={`datetime-part ${errors.time ? 'text-danger fw-bold' : ''}`}
           onClick={() => timeRef.current.showPicker()}
+          style={{ cursor: 'pointer', minWidth: '80px' }}
         >
           {time || t('basicUpload.time')}
         </span>
         </div>
-        <CalendarMonthIcon className="calendar-icon" />
+        <CalendarMonthIcon className={`calendar-icon ${errors.date ? 'text-danger' : ''}`} />
       </div>
     </div>
                 </div>
@@ -559,31 +589,37 @@ const BasicUpload = () => {
                     <div className="col-lg-9">
                     <div className="mb-3">
                     <label className="form-label mb-1">{t('basicUpload.goodType')}</label>
-                    <div className="select-wrapper position-relative">
-    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select`} value={goodTypeId} onChange={(e) => setGoodTypeId(e.target.value)}>
+                    <div className={`select-wrapper position-relative ${errors.goodTypeId ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
+    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select ${errors.goodTypeId ? 'is-invalid' : ''}`} value={goodTypeId} onChange={(e) => {
+      setGoodTypeId(e.target.value);
+      if (e.target.value) setErrors(prev => ({ ...prev, goodTypeId: false }));
+    }}>
         <option value="" disabled>{t('basicUpload.goodTypePlaceholder')}</option>
         {(listsData?.GoodType || []).map((type) => (
           <option key={type.id} value={type.id}>{getLangField(type, 'name')}</option>
         ))}
     </select>
     <div className={`select-icon position-absolute ${isRtl ? 'start-0 ps-2' : 'end-0 pe-2'} top-50 translate-middle-y`}>
-        <ExpandMoreIcon />
+        <ExpandMoreIcon className={errors.goodTypeId ? 'text-danger' : ''} />
     </div>
 </div>
                 </div>
                     </div>
                     <div className="col-lg-3">
                     <label className="form-label mb-1">{t('basicUpload.goodPrice')}</label>
-                    <div className="input-with-icon mb-3">
+                    <div className={`input-with-icon mb-3 ${errors.goodPrice ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
                     <div className="map-icon">
-                      <span className="kg">{t('basicUpload.kg')}</span>
+                      <span className={`kg ${errors.goodPrice ? 'text-danger' : ''}`}>{t('basicUpload.kg')}</span>
                     </div>
                     <input
                       type="text"
-                      className="form-control form-input py-2 blue-input"
+                      className={`form-control form-input py-2 blue-input ${errors.goodPrice ? 'is-invalid' : ''}`}
                       placeholder="500"
                       value={goodPrice}
-                      onChange={(e) => setGoodPrice(e.target.value)}
+                      onChange={(e) => {
+                        setGoodPrice(e.target.value);
+                        if (e.target.value) setErrors(prev => ({ ...prev, goodPrice: false }));
+                      }}
                     />
                   </div>
                     </div>

@@ -110,6 +110,7 @@ const TripUpload = () => {
 
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
+    const [errors, setErrors] = useState({});
     const [open, setOpen] = useState(false);
     const [selectedTruck, setSelectedTruck] = useState(null);
     const isRtl = i18n.language === 'ar';
@@ -170,10 +171,19 @@ const TripUpload = () => {
     }, [i18n.language]);
 
     const handleSubmit = async () => {
-      if (!cityId || !truckId || !selectedService || !numTrips || !goodTypeId || !date) {
-        toast.error(t('tripUpload.errorFillAll'));
+      const newErrors = {};
+      if (!cityId) newErrors.cityId = true;
+      if (!truckId) newErrors.truckId = true;
+      if (!selectedService) newErrors.selectedService = true;
+      if (!goodTypeId) newErrors.goodTypeId = true;
+      if (!date) newErrors.date = true;
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        toast.error(i18n.language === 'ar' ? "يرجى ملء جميع الحقول المطلوبة" : "Please fill all required fields");
         return;
       }
+      setErrors({});
 
       // Check if user is authenticated and is a client
       if (!isAuthenticated || role !== 'user') {
@@ -294,15 +304,18 @@ const TripUpload = () => {
                 <div className="col-12">
                     <div className="mb-3">
                     <label className="form-label mb-1">{t('tripUpload.selectCity')}</label>
-                    <div className="select-wrapper position-relative">
-    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select`} value={cityId} onChange={(e) => setCityId(e.target.value)}>
+                    <div className={`select-wrapper position-relative ${errors.cityId ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
+    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select ${errors.cityId ? 'is-invalid' : ''}`} value={cityId} onChange={(e) => {
+      setCityId(e.target.value);
+      if (e.target.value) setErrors(prev => ({ ...prev, cityId: false }));
+    }}>
         <option value="" disabled>{t('tripUpload.selectCityPlaceholder')}</option>
         {(listsData?.city || []).map((city) => (
           <option key={city.id} value={city.id}>{getLangField(city, 'name')}</option>
         ))}
     </select>
     <div className={`select-icon position-absolute ${isRtl ? 'start-0 ps-2' : 'end-0 pe-2'} top-50 translate-middle-y`}>
-        <ExpandMoreIcon />
+        <ExpandMoreIcon className={errors.cityId ? 'text-danger' : ''} />
     </div>
 </div>
                 </div>
@@ -311,10 +324,10 @@ const TripUpload = () => {
                         <label className="form-label mb-1">{t('tripUpload.truckType')}</label>
 
                         {/* ✅ Custom Select */}
-                        <div className="custom-select-wrapper" style={{ zIndex: open ? 1100 : 10 }}>
+                        <div className={`custom-select-wrapper ${errors.truckId ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`} style={{ zIndex: open ? 1100 : 10 }}>
                             
                             <div
-                            className="custom-select form-input"
+                            className={`custom-select form-input ${errors.truckId ? 'is-invalid' : ''}`}
                             onClick={() => setOpen(!open)}
                             >
                             {selectedTruck ? (
@@ -323,10 +336,10 @@ const TripUpload = () => {
                                 <span>{getLangField(selectedTruck, 'name')}</span>
                                 </div>
                             ) : (
-                                <span className="placeholder">{t('tripUpload.truckTypePlaceholder')}</span>
+                                <span className={`placeholder ${errors.truckId ? 'text-danger' : ''}`}>{t('tripUpload.truckTypePlaceholder')}</span>
                             )}
 
-                            <ExpandMoreIcon className={`arrow ${open ? "rotate" : ""}`} />
+                            <ExpandMoreIcon className={`arrow ${open ? "rotate" : ""} ${errors.truckId ? 'text-danger' : ''}`} />
                             </div>
 
                             {open && (
@@ -335,7 +348,10 @@ const TripUpload = () => {
                                 <div
                                     key={option.id}
                                     className="custom-option"
-                                    onClick={() => handleSelect(option)}
+                                    onClick={() => {
+                                      handleSelect(option);
+                                      setErrors(prev => ({ ...prev, truckId: false }));
+                                    }}
                                 >
                                     {option.image && <img src={option.image} alt="" style={{ width: '24px' }} />}
                                     <span>{getLangField(option, 'name')}</span>
@@ -352,14 +368,17 @@ const TripUpload = () => {
 <div>
 <h2 className='orders-title'>{t('tripUpload.truckSize')}</h2>
 
-  <div className="horizontal-scroll-wrapper">
+  <div className={`horizontal-scroll-wrapper ${errors.selectedService ? 'border border-danger rounded p-2 animate__animated animate__shakeX' : ''}`}>
     {(subTrucksData || []).map((item) => (
       <div
         key={item.id}
         className={`truck-size-card ${
           selectedService === item.id ? "active" : ""
         }`}
-        onClick={() => setSelectedService(item.id)}
+        onClick={() => {
+          setSelectedService(item.id);
+          setErrors(prev => ({ ...prev, selectedService: false }));
+        }}
       >
         <div className="truck-img-wrapper">
           <img
@@ -385,15 +404,18 @@ const TripUpload = () => {
                     <div className="col-lg-8">
                     <div className="mb-3">
                     <label className="form-label mb-1">{t('tripUpload.goodType')}</label>
-                    <div className="select-wrapper position-relative">
-    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select`} value={goodTypeId} onChange={(e) => setGoodTypeId(e.target.value)}>
+                    <div className={`select-wrapper position-relative ${errors.goodTypeId ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
+    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select ${errors.goodTypeId ? 'is-invalid' : ''}`} value={goodTypeId} onChange={(e) => {
+      setGoodTypeId(e.target.value);
+      if (e.target.value) setErrors(prev => ({ ...prev, goodTypeId: false }));
+    }}>
         <option value="" disabled>{t('tripUpload.goodTypePlaceholder')}</option>
         {(listsData?.GoodType || []).map((type) => (
           <option key={type.id} value={type.id}>{getLangField(type, 'name')}</option>
         ))}
     </select>
     <div className={`select-icon position-absolute ${isRtl ? 'start-0 ps-2' : 'end-0 pe-2'} top-50 translate-middle-y`}>
-        <ExpandMoreIcon />
+        <ExpandMoreIcon className={errors.goodTypeId ? 'text-danger' : ''} />
     </div>
 </div>
                 </div>
@@ -416,7 +438,7 @@ const TripUpload = () => {
 </div>
 <div className="mb-3">
                     <label className="form-label mb-1">{t('tripUpload.startDate')}</label>
-                    <div className="datetime-wrapper position-relative">
+                    <div className={`datetime-wrapper position-relative ${errors.date ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
       
       {/* Hidden native inputs */}
       <input
@@ -424,20 +446,23 @@ const TripUpload = () => {
         type="date"
         className="hidden-native-input"
         value={date}
-        onChange={(e) => setDate(e.target.value)}
+        onChange={(e) => {
+          setDate(e.target.value);
+          if (e.target.value) setErrors(prev => ({ ...prev, date: false }));
+        }}
       />
 
       {/* Visible fake input */}
-      <div className="form-input datetime-input d-flex align-items-center justify-content-between" onClick={() => dateRef.current.showPicker()} style={{ cursor: 'pointer' }}>
+      <div className={`form-input datetime-input d-flex align-items-center justify-content-between ${errors.date ? 'is-invalid' : ''}`} onClick={() => dateRef.current.showPicker()} style={{ cursor: 'pointer', minHeight: '45px' }}>
 
         <div className="d-flex align-items-center gap-4">
                     {/* Right: Date */}
-        <span className="datetime-part">
+        <span className={`datetime-part ${errors.date ? 'text-danger fw-bold' : ''}`} style={{ fontSize: '14px' }}>
           {date || t('tripUpload.startDate')}
         </span>
         </div>
         {/* Left Icon */}
-        <CalendarMonthIcon className="calendar-icon" />
+        <CalendarMonthIcon className={`calendar-icon ${errors.date ? 'text-danger' : ''}`} />
       </div>
     </div>
                 </div>

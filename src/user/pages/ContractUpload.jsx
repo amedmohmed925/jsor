@@ -85,6 +85,7 @@ const ContractUpload = () => {
 
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
+    const [errors, setErrors] = useState({});
 
     // Handle initial state from Hero search or saved form
     useEffect(() => {
@@ -171,10 +172,21 @@ const ContractUpload = () => {
     }, [i18n.language]);
 
     const handleSubmit = async () => {
-      if (!cityId || !truckId || !selectedService || !numTrips || !goodTypeId || !date || !contractDurationId) {
-        toast.error(t('contractUpload.errorFillAll'));
+      const newErrors = {};
+      if (!cityId) newErrors.cityId = true;
+      if (!location.address) newErrors.location = true;
+      if (!truckId) newErrors.truckId = true;
+      if (!selectedService) newErrors.selectedService = true;
+      if (!goodTypeId) newErrors.goodTypeId = true;
+      if (!date) newErrors.date = true;
+      if (!contractDurationId) newErrors.contractDurationId = true;
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        toast.error(i18n.language === 'ar' ? "يرجى ملء جميع الحقول المطلوبة" : "Please fill all required fields");
         return;
       }
+      setErrors({});
 
       // Check if user is authenticated and is a client
       if (!isAuthenticated || role !== 'user') {
@@ -296,31 +308,34 @@ const ContractUpload = () => {
                 <div className="col-12">
                     <div className="mb-2">
                     <label className="form-label mb-1">{t('contractUpload.whereTruck')}</label>
-                    <div className="select-wrapper position-relative">
-    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select`} value={cityId} onChange={(e) => setCityId(e.target.value)}>
+                    <div className={`select-wrapper position-relative ${errors.cityId ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
+    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select ${errors.cityId ? 'is-invalid' : ''}`} value={cityId} onChange={(e) => {
+      setCityId(e.target.value);
+      if (e.target.value) setErrors(prev => ({ ...prev, cityId: false }));
+    }}>
         <option value="" disabled>{t('contractUpload.selectOption')}</option>
         {listsData?.InCity && Object.entries(listsData.InCity).map(([id, name]) => (
           <option key={id} value={id}>{name}</option>
         ))}
     </select>
     <div className={`select-icon position-absolute ${isRtl ? 'start-0 ps-2' : 'end-0 pe-2'} top-50 translate-middle-y`}>
-        <ExpandMoreIcon />
+        <ExpandMoreIcon className={errors.cityId ? 'text-danger' : ''} />
     </div>
 </div>
                 </div>
                     </div>
-                    <div className="d-flex align-items-center gap-1 border-bottom pb-2">
+                    <div className={`d-flex align-items-center gap-1 border-bottom pb-2 ${errors.location ? 'border-bottom-danger bg-danger-subtle animate__animated animate__shakeX' : ''}`}>
                         <img src="../assets/map-hotel.svg" alt="map" />
-                        <h6 className='choose-from-map m-0'>{t('contractUpload.mapSelect')}</h6>
+                        <h6 className={`choose-from-map m-0 ${errors.location ? 'text-danger fw-bold' : ''}`}>{t('contractUpload.mapSelect')}</h6>
                     </div>
                     <div className="col-12 mt-3">
                         <label className="form-label mb-1">{t('contractUpload.truckType')}</label>
 
                         {/* ✅ Custom Select */}
-                        <div className="custom-select-wrapper" style={{ zIndex: open ? 1100 : 10 }}>
+                        <div className={`custom-select-wrapper ${errors.truckId ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`} style={{ zIndex: open ? 1100 : 10 }}>
                             
                             <div
-                            className="custom-select form-input"
+                            className={`custom-select form-input ${errors.truckId ? 'is-invalid' : ''}`}
                             onClick={() => setOpen(!open)}
                             >
                             {selectedTruck ? (
@@ -329,10 +344,10 @@ const ContractUpload = () => {
                                 <span>{getLangField(selectedTruck, 'name')}</span>
                                 </div>
                             ) : (
-                                <span className="placeholder">{t('contractUpload.truckTypePlaceholder')}</span>
+                                <span className={`placeholder ${errors.truckId ? 'text-danger' : ''}`}>{t('contractUpload.truckTypePlaceholder')}</span>
                             )}
 
-                            <ExpandMoreIcon className={`arrow ${open ? "rotate" : ""}`} />
+                            <ExpandMoreIcon className={`arrow ${open ? "rotate" : ""} ${errors.truckId ? 'text-danger' : ''}`} />
                             </div>
 
                             {open && (
@@ -341,7 +356,10 @@ const ContractUpload = () => {
                                 <div
                                     key={option.id}
                                     className="custom-option"
-                                    onClick={() => handleSelect(option)}
+                                    onClick={() => {
+                                      handleSelect(option);
+                                      setErrors(prev => ({ ...prev, truckId: false }));
+                                    }}
                                 >
                                     {option.image && <img src={option.image} alt="" style={{ width: '24px' }} />}
                                     <span>{getLangField(option, 'name')}</span>
@@ -357,14 +375,17 @@ const ContractUpload = () => {
 <div>
 <label className="form-label mb-1 mt-3">{t('contractUpload.truckSize')}</label>
 
-  <div className="horizontal-scroll-wrapper">
+  <div className={`horizontal-scroll-wrapper ${errors.selectedService ? 'border border-danger rounded p-2 animate__animated animate__shakeX' : ''}`}>
     {(subTrucksData || []).map((item) => (
       <div
         key={item.id}
         className={`truck-size-card ${
           selectedService === item.id ? "active" : ""
         }`}
-        onClick={() => setSelectedService(item.id)}
+        onClick={() => {
+          setSelectedService(item.id);
+          setErrors(prev => ({ ...prev, selectedService: false }));
+        }}
       >
         <div className="truck-img-wrapper">
           <img
@@ -390,15 +411,18 @@ const ContractUpload = () => {
                     <div className="col-lg-8">
                     <div className="mb-3">
                     <label className="form-label mb-1">{t('contractUpload.goodType')}</label>
-                    <div className="select-wrapper position-relative">
-    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select`} value={goodTypeId} onChange={(e) => setGoodTypeId(e.target.value)}>
+                    <div className={`select-wrapper position-relative ${errors.goodTypeId ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
+    <select className={`form-select form-input py-2 ${isRtl ? 'ps-3' : 'pe-3'} blue-select ${errors.goodTypeId ? 'is-invalid' : ''}`} value={goodTypeId} onChange={(e) => {
+      setGoodTypeId(e.target.value);
+      if (e.target.value) setErrors(prev => ({ ...prev, goodTypeId: false }));
+    }}>
         <option value="" disabled>{t('contractUpload.goodTypePlaceholder')}</option>
         {(listsData?.GoodType || []).map((type) => (
           <option key={type.id} value={type.id}>{getLangField(type, 'name')}</option>
         ))}
     </select>
     <div className={`select-icon position-absolute ${isRtl ? 'start-0 ps-2' : 'end-0 pe-2'} top-50 translate-middle-y`}>
-        <ExpandMoreIcon />
+        <ExpandMoreIcon className={errors.goodTypeId ? 'text-danger' : ''} />
     </div>
 </div>
                 </div>
@@ -421,7 +445,7 @@ const ContractUpload = () => {
 </div>
 <div className="mb-3">
                     <label className="form-label mb-1">{t('contractUpload.startDate')}</label>
-                    <div className="datetime-wrapper position-relative">
+                    <div className={`datetime-wrapper position-relative ${errors.date ? 'border border-danger rounded animate__animated animate__shakeX' : ''}`}>
       
       {/* Hidden native inputs */}
       <input
@@ -429,34 +453,40 @@ const ContractUpload = () => {
         type="date"
         className="hidden-native-input"
         value={date}
-        onChange={(e) => setDate(e.target.value)}
+        onChange={(e) => {
+          setDate(e.target.value);
+          if (e.target.value) setErrors(prev => ({ ...prev, date: false }));
+        }}
       />
 
       {/* Visible fake input */}
-      <div className="form-input datetime-input d-flex align-items-center justify-content-between" onClick={() => dateRef.current.showPicker()} style={{ cursor: 'pointer' }}>
+      <div className={`form-input datetime-input d-flex align-items-center justify-content-between ${errors.date ? 'is-invalid' : ''}`} onClick={() => dateRef.current.showPicker()} style={{ cursor: 'pointer', minHeight: '45px' }}>
 
         <div className="d-flex align-items-center gap-4">
                     {/* Right: Date */}
-        <span className="datetime-part">
+        <span className={`datetime-part ${errors.date ? 'text-danger fw-bold' : ''}`} style={{ fontSize: '14px' }}>
           {date || t('contractUpload.startDate')}
         </span>
         </div>
         {/* Left Icon */}
-        <CalendarMonthIcon className="calendar-icon" />
+        <CalendarMonthIcon className={`calendar-icon ${errors.date ? 'text-danger' : ''}`} />
       </div>
     </div>
                 </div>   
                 </div>
                 <div className="mb-3">
                 <label className="form-label mb-1">{t('contractUpload.contractDuration')}</label>
-                    <div className="d-flex align-items-center gap-2">
+                    <div className={`d-flex align-items-center gap-2 ${errors.contractDurationId ? 'border border-danger rounded p-2 animate__animated animate__shakeX' : ''}`}>
                         {(listsData?.ContractDuration || []).map((duration) => (
                             <div 
                                 key={duration.id}
                                 className={`filter-checkbox-box-2 months-filter-item px-4 ${
                                     contractDurationId === duration.id ? "active" : ""
                                 }`}
-                                onClick={() => setContractDurationId(duration.id)}
+                                onClick={() => {
+                                  setContractDurationId(duration.id);
+                                  setErrors(prev => ({ ...prev, contractDurationId: false }));
+                                }}
                                 style={{ flex: 1, textAlign: 'center' }}
                             >
                                 {getLangField(duration, 'name')}
