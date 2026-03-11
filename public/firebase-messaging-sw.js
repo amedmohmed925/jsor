@@ -16,6 +16,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-com
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
 
+// eslint-disable-next-line no-undef
 firebase.initializeApp({
   apiKey: "AIzaSyCm3zuJasC9sDerNOWWcod0JFEzI-apbzE",
   authDomain: "jsor-962ed.firebaseapp.com",
@@ -26,6 +27,7 @@ firebase.initializeApp({
   measurementId: "G-MJE06MQLWD"
 });
 
+// eslint-disable-next-line no-undef
 const messaging = firebase.messaging();
 
 // Handle background messages
@@ -49,11 +51,16 @@ messaging.onBackgroundMessage((payload) => {
 // Handle notification click → open app
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const url = event.notification.data?.url || '/';
+  const dataUrl = event.notification.data?.url;
+  // Use absolute URL from data payload, or fall back to the app's root (derived from SW scope)
+  const url = dataUrl || self.registration.scope;
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      // Focus any already-open tab belonging to this app
       for (const client of clientList) {
-        if (client.url === url && 'focus' in client) return client.focus();
+        if (client.url.startsWith(self.registration.scope) && 'focus' in client) {
+          return client.focus();
+        }
       }
       if (clients.openWindow) return clients.openWindow(url);
     })
