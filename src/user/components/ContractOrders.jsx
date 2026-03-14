@@ -11,11 +11,11 @@ import {
 import { useGetListsQuery } from '../../api/site/siteApi';
 import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { useCancelRequestMutation, useAcceptOfferMutation } from '../../api/site/siteApi';
+import { useAcceptOfferMutation } from '../../api/site/siteApi';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
+const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel, setShowDetails }) => {
   const { t, i18n } = useTranslation();
   const { token } = useAuth();
   const navigate = useNavigate();
@@ -33,6 +33,10 @@ const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
   };
 
   const [acceptOffer, { isLoading: isAccepting }] = useAcceptOfferMutation();
+
+  const handleOrderAgain = (order) => {
+    navigate('/user/contract-upload', { state: { reorder: order } });
+  };
 
   // Fetch lists for truck images
   const { data: listsResponse } = useGetListsQuery();
@@ -188,6 +192,9 @@ const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                      <h6 className='offers-dropdown-text m-0'>{t('common:buttons.offers')}</h6>
                      <FontAwesomeIcon icon={expandedOfferId === order.id ? faChevronUp : faChevronDown} />
                   </div>
+                  <div className="code-badge d-flex align-items-center justify-content-center gap-2" onClick={() => setShowDetails?.(order)} style={{ cursor: 'pointer' }}>
+                    <p className='m-0'>{t('common:buttons.details')}</p>
+                  </div>
                   <div className="cancel-order-btn" onClick={() => setShowCancel(order)}>
                      <p className='m-0'>{t('common:buttons.cancel_order')}</p>
                   </div>
@@ -225,7 +232,7 @@ const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                   <div className="contact-driver-button" onClick={() => setShowRating(order)}>
                     <p className='m-0'>{t('user:notification.rate')}</p>
                   </div>
-                  <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={handleOrderAgain}>
+                  <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={() => handleOrderAgain(order)}>
                     <h6 className='offers-dropdown-text m-0'>{t('common:buttons.order_again')}</h6>
                   </div>
                 </>
@@ -235,7 +242,7 @@ const ContractOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                   <div className="contact-driver-button" onClick={() => setShowRating(order)}>
                     <p className='m-0'>{t('user:notification.rate')}</p>
                   </div>
-                  <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={handleOrderAgain}>
+                  <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={() => handleOrderAgain(order)}>
                     <h6 className='offers-dropdown-text m-0'>{t('common:buttons.order_again')}</h6>
                   </div>
                 </>

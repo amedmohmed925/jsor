@@ -14,11 +14,11 @@ import {
 import { useGetListsQuery } from '../../api/site/siteApi';
 import { useAuth } from '../../hooks/useAuth';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { useCancelRequestMutation, useAcceptOfferMutation } from '../../api/site/siteApi';
+import { useAcceptOfferMutation } from '../../api/site/siteApi';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
+const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel, setShowDetails }) => {
   const { t, i18n } = useTranslation();
   const { token } = useAuth();
   const navigate = useNavigate();
@@ -181,6 +181,9 @@ const BasicOrders = ({ activeSubFilter, setShowRating, setShowCancel }) => {
                     <div className="offers-dropdown d-flex align-items-center justify-content-center gap-2" onClick={() => toggleOffers(order.id)} style={{ cursor: 'pointer' }}>
                       <h6 className='offers-dropdown-text m-0'>{t('common:buttons.offers')}</h6>
                       <FontAwesomeIcon icon={expandedOfferId === order.id ? faChevronUp : faChevronDown} />
+                    </div>
+                    <div className="code-badge d-flex align-items-center justify-content-center gap-2" onClick={() => setShowDetails?.(order)} style={{ cursor: 'pointer' }}>
+                      <p className='m-0'>{t('common:buttons.details')}</p>
                     </div>
                     <div className="cancel-order-btn" onClick={() => setShowCancel(order)}>
                       <p className='m-0'>{t('common:buttons.cancel_order')}</p>

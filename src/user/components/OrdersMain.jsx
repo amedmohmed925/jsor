@@ -15,9 +15,11 @@ const OrdersMain = () => {
   // State for tracking active main filter and sub-filter
   const [showRating, setShowRating] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [detailsOrder, setDetailsOrder] = useState(null);
 
   const [activeMainFilter, setActiveMainFilter] = useState('basic-orders');
   const [activeSubFilter, setActiveSubFilter] = useState('new-request');
@@ -26,9 +28,6 @@ const OrdersMain = () => {
   const [cancelOrder, { isLoading: isCancelling }] = useCancelRequestMutation();
   const { data: listsResponse } = useGetListsQuery();
   const truckList = listsResponse?.Truck || [];
-  
-  // State for tracking if offers section is expanded
-  const [offersExpanded, setOffersExpanded] = useState(false);
 
   // Helper to get localized name
   const getName = (obj) => {
@@ -36,6 +35,24 @@ const OrdersMain = () => {
     if (typeof obj === 'string') return obj;
     if (currentLanguage === 'en' && obj.name_en) return obj.name_en;
     return obj.name || obj.name_en || '';
+  };
+
+  const hasValue = (value) => value !== null && value !== undefined && value !== '';
+  const getValue = (value) => (hasValue(value) ? value : '--');
+
+  const getStatusLabel = (statusId) => {
+    if (statusId === 0 || statusId === '0') return t('user:user.orders.status.new');
+    if (statusId === 1 || statusId === '1') return t('user:user.orders.status.waiting');
+    if (statusId === 2 || statusId === '2') return t('user:user.orders.status.shipped');
+    if (statusId === 3 || statusId === '3') return t('user:user.orders.status.cancelled');
+    return t('common:messages.noData');
+  };
+
+  const formatLocation = (city, lat, lng) => {
+    const cityName = getName(city);
+    if (cityName) return cityName;
+    if (!hasValue(lat) && !hasValue(lng)) return '--';
+    return `${getValue(lat)}, ${getValue(lng)}`;
   };
 
   const handleShowRating = (order) => {
@@ -48,6 +65,16 @@ const OrdersMain = () => {
   const handleShowCancel = (order) => {
     setSelectedOrder(order);
     setShowCancelModal(true);
+  };
+
+  const handleShowDetails = (order) => {
+    setDetailsOrder(order);
+    setShowDetailsModal(true);
+  };
+
+  const handleCloseDetails = () => {
+    setShowDetailsModal(false);
+    setDetailsOrder(null);
   };
 
   const handleCancelSubmit = async () => {
@@ -141,20 +168,11 @@ const OrdersMain = () => {
     setActiveMainFilter(filterId);
     // Reset sub-filter to first option when main filter changes
     setActiveSubFilter('new-request');
-    // Reset offers expanded state when changing filters
-    setOffersExpanded(false);
   };
   
   // Handle sub-filter click
   const handleSubFilterClick = (filterId) => {
     setActiveSubFilter(filterId);
-    // Reset offers expanded state when changing sub-filters
-    setOffersExpanded(false);
-  };
-  
-  // Toggle offers section
-  const toggleOffers = () => {
-    setOffersExpanded(!offersExpanded);
   };
 
   // Function to render the appropriate card based on both filters
@@ -166,6 +184,7 @@ const OrdersMain = () => {
           activeSubFilter={activeSubFilter} 
           setShowRating={handleShowRating} 
           setShowCancel={handleShowCancel}
+          setShowDetails={handleShowDetails}
         />
       );
     }
@@ -176,6 +195,7 @@ const OrdersMain = () => {
           activeSubFilter={activeSubFilter} 
           setShowRating={handleShowRating}
           setShowCancel={handleShowCancel}
+          setShowDetails={handleShowDetails}
         />
       );
     }
@@ -186,6 +206,7 @@ const OrdersMain = () => {
           activeSubFilter={activeSubFilter} 
           setShowRating={handleShowRating}
           setShowCancel={handleShowCancel}
+          setShowDetails={handleShowDetails}
         />
       );
     }
@@ -193,6 +214,84 @@ const OrdersMain = () => {
     // Default case
     return <div className="alert alert-info">{t('user:user.orders.no_orders')}</div>;
   };
+
+  const detailsRows = detailsOrder ? [
+    {
+      key: 'id',
+      label: t('user:orders.order_number'),
+      value: `#${getValue(detailsOrder?.id)}`
+    },
+    {
+      key: 'type',
+      label: t('user:orders.order_type'),
+      value: getName(detailsOrder?.type) || getValue(detailsOrder?.type)
+    },
+    {
+      key: 'status',
+      label: t('user:orders.status'),
+      value: getStatusLabel(detailsOrder?.status ?? detailsOrder?.requestStatus?.[0]?.status_id)
+    },
+    {
+      key: 'user',
+      label: currentLanguage === 'ar' ? 'العميل' : 'Customer',
+      value: getValue(detailsOrder?.user_id?.name)
+    },
+    {
+      key: 'mobile',
+      label: currentLanguage === 'ar' ? 'رقم الجوال' : 'Mobile',
+      value: getValue(detailsOrder?.user_id?.mobile)
+    },
+    {
+      key: 'truck',
+      label: t('user:orders.car_type'),
+      value: getName(truckList.find((truck) => truck.id === detailsOrder?.truck_id || truck.id === detailsOrder?.truck_id?.id)) || getName(detailsOrder?.truck_id) || '--'
+    },
+    {
+      key: 'subTruck',
+      label: t('user:basicUpload.truckSize'),
+      value: getName(detailsOrder?.sub_truck_id) || '--'
+    },
+    {
+      key: 'goodType',
+      label: t('user:basicUpload.goodType'),
+      value: getName(detailsOrder?.good_type_id) || '--'
+    },
+    {
+      key: 'contractDuration',
+      label: t('user:user.orders.contract_duration'),
+      value: getName(detailsOrder?.contract_duration_id) || '--'
+    },
+    {
+      key: 'pickup',
+      label: t('user:orders.pickupLocation'),
+      value: formatLocation(detailsOrder?.city_from, detailsOrder?.lat_from, detailsOrder?.lang_from)
+    },
+    {
+      key: 'delivery',
+      label: t('user:orders.deliveryLocation'),
+      value: formatLocation(detailsOrder?.city_to, detailsOrder?.lat_to1, detailsOrder?.lang_to1)
+    },
+    {
+      key: 'dateTime',
+      label: currentLanguage === 'ar' ? 'التاريخ والوقت' : 'Date & Time',
+      value: `${getValue(detailsOrder?.date)} ${getValue(detailsOrder?.time)}`.trim()
+    },
+    {
+      key: 'total',
+      label: t('user:orders.total_price'),
+      value: hasValue(detailsOrder?.good_price) ? `${detailsOrder.good_price} ${t('common:buttons.currency')}` : '--'
+    },
+    {
+      key: 'confirmCode',
+      label: currentLanguage === 'ar' ? 'كود التأكيد' : 'Confirm Code',
+      value: getValue(detailsOrder?.confirm_code)
+    },
+    {
+      key: 'createdAt',
+      label: currentLanguage === 'ar' ? 'تاريخ الإنشاء' : 'Created At',
+      value: getValue(detailsOrder?.created_at)
+    }
+  ] : [];
 
   return (
     <section>
@@ -240,6 +339,44 @@ const OrdersMain = () => {
 
       {/* Render appropriate card based on both filters */}
       {renderOrderCard()}
+
+      {/* Details Modal */}
+      {showDetailsModal && detailsOrder && (
+        <div className="rating-overlay order-details-overlay" onClick={handleCloseDetails}>
+          <div
+            className="rating-modal order-details-modal"
+            dir={currentLanguage === 'ar' ? 'rtl' : 'ltr'}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="order-details-header">
+              <div>
+                <h3 className="order-details-title m-0">{t('user:orders.details') || t('common:buttons.details')}</h3>
+                <p className="order-details-subtitle m-0 mt-1">#{getValue(detailsOrder?.id)}</p>
+              </div>
+              <button
+                type="button"
+                className="order-details-close-btn"
+                onClick={handleCloseDetails}
+              >
+                {t('common:buttons.close')}
+              </button>
+            </div>
+
+            <div className="order-details-body">
+              <div className="order-details-grid row g-2">
+                {detailsRows.map((item) => (
+                  <div key={item.key} className="col-12 col-md-6">
+                    <div className="order-details-item h-100">
+                      <h6 className="order-details-label m-0 mb-1">{item.label}</h6>
+                      <p className="order-details-value m-0">{item.value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Rating Modal */}
       {showRating && (

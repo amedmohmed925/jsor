@@ -140,9 +140,6 @@ body {
   font-family: 'IBM Plex Sans Arabic', sans-serif !important;
 }
 /* Custom styles for Navbar links */
-.navbar{
-  /* background-color: #FFFFFF66 !important; */
-}
 .nav-link-custom {
   font-size: 14px !important;
   color: #4B5563 !important;
@@ -1923,6 +1920,104 @@ select.form-select {
   position: relative;
 }
 
+.order-details-overlay {
+  padding: 16px 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  backdrop-filter: blur(2px);
+}
+
+.order-details-modal {
+  width: min(860px, 100%);
+  max-width: 100%;
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0;
+  text-align: start;
+  border-radius: 20px;
+  border: 1px solid #d4e6ff;
+  background: linear-gradient(180deg, #f7fbff 0%, #ffffff 18%);
+  box-shadow: 0 18px 45px rgba(7, 29, 66, 0.22);
+}
+
+.order-details-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(120deg, #1a73e8 0%, #2e89ff 62%, #f97316 140%);
+}
+
+.order-details-title {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.order-details-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.order-details-close-btn {
+  min-width: 86px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 10px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.order-details-close-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.order-details-body {
+  padding: 14px;
+}
+
+.order-details-item {
+  border: 1px solid #e6eefc;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.order-details-item:hover {
+  transform: translateY(-1px);
+  border-color: #c7dcff;
+  box-shadow: 0 10px 22px rgba(26, 115, 232, 0.1);
+}
+
+.order-details-label {
+  color: #687180;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.order-details-value {
+  color: #1f2937;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
 .close-btn {
   position: absolute;
   top: 12px;
@@ -1955,6 +2050,51 @@ select.form-select {
 
 .star.active {
   color: #FFD33C;
+}
+
+@media (max-width: 767px) {
+  .order-details-overlay {
+    align-items: flex-start;
+    padding: 8px;
+  }
+
+  .order-details-modal {
+    max-height: calc(100vh - 16px);
+    max-height: calc(100dvh - 16px);
+    border-radius: 14px;
+  }
+
+  .order-details-header {
+    padding: 12px;
+    border-radius: 14px 14px 10px 10px;
+  }
+
+  .order-details-title {
+    font-size: 18px;
+  }
+
+  .order-details-subtitle {
+    font-size: 13px;
+  }
+
+  .order-details-close-btn {
+    min-width: 74px;
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .order-details-body {
+    padding: 10px;
+  }
+
+  .order-details-item {
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .order-details-value {
+    font-size: 14px;
+  }
 }
 .shipment-progress {
   background: #ECF4FF;
