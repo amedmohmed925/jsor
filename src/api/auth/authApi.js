@@ -34,6 +34,18 @@ export const authApi = baseApi.injectEndpoints({
     }),
     
     /**
+     * Register Company
+     * POST /api/web/v1/site/signup-company
+     */
+    registerCompany: builder.mutation({
+      query: (companyData) => ({
+        url: API_ENDPOINTS.SIGNUP_COMPANY,
+        method: 'POST',
+        body: companyData,
+      }),
+    }),
+    
+    /**
      * Activate Account
      * POST /api/web/v1/site/activate
      */
@@ -53,6 +65,21 @@ export const authApi = baseApi.injectEndpoints({
       query: () => API_ENDPOINTS.LISTS,
       transformResponse: (response) => {
         return response.status === 1 ? response.data[0] : null;
+      },
+    }),
+
+    /**
+     * Get Cities of Country
+     * GET /api/web/v1/site/city-of-country?id=COUNTRY_ID
+     */
+    getCitiesByCountry: builder.query({
+      query: (countryId) => `${API_ENDPOINTS.CITY_BY_COUNTRY}?id=${countryId}`,
+      transformResponse: (response) => {
+        // The API returns { status: 1, data: [[{ id, name, ... }]] }
+        if (response.status === 1 && Array.isArray(response.data) && Array.isArray(response.data[0])) {
+          return response.data[0];
+        }
+        return response.status === 1 ? (Array.isArray(response.data) ? response.data : []) : [];
       },
     }),
 
@@ -118,11 +145,14 @@ export const authApi = baseApi.injectEndpoints({
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useRegisterCompanyMutation,
   useActivateMutation,
   useGetListsQuery,
+  useGetCitiesByCountryQuery,
   usePasswordResetMutation,
   useResetPasswordMutation,
   useLogoutMutation,
   useGetCurrentUserQuery,
   useRefreshTokenMutation,
 } = authApi;
+

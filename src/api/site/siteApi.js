@@ -148,11 +148,11 @@ export const siteApi = baseApi.injectEndpoints({
 
     /**
      * Driver Signup
-     * POST /api/web/v1/site/signup-driver
+     * POST /api/web/v1/site/signup-drivers
      */
     driverSignup: builder.mutation({
       query: (signupData) => ({
-        url: API_ENDPOINTS.SIGNUP_DRIVER,
+        url: API_ENDPOINTS.SIGNUP_DRIVERS,
         method: 'POST',
         body: signupData,
       }),

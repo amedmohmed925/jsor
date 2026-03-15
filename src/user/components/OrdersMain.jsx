@@ -48,7 +48,8 @@ const OrdersMain = () => {
     return t('common:messages.noData');
   };
 
-  const formatLocation = (city, lat, lng) => {
+  const formatLocation = (city, lat, lng, address) => {
+    if (hasValue(address)) return address;
     const cityName = getName(city);
     if (cityName) return cityName;
     if (!hasValue(lat) && !hasValue(lng)) return '--';
@@ -264,12 +265,12 @@ const OrdersMain = () => {
     {
       key: 'pickup',
       label: t('user:orders.pickupLocation'),
-      value: formatLocation(detailsOrder?.city_from, detailsOrder?.lat_from, detailsOrder?.lang_from)
+      value: formatLocation(detailsOrder?.city_from, detailsOrder?.lat_from, detailsOrder?.lang_from, detailsOrder?.address_from)
     },
     {
       key: 'delivery',
       label: t('user:orders.deliveryLocation'),
-      value: formatLocation(detailsOrder?.city_to, detailsOrder?.lat_to1, detailsOrder?.lang_to1)
+      value: formatLocation(detailsOrder?.city_to, detailsOrder?.lat_to1, detailsOrder?.lang_to1, detailsOrder?.address_to1)
     },
     {
       key: 'dateTime',

@@ -104,30 +104,77 @@ const OrderDetails = () => {
                                     <div className="p-2 border rounded-2 h-100">
                                     <h2 className='orders-card-title mb-2'>{t('driver:orders.shipment_details_title') || 'تفاصيل الشحنة'}</h2>
                                     <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="p-2 rounded-3 card-gray-bg h-100">
-                                            <h2 className='orders-card-title mb-2'>{t('driver:orders.receipt_place') || 'مكان الاستلام'}</h2>
-                                            <p className="footer-main-sublabel mb-2">{order.city_from || '--'}</p>
-                                            <p className="not-have mb-2">{t('driver:orders.receipt_time') || 'وقت الاستلام'}</p>
-                                            <div className="d-flex gap-2 align-items-center">
-                                                <img src="/assets/calendar.svg" className='mb-1' alt="calendar" />
-                                                <h6 className='user-desc m-0'>{displayDate}</h6>
-                                                <FontAwesomeIcon icon={faCircle} className='dot-icon' />
-                                                <h6 className='user-desc m-0'>{displayTime}</h6>
-                                            </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="p-2 rounded-3 card-gray-bg h-100">
-                                            <h2 className='orders-card-title mb-2'>{t('driver:orders.delivery_place') || 'مكان التسليم'}</h2>
-                                            <p className="footer-main-sublabel mb-2">{order.city_to || '--'}</p>
-                                            <p className="not-have mb-2">{t('driver:orders.delivery_time') || 'وقت التسليم'}</p>
-                                            <div className="d-flex gap-2 align-items-center">
-                                                <img src="/assets/calendar.svg" className='mb-1' alt="calendar" />
-                                                <h6 className='user-desc m-0'>{order.date_delivery || '--'}</h6>
-                                                <FontAwesomeIcon icon={faCircle} className='dot-icon' />
-                                                <h6 className='user-desc m-0'>{order.time_delivery || '--'}</h6>
-                                            </div>
+                                        <div className="col-12">
+                                            <div className="p-3 mb-3 rounded-3 card-gray-bg border">
+                                                <h2 className='orders-card-title mb-3 d-flex align-items-center gap-2'>
+                                                    <LocationOnOutlinedIcon className='text-primary' />
+                                                    {t('driver:orders.route_details') || 'تفاصيل المسار'}
+                                                </h2>
+                                                
+                                                {/* Pickup Point */}
+                                                <div className="mb-4">
+                                                    <div className="d-flex align-items-center gap-2 mb-1">
+                                                        <FontAwesomeIcon icon={faDotCircle} className="text-success" />
+                                                        <h6 className="m-0 fw-bold">{t('driver:orders.receipt_place') || 'مكان الاستلام'}</h6>
+                                                    </div>
+                                                    <p className="footer-main-sublabel mb-2 ps-4">{order.address_from && order.address_from !== 'null' ? order.address_from : (order.city_from || '--')}</p>
+                                                    <div className="d-flex gap-3 align-items-center ps-4">
+                                                        <div className="d-flex gap-1 align-items-center">
+                                                            <img src="/assets/calendar.svg" width="14" alt="calendar" />
+                                                            <span className='user-desc small'>{displayDate}</span>
+                                                        </div>
+                                                        <div className="d-flex gap-1 align-items-center">
+                                                            <FontAwesomeIcon icon={faCircle} className='dot-icon' style={{ fontSize: '4px' }} />
+                                                            <span className='user-desc small'>{displayTime}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Delivery Points */}
+                                                {(() => {
+                                                    const deliveryPoints = [];
+                                                    for (let i = 1; i <= 5; i++) {
+                                                        const addr = order[`address_to${i === 1 ? '1' : i === 2 ? '2' : i}`] || order[`address_to${i}`];
+                                                        const city = order[`city_to${i === 1 ? '' : i}`];
+                                                        const hasData = addr && addr !== 'null';
+                                                        
+                                                        if (hasData) {
+                                                            deliveryPoints.push({ address: addr, index: i });
+                                                        } else if (city && i === 1 && deliveryPoints.length === 0) {
+                                                            // Fallback for first delivery point if no address but city exists
+                                                            deliveryPoints.push({ address: typeof city === 'object' ? (city.name || city.name_en) : city, index: i });
+                                                        }
+                                                    }
+                                                    
+                                                    if (deliveryPoints.length === 0 && order.city_to) {
+                                                        deliveryPoints.push({ address: typeof order.city_to === 'object' ? (order.city_to.name || order.city_to.name_en) : order.city_to, index: 1 });
+                                                    }
+
+                                                    return deliveryPoints.map((point, idx) => (
+                                                        <div key={idx} className={`${idx !== deliveryPoints.length - 1 ? 'mb-4' : ''}`}>
+                                                            <div className="d-flex align-items-center gap-2 mb-1">
+                                                                <FontAwesomeIcon icon={faLocationDot} className="text-danger" />
+                                                                <h6 className="m-0 fw-bold">
+                                                                    {t('driver:orders.delivery_place') || 'مكان التسليم'} 
+                                                                    {deliveryPoints.length > 1 ? ` (${point.index})` : ''}
+                                                                </h6>
+                                                            </div>
+                                                            <p className="footer-main-sublabel mb-1 ps-4">{point.address}</p>
+                                                            {idx === 0 && (
+                                                                <div className="d-flex gap-3 align-items-center ps-4">
+                                                                    <div className="d-flex gap-1 align-items-center">
+                                                                        <img src="/assets/calendar.svg" width="14" alt="calendar" />
+                                                                        <span className='user-desc small'>{order.date_delivery || '--'}</span>
+                                                                    </div>
+                                                                    <div className="d-flex gap-1 align-items-center">
+                                                                        <FontAwesomeIcon icon={faCircle} className='dot-icon' style={{ fontSize: '4px' }} />
+                                                                        <span className='user-desc small'>{order.time_delivery || '--'}</span>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ));
+                                                })()}
                                             </div>
                                         </div>
                                     </div>

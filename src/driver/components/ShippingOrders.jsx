@@ -35,6 +35,23 @@ const ShippingOrders = ({ orders, isLoading }) => {
         const displayDate = order.date !== "0000-00-00" ? order.date : '--';
         const displayTime = order.time || '--';
 
+        // Prepare destinations - Address prioritized over Coordinates
+        const destinations = [];
+        for (let i = 1; i <= 5; i++) {
+          const address = order[`address_to${i === 1 ? '1' : i === 2 ? '2' : i}`] || order[`address_to${i}`];
+          const cityName = getName(order[`city_to${i === 1 ? '' : i}`]);
+          const hasData = address && address !== 'null';
+
+          if (hasData) {
+            destinations.push(address);
+          } else if (cityName) {
+            destinations.push(cityName);
+          }
+        }
+        if (destinations.length === 0 && order.city_to) {
+          destinations.push(getName(order.city_to));
+        }
+
         return (
           <div key={order.id} className="card-order-details p-2 border rounded-3 mt-2">
             <div className="d-flex flex-column align-items-start gap-2 w-100">
@@ -57,7 +74,8 @@ const ShippingOrders = ({ orders, isLoading }) => {
                         {userRate} <img src="/assets/star.svg" alt="rate" />
                     </div>
                   </div>
-                  <p className="user-desc m-0">{getName(order.city_from) || order.city_from || '--'}</p>
+                  <p className="user-desc m-0">{order.user_id?.mobile || '--'}</p>
+
                 </div>
               </div>
 
@@ -68,13 +86,26 @@ const ShippingOrders = ({ orders, isLoading }) => {
                   </div>
                   <div className="circle"></div>
                   <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
+                  {destinations.length > 1 &&
+                    destinations.slice(1).map((_, i) => (
+                      <React.Fragment key={`arrow-${i}`}>
+                        <div className="circle"></div>
+                        <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
+                      </React.Fragment>
+                    ))}
                   <div className="location-icon">
                     <LocationOnOutlinedIcon className='fs-6' />
                   </div>
                 </div>
                 <div className="from-to-text">
-                  <span>{getName(order.city_from) || order.city_from || '--'}</span>
-                  <span>{getName(order.city_to) || order.city_to || '--'}</span>
+                  <span>{order.address_from && order.address_from !== 'null' ? order.address_from : (getName(order.city_from) || '--')}</span>
+                  {destinations.length > 0 ? (
+                    destinations.map((dest, i) => (
+                      <span key={i}>{dest}</span>
+                    ))
+                  ) : (
+                    <span>--</span>
+                  )}
                 </div>
               </div>
 
@@ -90,7 +121,16 @@ const ShippingOrders = ({ orders, isLoading }) => {
                   <div 
                     className="offers-dropdown text-decoration-none d-flex align-items-center justify-content-center gap-2"
                     style={{ cursor: 'pointer' }}
-                    onClick={() => navigate('/driver/mission-started', { state: { order } })}
+                    onClick={() => {
+                      // Check order status to direct to the correct page
+                      // If status is 2 (Shipping), we check if internal tracking or images suggest we are "In Road" or "Arrived"
+                      // For now, based on user's request, we improve navigation logic
+                      if (order.requestImageBefore?.length > 0) {
+                        navigate('/driver/mission-in-road', { state: { order } });
+                      } else {
+                        navigate('/driver/mission-started', { state: { order } });
+                      }
+                    }}
                   >
                     <h6 className='offers-dropdown-text m-0 text-nowrap'>{t('driver:orders.track_location') || 'تتبع موقعك'}</h6>
                   </div>

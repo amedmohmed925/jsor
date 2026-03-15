@@ -91,6 +91,14 @@ const MissionInroad = () => {
         navigate('/driver/mission-arrived', { state: { order } });
     };
 
+    // Auto-redirect if somehow reached here but order doesn't have images before (not really started)
+    // Or if it's already finished. But priority is handling the "Already Arrived" state if possible.
+    useEffect(() => {
+        if (order?.requestImageAfter?.length > 0) {
+            navigate('/driver/mission-arrived', { state: { order } });
+        }
+    }, [order, navigate]);
+
     const MapComponent = () => (
         <MapContainer center={currentLocation || pickupLocation} zoom={12} className="rounded-3"
             style={{ height: '95%', minHeight: '400px', width: '100%' }}>
@@ -151,20 +159,46 @@ const MissionInroad = () => {
                             </div>
 
                             <div className="d-flex justify-content-between align-items-center flex-wrap">
-                                <div className="from-to-wrapper mt-3">
+                                <div className="from-to-wrapper mt-3 w-100 mb-2">
                                     <div className="from-to-icons">
                                         <div className="location-icon">
                                             <FontAwesomeIcon icon={faLocationDot} className='fs-6 text-primary' />
                                         </div>
                                         <div className="circle"></div>
                                         <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
+                                        {(() => {
+                                            const dests = [];
+                                            for (let i = 1; i <= 5; i++) {
+                                                const addr = order[`address_to${i === 1 ? '1' : i === 2 ? '2' : i}`] || order[`address_to${i}`];
+                                                if (addr && addr !== 'null') dests.push(addr);
+                                            }
+                                            if (dests.length === 0 && order.city_to) dests.push(getName(order.city_to));
+
+                                            return dests.length > 1 ? dests.slice(1).map((_, idx) => (
+                                                <React.Fragment key={idx}>
+                                                    <div className="circle"></div>
+                                                    <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
+                                                </React.Fragment>
+                                            )) : null;
+                                        })()}
                                         <div className="location-icon">
                                             <FontAwesomeIcon icon={faLocationDot} className='fs-6 text-danger' />
                                         </div>
                                     </div>
                                     <div className="from-to-text">
-                                        <span>{getName(order.city_from) || (isRtl ? 'موقع الانطلاق' : 'Pickup point')}</span>
-                                        <span>{getName(order.city_to) || (isRtl ? 'موقع الوصول' : 'Delivery point')}</span>
+                                        <span>{order.address_from && order.address_from !== 'null' ? order.address_from : (getName(order.city_from) || (isRtl ? 'موقع الانطلاق' : 'Pickup point'))}</span>
+                                        {(() => {
+                                            const dests = [];
+                                            for (let i = 1; i <= 5; i++) {
+                                                const addr = order[`address_to${i === 1 ? '1' : i === 2 ? '2' : i}`] || order[`address_to${i}`];
+                                                if (addr && addr !== 'null') dests.push(addr);
+                                            }
+                                            if (dests.length === 0 && order.city_to) dests.push(getName(order.city_to));
+
+                                            return dests.length > 0 ? dests.map((d, idx) => (
+                                                <span key={idx}>{d}</span>
+                                            )) : <span>{isRtl ? 'موقع الوصول' : 'Delivery point'}</span>;
+                                        })()}
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center flex-wrap gap-2 mt-3">

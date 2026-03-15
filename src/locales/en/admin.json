@@ -192,6 +192,18 @@
         "goodType": "Good Type",
         "price": "Price",
         "from": "From",
-        "to": "To"
+        "to": "To",
+        "tripDetails": "Trip Details",
+        "routeDetails": "Route Details",
+        "pickup": "Pickup Point",
+        "delivery": "Delivery Point",
+        "driverInfo": "Driver Info",
+        "UserInfo": "Customer Info",
+        "financials": "Financial Details",
+        "driverPrice": "Driver Cost",
+        "tripPhotos": "Trip Photos",
+        "photosBefore": "Pickup Photos",
+        "photosAfter": "Delivery Photos",
+        "noPhotos": "No photos available"
     }
 }

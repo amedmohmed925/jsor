@@ -2,7 +2,7 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownLong } from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faUser, faTruck, faInfoCircle, faImages, faMapMarkerAlt, faHistory, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from 'react-i18next';
 import { useGetCompanyOrdersMutation } from '../../api/admin/adminApi';
 import { useGetListsQuery } from '../../api/site/siteApi';
@@ -43,9 +43,318 @@ const getDateRange = (period) => {
   return { date_from: fmt(dateFrom), date_to: fmt(dateTo) };
 };
 
+const OrderDetailsModal = ({ order, isOpen, onClose, isRtl, getStatusClass, getStatusName, t }) => {
+  if (!order || !isOpen) return null;
+
+  const getFullAddress = (item) => {
+    const stops = [];
+    if (item.address_from) stops.push(item.address_from);
+    for (let i = 1; i <= 5; i++) {
+      if (item[`address_to${i}`]) {
+        stops.push(item[`address_to${i}`]);
+      }
+    }
+    return stops;
+  };
+
+  const addresses = getFullAddress(order);
+
+  const resolveImageSrc = (value) => {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    return value.avatar || value.img || value.image || value.image_url || value.profile_image || '';
+  };
+
+  const driverAvatar = resolveImageSrc(order.driver_id);
+  const userAvatar = resolveImageSrc(order.user_id);
+
+  return (
+    <div className={`modal fade show d-block`} style={{ backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 1050 }}>
+      <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '15px' }}>
+          {/* Header */}
+          <div className="modal-header border-bottom-0 p-4 d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center gap-3">
+              <div className="bg-primary bg-opacity-10 p-2 rounded-3 text-primary">
+                <FontAwesomeIcon icon={faInfoCircle} size="lg" />
+              </div>
+              <h5 className="modal-title fw-bold m-0 text-dark">
+                {t('admin:tripHistory.tripDetails')} #{String(order.id).padStart(3, '0')}
+              </h5>
+            </div>
+            <button 
+              type="button" 
+              className="btn-close shadow-none m-0" 
+              onClick={onClose}
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div className="modal-body p-4">
+            <div className="row g-4">
+              {/* Trip Lifecycle & Status */}
+              <div className="col-12">
+                <div className="p-3 bg-light dark-bg-light rounded-3 d-flex justify-content-between align-items-center border border-light-subtle">
+                  <div className="d-flex align-items-center gap-2">
+                    <FontAwesomeIcon icon={faHistory} className="text-secondary" />
+                    <span className="fw-medium text-dark">{t('admin:tripHistory.status')}:</span>
+                    <span className={`status-badge ${getStatusClass(order.status)} ms-1`}>
+                      {getStatusName(order.status)}
+                    </span>
+                  </div>
+                  {order.created_at && (
+                    <div className="text-muted small">
+                      <span className="me-1">{order.created_at}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Route & Locations */}
+              <div className="col-md-7">
+                <div className="card h-100 border-0 shadow-sm bg-white dark-bg-card" style={{ borderRadius: '12px' }}>
+                  <div className="card-header bg-transparent border-0 p-3 pb-0">
+                    <h6 className="fw-bold m-0 d-flex align-items-center gap-2 text-dark">
+                      <FontAwesomeIcon icon={faMapMarkerAlt} className="text-primary" />
+                      {t('admin:tripHistory.routeDetails')}
+                    </h6>
+                  </div>
+                  <div className="card-body p-3">
+                    <div className="position-relative ps-2">
+                       {/* Connection Line */}
+                       <div className="position-absolute h-100 border-start border-2 border-dashed border-light-subtle" 
+                            style={{ 
+                              left: isRtl ? 'auto' : '15px', 
+                              right: isRtl ? '15px' : 'auto', 
+                              top: '10px', 
+                              bottom: '10px',
+                              zIndex: 0
+                            }}>
+                       </div>
+
+                       {/* Points */}
+                       <div className="d-flex flex-column gap-4">
+                          {/* Pickup */}
+                          <div className="d-flex gap-3 position-relative" style={{ zIndex: 1 }}>
+                            <div className="bg-success rounded-circle d-flex align-items-center justify-content-center" 
+                                 style={{ width: '24px', height: '24px', minWidth: '24px' }}>
+                                <FontAwesomeIcon icon={faCircle} className="text-white" style={{ fontSize: '8px' }} />
+                            </div>
+                            <div>
+                              <p className="small text-muted mb-0">{t('admin:tripHistory.pickup')}</p>
+                              <p className="fw-semibold text-dark mb-0">{order.address_from || order.city_from}</p>
+                            </div>
+                          </div>
+
+                          {/* Destinations */}
+                          {addresses.slice(1).map((addr, idx) => (
+                            <div key={idx} className="d-flex gap-3 position-relative" style={{ zIndex: 1 }}>
+                              <div className="bg-danger rounded-circle d-flex align-items-center justify-content-center" 
+                                   style={{ width: '24px', height: '24px', minWidth: '24px' }}>
+                                  <FontAwesomeIcon icon={faCircle} className="text-white" style={{ fontSize: '8px' }} />
+                              </div>
+                              <div>
+                                <p className="small text-muted mb-0">{t('admin:tripHistory.delivery')} {idx + 1}</p>
+                                <p className="fw-semibold text-dark mb-0">{addr}</p>
+                              </div>
+                            </div>
+                          ))}
+
+                          {/* If no addresses, fallback to city_to */}
+                          {addresses.length <= 1 && order.city_to && (
+                            <div className="d-flex gap-3 position-relative" style={{ zIndex: 1 }}>
+                                <div className="bg-danger rounded-circle d-flex align-items-center justify-content-center" 
+                                    style={{ width: '24px', height: '24px', minWidth: '24px' }}>
+                                    <FontAwesomeIcon icon={faCircle} className="text-white" style={{ fontSize: '8px' }} />
+                                </div>
+                                <div>
+                                    <p className="small text-muted mb-0">{t('admin:tripHistory.delivery')}</p>
+                                    <p className="fw-semibold text-dark mb-0">{order.city_to}</p>
+                                </div>
+                            </div>
+                          )}
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stakeholders (User & Driver) */}
+              <div className="col-md-5">
+                <div className="d-flex flex-column gap-3">
+                  {/* Driver Info */}
+                  <div className="card border-0 shadow-sm bg-white dark-bg-card" style={{ borderRadius: '12px' }}>
+                    <div className="card-body p-3">
+                      <h6 className="fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
+                        <FontAwesomeIcon icon={faTruck} className="text-primary" />
+                        {t('admin:tripHistory.driverInfo')}
+                      </h6>
+                      <div className="d-flex align-items-center gap-3">
+                        <div className="rounded-circle overflow-hidden bg-light dark-bg-light d-flex align-items-center justify-content-center" style={{ width: '55px', height: '55px', minWidth: '55px' }}>
+                          {driverAvatar ? (
+                            <img
+                              src={driverAvatar}
+                              alt="Driver"
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = '/assets/driver-avatar.png';
+                              }}
+                            />
+                          ) : (
+                            <FontAwesomeIcon icon={faUser} className="text-secondary" size="lg" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="fw-bold mb-0 text-dark">{order.driver_id?.name || '-'}</p>
+                          <p className="small text-muted mb-0">{order.driver_id?.phone || '-'}</p>
+                          <p className="small text-primary mb-0 fw-medium">
+                            {order.sub_truck_id?.name || order.truck_id?.name || '-'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* User Info */}
+                  <div className="card border-0 shadow-sm bg-white dark-bg-card" style={{ borderRadius: '12px' }}>
+                    <div className="card-body p-3">
+                      <h6 className="fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
+                        <FontAwesomeIcon icon={faUser} className="text-primary" />
+                        {t('admin:tripHistory.UserInfo')}
+                      </h6>
+                      <div className="d-flex align-items-center gap-3">
+                        <div className="rounded-circle overflow-hidden bg-light dark-bg-light d-flex align-items-center justify-content-center" style={{ width: '55px', height: '55px', minWidth: '55px' }}>
+                          {userAvatar ? (
+                            <img
+                              src={userAvatar}
+                              alt="User"
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = '/assets/user-avatar.png';
+                              }}
+                            />
+                          ) : (
+                            <FontAwesomeIcon icon={faUser} className="text-secondary" size="lg" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="fw-bold mb-0 text-dark">{order.user_id?.name || '-'}</p>
+                          <p className="small text-muted mb-0">{order.user_id?.phone || '-'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pricing Info */}
+                  <div className="card border-0 shadow-sm bg-white dark-bg-card" style={{ borderRadius: '12px' }}>
+                    <div className="card-body p-3">
+                      <h6 className="fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
+                        <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />
+                        {t('admin:tripHistory.financials')}
+                      </h6>
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <span className="text-muted">{t('admin:tripHistory.income')}:</span>
+                        <span className="fw-bold text-success">{order.good_price || '0'} {t('admin:tripHistory.currency')}</span>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span className="text-muted">{t('admin:tripHistory.driverPrice')}:</span>
+                        <span className="fw-bold text-primary">{order.driver_price || '0'} {t('admin:tripHistory.currency')}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Photos Section */}
+              <div className="col-12">
+                <div className="card border-0 shadow-sm bg-white dark-bg-card" style={{ borderRadius: '12px' }}>
+                  <div className="card-header bg-transparent border-0 p-3 pb-0">
+                    <h6 className="fw-bold m-0 d-flex align-items-center gap-2 text-dark">
+                      <FontAwesomeIcon icon={faImages} className="text-primary" />
+                      {t('admin:tripHistory.tripPhotos')}
+                    </h6>
+                  </div>
+                  <div className="card-body p-3">
+                    <div className="row g-3">
+                      {/* Photos Before */}
+                      <div className="col-md-6">
+                        <p className="small fw-bold text-muted mb-2 ps-2 border-start border-3 border-success">
+                          {t('admin:tripHistory.photosBefore')}
+                        </p>
+                        <div className="d-flex flex-wrap gap-2">
+                          {order.requestImageBefore?.length > 0 ? (
+                            order.requestImageBefore.map((img, idx) => {
+                              const imgSrc = typeof img === 'string' ? img : (img.img || img.image || img.image_url);
+                              return imgSrc ? (
+                                <a key={idx} href={imgSrc} target="_blank" rel="noreferrer">
+                                  <img src={imgSrc} alt="Before" className="rounded-3 border border-light-subtle" 
+                                       style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
+                                </a>
+                              ) : null;
+                            })
+                          ) : (
+                            <p className="text-muted small ps-2">{t('admin:tripHistory.noPhotos')}</p>
+                          )}
+                        </div>
+                      </div>
+                      {/* Photos After */}
+                      <div className="col-md-6">
+                        <p className="small fw-bold text-muted mb-2 ps-2 border-start border-3 border-danger">
+                          {t('admin:tripHistory.photosAfter')}
+                        </p>
+                        <div className="d-flex flex-wrap gap-2">
+                          {order.requestImageAfter?.length > 0 ? (
+                            order.requestImageAfter.map((img, idx) => {
+                              const imgSrc = typeof img === 'string' ? img : (img.img || img.image || img.image_url);
+                              return imgSrc ? (
+                                <a key={idx} href={imgSrc} target="_blank" rel="noreferrer">
+                                  <img src={imgSrc} alt="After" className="rounded-3 border border-light-subtle" 
+                                       style={{ width: '80px', height: '80px', objectFit: 'cover' }} />
+                                </a>
+                              ) : null;
+                            })
+                          ) : (
+                            <p className="text-muted small ps-2">{t('admin:tripHistory.noPhotos')}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="modal-footer border-top-0 p-3">
+            <button type="button" className="btn btn-light px-4 fw-medium" onClick={onClose} style={{ borderRadius: '8px' }}>
+              {t('common:buttons.close')}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TripHistoryComponent = () => {
   const { t, i18n } = useTranslation(['admin', 'common']);
   const isRtl = i18n.language === 'ar';
+
+  // Modal State
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = (order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedOrder(null);
+    setIsModalOpen(false);
+  };
 
   // Filters state
   const [statusFilter, setStatusFilter] = useState('');
@@ -437,8 +746,17 @@ const TripHistoryComponent = () => {
 
         {/* Table */}
         {!isLoading && !isError && (
-  <div className="table-responsive border rounded-3 bg-white shadow-sm mb-4">
-    <table className="table table-hover align-middle mb-0 w-100" style={{ minWidth: '800px' }}>
+  <div className="table-responsive border rounded-3 shadow-sm mb-4" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}>
+    <table
+      className="table table-hover align-middle mb-0 w-100"
+      style={{
+        minWidth: '800px',
+        '--bs-table-bg': 'var(--card-bg)',
+        '--bs-table-color': 'var(--text-primary)',
+        '--bs-table-border-color': 'var(--border-color)',
+        '--bs-table-hover-bg': 'var(--bg-hover)',
+      }}
+    >
       <thead className="table-light">
         <tr>
           {/* استخدمنا text-start لكي يتغير اتجاه النص تلقائياً مع لغة الموقع */}
@@ -459,7 +777,7 @@ const TripHistoryComponent = () => {
           </tr>
         ) : (
           filteredItems.map((item) => (
-            <tr key={item.id}>
+            <tr key={item.id} onClick={() => handleOpenModal(item)} style={{ cursor: 'pointer' }}>
               {/* رقم الرحلة */}
               <td className="p-3 text-start">
                 <span className="fw-semibold text-secondary">
@@ -511,6 +829,16 @@ const TripHistoryComponent = () => {
     </table>
   </div>
 )}
+        {/* Render Order Details Modal */}
+        <OrderDetailsModal
+          order={selectedOrder}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          isRtl={isRtl}
+          getStatusClass={getStatusClass}
+          getStatusName={getStatusName}
+          t={t}
+        />
       </div>
     </div>
   );

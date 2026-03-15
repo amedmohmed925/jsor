@@ -1,14 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useGetListsQuery, useRegisterMutation } from '../../api/auth/authApi';
+import { useGetListsQuery, useRegisterCompanyMutation, useGetCitiesByCountryQuery } from '../../api/auth/authApi';
 
 const CompanySignupMain = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation(['auth', 'common']);
-  const isRtl = i18n.dir() === 'rtl';
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -16,21 +15,21 @@ const CompanySignupMain = () => {
   const [formData, setFormData] = useState({
     name: '',
     last_name: '',
+    username: '',
     email: '',
     mobile: '',
     password: '',
     password_repeat: '',
-    country_id: '',
+    country_id: '1', // Default to 1 as per request
     city_id: '',
-    company_name: '',
-    commercial_register: '',
-    company_size: '',
-    address: '',
     item1: 0,
   });
 
   const { data: listsData } = useGetListsQuery();
-  const [register, { isLoading: registerLoading }] = useRegisterMutation();
+  const { data: citiesData } = useGetCitiesByCountryQuery(formData.country_id, {
+    skip: !formData.country_id,
+  });
+  const [registerCompany, { isLoading: registerLoading }] = useRegisterCompanyMutation();
 
   const getLangField = (item, field) => {
     if (!item) return '';
@@ -40,15 +39,10 @@ const CompanySignupMain = () => {
 
     if (isEn && item[enField]) return item[enField];
     if (!isEn && item[arField]) return item[arField];
+    if (item[field]) return item[field]; // Fallback to plain field (e.g., 'title' or 'name')
 
-    return item[field] || '';
+    return '';
   };
-
-  const filteredCities = useMemo(() => {
-    const allCities = listsData?.city || [];
-    if (!formData.country_id) return [];
-    return allCities.filter((city) => String(city.country_id) === String(formData.country_id));
-  }, [listsData?.city, formData.country_id]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -67,24 +61,13 @@ const CompanySignupMain = () => {
     });
   };
 
-  const buildUsername = () => {
-    const source = `${formData.company_name}-${formData.mobile}`.trim();
-    const username = source
-      .replace(/\s+/g, '_')
-      .replace(/[^\w\u0600-\u06FF-]/g, '')
-      .slice(0, 40);
-
-    return username || `company_${Date.now()}`;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     const requiredFields = [
-      'name', 'last_name', 'email', 'mobile', 'password', 'password_repeat', 
-      'country_id', 'city_id', 'company_name', 'commercial_register', 
-      'company_size', 'address'
+      'name', 'last_name', 'username', 'email', 'mobile', 'password', 'password_repeat', 
+      'country_id', 'city_id'
     ];
 
     const missing = requiredFields.filter(f => !String(formData[f] || '').trim());
@@ -107,7 +90,7 @@ const CompanySignupMain = () => {
     const payload = {
       name: formData.name,
       last_name: formData.last_name,
-      username: buildUsername(),
+      username: formData.username,
       email: formData.email,
       mobile: formData.mobile,
       password: formData.password,
@@ -115,15 +98,11 @@ const CompanySignupMain = () => {
       country_id: formData.country_id,
       city_id: formData.city_id,
       item1: formData.item1,
-      company_name: formData.company_name,
-      commercial_register: formData.commercial_register,
-      company_size: formData.company_size,
-      address: formData.address,
       account_type: 'company',
     };
 
     try {
-      const result = await register(payload).unwrap();
+      const result = await registerCompany(payload).unwrap();
       const registerData = result.status === 1 && result.data?.[0]?.status === 1 ? result.data[0] : (result.status === 1 ? result : null);
 
       if (registerData && (registerData.status === 1 || result.status === 1)) {
@@ -176,6 +155,18 @@ const CompanySignupMain = () => {
               required
             />
           </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label small">{t('auth:companySignup.fields.username')}</label>
+          <input
+            name="username"
+            className="form-control form-input py-2"
+            placeholder={t('auth:companySignup.fields.username')}
+            value={formData.username}
+            onChange={handleInputChange}
+            required
+          />
         </div>
 
         <div className="mb-3">
@@ -241,99 +232,42 @@ const CompanySignupMain = () => {
           />
         </div>
 
-        <div className="mb-3">
-          <label className="form-label small">{t('auth:companySignup.fields.country')}</label>
-          <select
-            name="country_id"
-            className="form-select form-input py-2"
-            value={formData.country_id}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">{t('auth:companySignup.fields.selectCountry')}</option>
-            {(listsData?.Country || []).map((country) => (
-              <option key={country.id} value={country.id}>
-                {getLangField(country, 'name')}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <hr className="my-4" />
-
-        <h3 className="company-signup-section-title">{t('auth:companySignup.steps.company')}</h3>
-        <p className="company-signup-note mb-4">{t('auth:companySignup.sections.companyDataHint')}</p>
-
-        <div className="mb-3">
-          <label className="form-label small">{t('auth:companySignup.fields.companyName')}</label>
-          <input
-            name="company_name"
-            className="form-control form-input py-2"
-            placeholder={t('auth:companySignup.fields.companyName')}
-            value={formData.company_name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label small">{t('auth:companySignup.fields.commercialRegister')}</label>
-          <input
-            name="commercial_register"
-            className="form-control form-input py-2"
-            placeholder={t('auth:companySignup.fields.commercialRegister')}
-            value={formData.commercial_register}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label small">{t('auth:companySignup.fields.companySize')}</label>
-          <select
-            name="company_size"
-            className="form-select form-input py-2"
-            value={formData.company_size}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">{t('auth:companySignup.fields.selectCompanySize')}</option>
-            <option value="small">{t('auth:companySignup.sizes.small')}</option>
-            <option value="medium">{t('auth:companySignup.sizes.medium')}</option>
-            <option value="large">{t('auth:companySignup.sizes.large')}</option>
-          </select>
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label small">{t('auth:companySignup.fields.city')}</label>
-          <select
-            name="city_id"
-            className="form-select form-input py-2"
-            value={formData.city_id}
-            onChange={handleInputChange}
-            required
-            disabled={!formData.country_id}
-          >
-            <option value="">{t('auth:companySignup.fields.selectCity')}</option>
-            {filteredCities.map((city) => (
-              <option key={city.id} value={city.id}>
-                {getLangField(city, 'name')}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mb-4">
-          <label className="form-label small">{t('auth:companySignup.fields.address')}</label>
-          <textarea
-            name="address"
-            rows="3"
-            className="form-control form-input py-2"
-            placeholder={t('auth:companySignup.fields.address')}
-            value={formData.address}
-            onChange={handleInputChange}
-            required
-          />
+        <div className="row g-2 mb-3">
+          <div className="col-6">
+            <label className="form-label small">{t('auth:companySignup.fields.country')}</label>
+            <select
+              name="country_id"
+              className="form-select form-input py-2"
+              value={formData.country_id}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">{t('auth:companySignup.fields.selectCountry')}</option>
+              {(listsData?.Country || []).map((country) => (
+                <option key={country.id} value={country.id}>
+                  {getLangField(country, 'name')}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-6">
+            <label className="form-label small">{t('auth:companySignup.fields.city')}</label>
+            <select
+              name="city_id"
+              className="form-select form-input py-2"
+              value={formData.city_id}
+              onChange={handleInputChange}
+              required
+              disabled={!formData.country_id}
+            >
+              <option value="">{t('auth:companySignup.fields.selectCity')}</option>
+              {(citiesData || []).map((city) => (
+                <option key={city.id} value={city.id}>
+                  {getLangField(city, 'name')}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="d-flex align-items-center gap-2 mb-3 company-signup-terms">
@@ -358,10 +292,12 @@ const CompanySignupMain = () => {
       </form>
 
       <div className="text-center mt-4 company-signup-login">
-        {t('auth:companySignup.haveAccount')} {' '}
-        <Link to="/login" className="register-link text-decoration-none">
-          {t('auth:companySignup.signIn')}
-        </Link>
+        <p className="m-0 small">
+          {t('auth:companySignup.haveAccount')} {' '}
+          <Link to="/login" className="register-link text-decoration-none fw-bold">
+            {t('auth:companySignup.signIn')}
+          </Link>
+        </p>
       </div>
     </div>
   );

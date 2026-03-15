@@ -192,6 +192,18 @@
         "goodType": "نوع البضاعة",
         "price": "السعر",
         "from": "من",
-        "to": "إلى"
+        "to": "إلى",
+        "tripDetails": "تفاصيل الرحلة",
+        "routeDetails": "تفاصيل المسار",
+        "pickup": "نقطة الاستلام",
+        "delivery": "نقطة التوصيل",
+        "driverInfo": "بيانات السائق",
+        "UserInfo": "بيانات العميل",
+        "financials": "التفاصيل المالية",
+        "driverPrice": "تكلفة السائق",
+        "tripPhotos": "صور الرحلة",
+        "photosBefore": "الصور عند الاستلام",
+        "photosAfter": "الصور عند التسليم",
+        "noPhotos": "لا توجد صور متوفرة"
     }
 }

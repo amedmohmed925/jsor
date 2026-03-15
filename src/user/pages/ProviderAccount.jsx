@@ -309,25 +309,56 @@ const ProviderAccount = () => {
                                                  <h6 className='user-desc m-0'>{t('buttons.currency')} {req.driver_price}</h6>
                                             </div>
 
-                                            {/* Locations if available */}
-                                            {(req.city_from || req.city_to || req.lat_from) && (
-                                                <div className="from-to-wrapper">
-                                                    <div className="from-to-icons">
-                                                        <div className="location-icon">
-                                                            <LocationOnOutlinedIcon className='fs-6' />
+                                            {/* Locations Logic */}
+                                            {(() => {
+                                                const destinations = [];
+                                                for (let i = 1; i <= 5; i++) {
+                                                    const address = req[`address_to${i === 1 ? '1' : i === 2 ? '2' : i}`] || req[`address_to${i}`];
+                                                    const cityName = getName(req[`city_to${i === 1 ? '' : i}`]);
+                                                    const hasData = address && address !== 'null';
+
+                                                    if (hasData) {
+                                                        destinations.push(address);
+                                                    } else if (cityName) {
+                                                        destinations.push(cityName);
+                                                    }
+                                                }
+                                                if (destinations.length === 0 && req.city_to) {
+                                                    destinations.push(getName(req.city_to));
+                                                }
+
+                                                return (
+                                                    <div className="from-to-wrapper w-100">
+                                                        <div className="from-to-icons">
+                                                            <div className="location-icon">
+                                                                <LocationOnOutlinedIcon className='fs-6' />
+                                                            </div>
+                                                            <div className="circle"></div>
+                                                            <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
+                                                            {destinations.length > 1 &&
+                                                                destinations.slice(1).map((_, i) => (
+                                                                    <React.Fragment key={`arrow-${i}`}>
+                                                                        <div className="circle"></div>
+                                                                        <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
+                                                                    </React.Fragment>
+                                                                ))}
+                                                            <div className="location-icon">
+                                                                <LocationOnOutlinedIcon className='fs-6' />
+                                                            </div>
                                                         </div>
-                                                        <div className="circle"></div>
-                                                        <FontAwesomeIcon icon={faArrowDownLong} className="arrow" />
-                                                        <div className="location-icon">
-                                                            <LocationOnOutlinedIcon className='fs-6' />
+                                                        <div className="from-to-text">
+                                                            <span>{req.address_from && req.address_from !== 'null' ? req.address_from : (getName(req.city_from) || '---')}</span>
+                                                            {destinations.length > 0 ? (
+                                                                destinations.map((dest, i) => (
+                                                                    <span key={i}>{dest}</span>
+                                                                ))
+                                                            ) : (
+                                                                <span>---</span>
+                                                            )}
                                                         </div>
                                                     </div>
-                                                    <div className="from-to-text">
-                                                        <span>{getName(req.city_from) || (currentLanguage === 'ar' ? 'من الموقع' : 'From Location')}</span>
-                                                        <span>{getName(req.city_to) || (req.lat_to1 ? (currentLanguage === 'ar' ? 'إلى الموقع' : 'To Location') : '---')}</span>
-                                                    </div>
-                                                </div>
-                                            )}
+                                                );
+                                            })()}
                                             
                                             <div className="d-flex gap-2 align-items-center">
                                                 <img src="../assets/calendar.svg" className='mb-1' alt="calender" />
