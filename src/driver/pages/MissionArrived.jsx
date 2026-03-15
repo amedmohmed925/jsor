@@ -87,7 +87,11 @@ const MissionArrived = () => {
     const handleFinish = async () => {
         if (!order) return;
         if (!confirmCode.trim()) {
-            toast.error(t('driver:missionArrived.enterCode', 'الرجاء إدخال رمز التحقق'));
+            toast.error(isRtl ? 'الرجاء إدخال رمز التحقق' : 'Please enter verification code');
+            return;
+        }
+        if (images.length === 0) {
+            toast.error(isRtl ? 'يرجى رفع صور الحمولة أولاً' : 'Please upload cargo images first');
             return;
         }
         if (!signatureFile) {
@@ -96,45 +100,45 @@ const MissionArrived = () => {
         }
 
         try {
-            // 1. Upload after images (reqeust_id — API typo)
-            if (images.length > 0) {
-                const imgBody = new FormData();
-                imgBody.append('reqeust_id', order.id);
-                images.forEach(img => imgBody.append('image[]', img));
-
-                const imgRes = await uploadImageAfter({ token, body: imgBody }).unwrap();
-                if (imgRes.status !== 1 || imgRes.data?.[0]?.status === 0) {
-                    toast.error(imgRes.data?.[0]?.message || t('common:error', 'حدث خطأ'));
-                    return;
-                }
-            }
-
-            // 2. End order (request_id)
-            const endBody = new FormData();
-            endBody.append('request_id', order.id);
-
-            const endRes = await endOrder({ token, body: endBody }).unwrap();
-            if (endRes.status !== 1 || endRes.data?.[0]?.status === 0) {
-                toast.error(endRes.data?.[0]?.message || t('common:error', 'حدث خطأ'));
-                return;
-            }
-
-            // 3. Customer signature (request_id)
+            // 1. First, verify signature and code (Crucial verification)
             const sigBody = new FormData();
             sigBody.append('request_id', order.id);
             sigBody.append('confirm_code', confirmCode);
             sigBody.append('signature', signatureFile);
 
             const sigRes = await customerSignature({ token, body: sigBody }).unwrap();
-            if (sigRes.status !== 1 || sigRes.data?.[0]?.status === 0) {
-                toast.error(sigRes.data?.[0]?.message || t('common:error', 'حدث خطأ'));
+            // Assuming status 1 is success, and we stop everything if it fails
+            if (sigRes.status !== 1 || (sigRes.data?.[0] && sigRes.data[0].status === 0)) {
+                toast.error(sigRes.message || sigRes.data?.[0]?.message || (isRtl ? 'رمز التحقق أو التوقيع غير صحيح' : 'Verification code or signature is incorrect'));
                 return;
             }
 
-            toast.success(t('driver:missionArrived.success', 'تم إنهاء المهمة بنجاح'));
+            // 2. Upload cargo images (reqeust_id — API typo)
+            const imgBody = new FormData();
+            imgBody.append('reqeust_id', order.id);
+            images.forEach(img => imgBody.append('image[]', img));
+
+            const imgRes = await uploadImageAfter({ token, body: imgBody }).unwrap();
+            if (imgRes.status !== 1) {
+                toast.error(imgRes.message || (isRtl ? 'فشل رفع الصور' : 'Failed to upload images'));
+                return;
+            }
+
+            // 3. Finally, end the order
+            const endBody = new FormData();
+            endBody.append('request_id', order.id);
+
+            const endRes = await endOrder({ token, body: endBody }).unwrap();
+            if (endRes.status !== 1) {
+                toast.error(endRes.message || (isRtl ? 'فشل إنهاء الطلب' : 'Failed to end order'));
+                return;
+            }
+
+            toast.success(isRtl ? 'تم إنهاء المهمة بنجاح' : 'Mission completed successfully');
             navigate('/driver/orders');
         } catch (err) {
-            toast.error(t('common:error', 'حدث خطأ في الاتصال'));
+            console.error(err);
+            toast.error(isRtl ? 'حدث خطأ في الاتصال أو تنفيذ العملية' : 'Error in connection or process execution');
         }
     };
 
