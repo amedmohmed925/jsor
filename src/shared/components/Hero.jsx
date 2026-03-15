@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faMapMarkerAlt, faTimes, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 // Defined outside Hero to avoid remounting the map on every state change
 const HeroMapClickHandler = ({ onMapClick }) => {
@@ -28,6 +30,7 @@ import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
 
 const Hero = () => {
+  const { isAuthenticated } = useAuth();
   const [activeFilter, setActiveFilter] = useState('fast'); // Default to fast/normal
   const [isMultiple, setIsMultiple] = useState(false);
   const [destinations, setDestinations] = useState(['']); // Array for delivery locations
@@ -253,8 +256,30 @@ const Hero = () => {
                       transition={{ duration: 0.5, delay: 0.4 }}
                       style={{ paddingBottom: i18n.language.startsWith('en') ? '20px' : '40px' }} // رفع الأزرار لتجنب تداخلها مع الكارت
                     >
-                      <Link to="/user/basic-upload" className="login-button text-decoration-none">{t('hero.orderTruck')}</Link>
-                      <Link to="/signup-driver" className="join-button text-decoration-none">{t('common:hero.joinDriver', 'انضم كسائق')}</Link>
+                      <Link 
+                        to={isAuthenticated ? "#" : "/user/basic-upload"} 
+                        onClick={(e) => {
+                          if (isAuthenticated) {
+                            e.preventDefault();
+                            toast.info(i18n.language === 'en' ? 'You are already logged in' : 'أنت مسجل للدخول بالفعل');
+                          }
+                        }}
+                        className="login-button text-decoration-none"
+                      >
+                        {t('hero.orderTruck')}
+                      </Link>
+                      <Link 
+                        to={isAuthenticated ? "#" : "/signup-driver"} 
+                        onClick={(e) => {
+                          if (isAuthenticated) {
+                            e.preventDefault();
+                            toast.info(i18n.language === 'en' ? 'You are already logged in' : 'أنت مسجل للدخول بالفعل');
+                          }
+                        }}
+                        className="join-button text-decoration-none"
+                      >
+                        {t('common:hero.joinDriver', 'انضم كسائق')}
+                      </Link>
                     </motion.div>
                   </div>
                 </div>

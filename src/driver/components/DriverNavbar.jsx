@@ -58,7 +58,12 @@ const DriverNavbar = () => {
             </div>
             <LanguageSwitcher isMinimal={true} />
             <Link to="/driver/notifications" className="nav-labg-mode position-relative bg-light rounded-pill p-2">
-              <img src="/assets/notification.svg" alt="notification" width="16" />
+              <img 
+                src="/assets/notification.svg" 
+                alt="notification" 
+                width="16" 
+                style={currentTheme === 'dark' ? { filter: 'invert(1) brightness(2)' } : {}}
+              />
               {badgeCount > 0 && (
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '0.4rem', padding: '0.15em 0.3em' }}>
                   {badgeCount}
@@ -112,7 +117,12 @@ const DriverNavbar = () => {
             <li className="nav-item d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2 gap-xl-3">
                 <div className="d-flex align-items-center justify-content-center gap-2">
                     <Link to="/driver/notifications" className="nav-labg-mode position-relative bg-light rounded-pill p-2 hover-shadow">
-                      <img src="/assets/notification.svg" alt="notification" width="20" />
+                      <img 
+                        src="/assets/notification.svg" 
+                        alt="notification" 
+                        width="20" 
+                        style={currentTheme === 'dark' ? { filter: 'invert(1) brightness(2)' } : {}}
+                      />
                       {badgeCount > 0 && (
                         <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '0.6rem' }}>
                           {badgeCount}

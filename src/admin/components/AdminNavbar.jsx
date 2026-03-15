@@ -74,7 +74,11 @@ const AdminNavbar = () => {
             </li>
             <li className="nav-item d-flex align-items-center gap-2">
                 <Link to="/admin/notifications" className="nav-labg-mode position-relative">
-                  <img src="/assets/notification.svg" alt="notification" />
+                  <img 
+                    src="/assets/notification.svg" 
+                    alt="notification" 
+                    style={currentTheme === 'dark' ? { filter: 'invert(1) brightness(2)' } : {}}
+                  />
                   {badgeCount > 0 && (
                     <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '0.6rem' }}>
                       {badgeCount}

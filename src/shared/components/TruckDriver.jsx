@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const TruckDriver = () => {
   const { i18n } = useTranslation();
+  const { isAuthenticated } = useAuth();
   const { data: homeData, isLoading } = useGetHomeDataQuery();
 
   // Helper to get localized field from API
@@ -72,7 +75,16 @@ const TruckDriver = () => {
               ))}
             </motion.div>
             <div className="text-center">
-              <Link to='/signup-driver' className="d-inline-block">
+              <Link 
+                to={isAuthenticated ? "#" : "/signup-driver"} 
+                onClick={(e) => {
+                  if (isAuthenticated) {
+                    e.preventDefault();
+                    toast.info(i18n.language === 'en' ? 'You are already logged in' : 'أنت مسجل للدخول بالفعل');
+                  }
+                }}
+                className="d-inline-block"
+              >
                 <motion.button 
                   className="login-button mt-4"
                   whileHover={{ scale: 1.1, backgroundColor: "#0056b3" }}

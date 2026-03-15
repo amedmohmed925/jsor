@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery, useGetContactInfoQuery } from '../../api/site/siteApi';
+import { useAuth } from '../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 // Import Material Icons for social media
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -16,6 +18,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Footer = ({ isProviderPage = false }) => {
   const { t, i18n } = useTranslation(['common', 'auth']);
+  const { isAuthenticated } = useAuth();
   const { data: homeData, isLoading } = useGetHomeDataQuery();
   const { data: contactInfo } = useGetContactInfoQuery();
 
@@ -36,7 +39,18 @@ const Footer = ({ isProviderPage = false }) => {
         {/* General Footer - Hidden on Provider Page */}
         <div className={`d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 general-footer ${isProviderPage ? 'd-none' : ''}`}>
           <h3 className='footer-title'>{t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
-          <Link to='/signup-driver' className="login-button text-decoration-none">{t('common:hero.joinDriver', 'انضم الينا الان')}</Link>
+          <Link 
+            to={isAuthenticated ? "#" : "/signup-driver"} 
+            onClick={(e) => {
+              if (isAuthenticated) {
+                e.preventDefault();
+                toast.info(i18n.language === 'en' ? 'You are already logged in' : 'أنت مسجل للدخول بالفعل');
+              }
+            }}
+            className="login-button text-decoration-none"
+          >
+            {t('common:hero.joinDriver', 'انضم الينا الان')}
+          </Link>
         </div>
         
         {/* Provider Footer - Only Shown on Provider Page */}
@@ -44,7 +58,16 @@ const Footer = ({ isProviderPage = false }) => {
           <h3 className='login-title'>
             {isLoading ? '...' : getLangField(footerSection, 'title') || 'هل أنت مستعد لبدء العمل وزيادة دخلك؟'}
           </h3>
-          <Link to='/signup-driver' className="login-button text-decoration-none">
+          <Link 
+            to={isAuthenticated ? "#" : "/signup-driver"} 
+            onClick={(e) => {
+              if (isAuthenticated) {
+                e.preventDefault();
+                toast.info(i18n.language === 'en' ? 'You are already logged in' : 'أنت مسجل للدخول بالفعل');
+              }
+            }}
+            className="login-button text-decoration-none"
+          >
             {isLoading ? '...' : getLangField(footerSection, 'content') || 'ابدأ الآن كمزود خدمة'}
           </Link>
         </div>

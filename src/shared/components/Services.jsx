@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const Services = () => {
   const { i18n } = useTranslation();
+  const { isAuthenticated } = useAuth();
   const { data: homeData, isLoading } = useGetHomeDataQuery();
 
   // Helper to get localized field from API
@@ -94,7 +97,16 @@ const Services = () => {
                 </div>
                 <h5 className='services-card-title m-0'>{getLangField(service, 'title')}</h5>
                 <p className='services-card-desc m-0'>{getLangField(service, 'content')}</p>
-                <Link to={getServiceLink(service)} className="services-btn text-decoration-none">
+                <Link 
+                  to={isAuthenticated ? "#" : getServiceLink(service)} 
+                  onClick={(e) => {
+                    if (isAuthenticated) {
+                      e.preventDefault();
+                      toast.info(i18n.language === 'en' ? 'You are already logged in' : 'أنت مسجل للدخول بالفعل');
+                    }
+                  }}
+                  className="services-btn text-decoration-none"
+                >
                   {i18n.language === 'en' ? 'Order Now' : 'اطلب الآن'}
                 </Link>
               </motion.div>
