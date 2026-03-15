@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useGetContactInfoQuery } from './api/site/siteApi';
 import { selectTheme } from './store/slices/uiSlice';
 import './index.css'
@@ -15,6 +16,7 @@ import Home from "./shared/pages/Home";
 import Login from "./shared/pages/Login";
 import Register from "./shared/pages/Register";
 import DriverSignup from "./shared/pages/DriverSignup";
+import CompanySignup from "./shared/pages/CompanySignup";
 import ActivateAccount from "./shared/pages/ActivateAccount";
 import ForgotPassword from "./shared/pages/ForgotPassword";
 import ResetPassword from "./shared/pages/ResetPassword";
@@ -58,6 +60,7 @@ import { USER_ROLES } from "./utils/constants";
 function App() {
   const { data: contactInfo } = useGetContactInfoQuery();
   const currentTheme = useSelector(selectTheme);
+  const { t, i18n } = useTranslation('common');
 
   // Apply theme to document
   useEffect(() => {
@@ -70,11 +73,15 @@ function App() {
   }, [currentTheme]);
 
   useEffect(() => {
+    const isEn = i18n.language?.startsWith('en');
+
+    const siteTitle = isEn
+      ? (contactInfo?._site_name_en || contactInfo?.site_name_en || t('app.name'))
+      : (contactInfo?._site_name_ar || contactInfo?.site_name_ar || contactInfo?._site_name || contactInfo?.site_name || t('app.name'));
+
+    document.title = siteTitle;
+
     if (contactInfo) {
-      // Update Title
-      if (contactInfo._site_name) {
-        document.title = contactInfo._site_name;
-      }
       
       // Update Meta Description
       if (contactInfo._description) {
@@ -98,7 +105,7 @@ function App() {
         metaKeywords.content = contactInfo.key_words;
       }
     }
-  }, [contactInfo]);
+  }, [contactInfo, i18n.language, t]);
 
   return (
     <Routes>
@@ -122,6 +129,7 @@ function App() {
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/create-account" element={<PublicRoute><Register /></PublicRoute>} />
       <Route path="/signup-driver" element={<PublicRoute><DriverSignup /></PublicRoute>} />
+      <Route path="/signup-company" element={<PublicRoute><CompanySignup /></PublicRoute>} />
       <Route path="/activate-account" element={<PublicRoute><ActivateAccount /></PublicRoute>} />
       <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
       <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />

@@ -515,7 +515,7 @@ const Hero = () => {
       {showMapModal && (
         <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 9999 }} onClick={() => setShowMapModal(false)}>
           <div className="modal-dialog modal-lg modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '15px', overflow: 'hidden' }}>
+              <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '15px', overflow: 'hidden' }}>
               <div className="modal-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
                 <h5 className="modal-title fw-bold m-0">
                   {i18n.language === 'ar' ? 'تحديد الموقع من الخريطة' : 'Select Location from Map'}

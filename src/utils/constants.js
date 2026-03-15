@@ -45,6 +45,7 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/create-account',
   DRIVER_REGISTER: '/signup-driver',
+  COMPANY_REGISTER: '/signup-company',
   ACTIVATE_ACCOUNT: '/activate-account',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',

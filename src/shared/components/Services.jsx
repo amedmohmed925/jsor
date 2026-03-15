@@ -43,7 +43,7 @@ const Services = () => {
     
     // Check if it's for companies/contract - ID 62
     if (title.includes('شركات') || titleEn.includes('companies')) {
-      return '/user/contract-upload';
+      return '/signup-company';
     }
 
     // Default for individuals / regular orders - ID 63

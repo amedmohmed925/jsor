@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 // Import Material Icons
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -17,12 +17,9 @@ const RequestMechanism = () => {
 
   const processSection = homeData?.Sections?.[17]; // ID 31: آلية الطلب
   const processSteps = homeData?.Process || [];
-
-  useEffect(() => {
-    if (processSteps.length > 0) {
-      setActiveStep(0);
-    }
-  }, [processSteps]);
+  const activeStepIndex = processSteps.length > 0
+    ? Math.min(activeStep, processSteps.length - 1)
+    : 0;
 
   const getLangField = (item, field) => {
     if (!item) return '';
@@ -32,7 +29,7 @@ const RequestMechanism = () => {
   };
 
   const progressHeight = processSteps.length > 1 
-    ? (activeStep / (processSteps.length - 1)) * 100 
+    ? (activeStepIndex / (processSteps.length - 1)) * 100 
     : 0;
 
   const defaultIcons = [
@@ -44,7 +41,7 @@ const RequestMechanism = () => {
   ];
 
   const renderStepContent = (step, isActive) => (
-    <motion.div 
+    <Motion.div 
       className={`p-3 rounded-4 border-2 border ${isActive ? 'border-primary bg-white shadow' : 'border-transparent text-muted'}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -52,7 +49,7 @@ const RequestMechanism = () => {
     >
       <h3 className="fw-bold fs-6 fs-md-5 mb-1">{getLangField(step, 'title')}</h3>
       <p className="small mb-0" style={{ fontSize: '0.85rem' }}>{getLangField(step, 'content')}</p>
-    </motion.div>
+    </Motion.div>
   );
 
   return (
@@ -72,7 +69,7 @@ const RequestMechanism = () => {
           top: 20px;
           bottom: 20px;
           width: 4px;
-          background-color: #eee;
+          background-color: var(--border-color);
           z-index: 0;
           border-radius: 10px;
           /* موقع الخط في الموبايل - LTR */
@@ -170,27 +167,27 @@ const RequestMechanism = () => {
           
           {/* جزء الخطوات (Timeline) */}
           <div className="col-md-7 text-center mt-3">
-            <motion.h2 
+            <Motion.h2 
               className="section-title mb-4 fw-bold"
               initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
             >
               {isLoading ? '...' : (getLangField(processSection, 'title') || 'آلية الطلب')}
-            </motion.h2>
-            <motion.p 
+            </Motion.h2>
+            <Motion.p 
               className="section-desc mb-5 text-muted"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
               {isLoading ? '...' : getLangField(processSection, 'content')}
-            </motion.p>
+            </Motion.p>
 
             <div className="custom-timeline-container text-start">
               
               {/* الخط العمودي والخلفية */}
               <div className="custom-timeline-line">
-                <motion.div 
+                 <Motion.div 
                    className="bg-primary"
                    style={{ width: '100%', borderRadius: '10px' }}
                    initial={{ height: 0 }}
@@ -200,7 +197,7 @@ const RequestMechanism = () => {
               </div>
 
               {processSteps.map((step, index) => {
-                const isActive = activeStep === index;
+                const isActive = activeStepIndex === index;
                 const isEven = index % 2 === 0;
 
                 return (
@@ -223,7 +220,7 @@ const RequestMechanism = () => {
 
                     {/* الأيقونة بحجم ثابت ومقاوم للتمدد */}
                     <div className="custom-timeline-icon">
-                      <motion.div 
+                      <Motion.div 
                         className={`rounded-circle d-flex align-items-center justify-content-center shadow-sm w-100 h-100 ${isActive ? 'bg-primary text-white' : 'bg-white text-primary border border-primary'}`}
                         animate={{ scale: isActive ? 1.15 : 1 }}
                       >
@@ -232,15 +229,13 @@ const RequestMechanism = () => {
                         ) : (
                           defaultIcons[index % defaultIcons.length]
                         )}
-                      </motion.div>
+                      </Motion.div>
                     </div>
 
                     {/* الكارت (للعناصر الفردية في الكمبيوتر، ولجميع العناصر في الموبايل) */}
-                    {(!isEven || true) && (
-                       <div className={`custom-timeline-content ${isEven ? 'd-md-none' : ''}`}>
-                          {renderStepContent(step, isActive)}
-                       </div>
-                    )}
+                      <div className={`custom-timeline-content ${isEven ? 'd-md-none' : ''}`}>
+                       {renderStepContent(step, isActive)}
+                      </div>
 
                     {/* في الشاشات الكبيرة: الفراغ الأيمن للعناصر الزوجية */}
                     {isEven && <div className="custom-timeline-spacer"></div>}
@@ -255,8 +250,8 @@ const RequestMechanism = () => {
           <div className="col-md-5 text-center mt-5 mt-md-3 position-relative">
             <div className="iphone-wrapper mx-auto" style={{ maxWidth: '300px' }}>
               <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeStep}
+                <Motion.div
+                  key={activeStepIndex}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -264,8 +259,8 @@ const RequestMechanism = () => {
                   className="position-relative d-inline-block w-100"
                 >
                   <img src="assets/iPhone.png" className="img-fluid" alt="iphone" style={{ position: 'relative', zIndex: 2 }} />
-                  <motion.img 
-                    src={processSteps[activeStep]?.image} 
+                  <Motion.img 
+                    src={processSteps[activeStepIndex]?.image} 
                     className="position-absolute"
                     style={{
                       top: '2%', left: '5%', right: '5%', bottom: '2%',
@@ -275,7 +270,7 @@ const RequestMechanism = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   />
-                </motion.div>
+                </Motion.div>
               </AnimatePresence>
             </div>
           </div>

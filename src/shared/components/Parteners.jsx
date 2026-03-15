@@ -82,6 +82,7 @@ const Partners = () => {
       <div className="container-fluid mb-5">
         {!isLoading && partnerLogos.length > 0 ? (
           <Swiper
+            key={i18n.language}
             modules={[Navigation, Pagination, Autoplay, FreeMode]}
             spaceBetween={20}
             slidesPerView={'auto'}
@@ -95,6 +96,8 @@ const Partners = () => {
             // إضافات هامة جداً لمراقبة التغييرات في الشاشة
             observer={true}
             observeParents={true}
+            observeSlideChildren={true}
+            dir={i18n.dir()}
             className="partners-swiper"
           >
             {duplicatedLogos.map((partner, index) => (
@@ -132,7 +135,7 @@ const Partners = () => {
         <Modal.Header closeButton style={{ border: 'none' }}>
         </Modal.Header>
         <Modal.Body className="text-center p-4">
-          <div className="partner-modal-img-container mb-4 p-4 rounded-4" style={{ backgroundColor: '#f3f4f6' }}>
+          <div className="partner-modal-img-container mb-4 p-4 rounded-4" style={{ backgroundColor: 'var(--bg-secondary)' }}>
             <img 
               src={selectedPartner?.image} 
               alt={getLangField(selectedPartner, 'title')} 
@@ -140,7 +143,7 @@ const Partners = () => {
               style={{ maxHeight: '150px', objectFit: 'contain' }} 
             />
           </div>
-          <h3 className="partner-modal-title mb-3" style={{ color: '#374151', fontWeight: '700' }}>
+          <h3 className="partner-modal-title mb-3" style={{ color: 'var(--text-primary)', fontWeight: '700' }}>
             {getLangField(selectedPartner, 'title')}
           </h3>
           <p className="partner-modal-content text-muted lh-base">

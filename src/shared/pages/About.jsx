@@ -1,30 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetContactInfoQuery } from '../../api/site/siteApi';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { motion } from 'framer-motion';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaCheckCircle, FaRocket, FaHandshake, FaBullseye } from 'react-icons/fa';
+import { motion as Motion } from 'framer-motion';
+import { FaMapMarkerAlt, FaClock, FaCheckCircle, FaRocket, FaHandshake, FaBullseye } from 'react-icons/fa';
 
 const About = () => {
-  const { t, i18n } = useTranslation('common');
-  const { data: contactInfo } = useGetContactInfoQuery();
+  const { i18n } = useTranslation('common');
   const isEn = i18n.language === 'en';
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-  };
 
   const stats = [
     { id: 1, label: isEn ? 'Support' : 'دعم فني', value: '24/7', icon: <FaClock className="text-primary fs-3" /> },
@@ -41,14 +24,14 @@ const About = () => {
       <section className="about-hero py-5 bg-light position-relative" style={{ marginTop: '80px' }}>
         <div className="container py-lg-5">
           <div className="row align-items-center">
-            <motion.div 
+            <Motion.div 
               className="col-lg-6"
               initial={{ opacity: 0, x: isEn ? -50 : 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
               <h6 className="text-primary text-uppercase fw-bold mb-3">{isEn ? 'About Us' : 'من نحن'}</h6>
-              <h1 className="display-4 fw-bold mb-4" style={{ color: '#374151' }}>
+              <h1 className="display-4 fw-bold mb-4" style={{ color: 'var(--text-primary)' }}>
                 {isEn ? 'Building Bridges in Saudi Transport' : 'جسور: ريادة النقل والخدمات اللوجستية'}
               </h1>
               <p className="lead text-muted mb-4 lh-base">
@@ -61,9 +44,9 @@ const About = () => {
                   ? "Your investment in original spare parts is a long term successful investment. We believe in quality and trust, providing solutions that empower the national economy."
                   : "استثمارك في قطع الغيار الأصلية هو استثمار ناجح على المدى الطويل. نحن نؤمن بالجودة والثقة، ونقدم حلولاً تساهم في نمو الاقتصاد الوطني."}
               </p>
-            </motion.div>
+            </Motion.div>
             
-            <motion.div 
+            <Motion.div 
               className="col-lg-6 mt-5 mt-lg-0"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -80,7 +63,7 @@ const About = () => {
                   <small className="text-muted">{isEn ? 'Reliable Service' : 'خدمة موثوقة'}</small>
                 </div>
               </div>
-            </motion.div>
+            </Motion.div>
           </div>
         </div>
       </section>
@@ -90,7 +73,7 @@ const About = () => {
         <div className="container">
           <div className="row g-4 text-center">
             {stats.map((stat) => (
-              <motion.div 
+              <Motion.div 
                 key={stat.id} 
                 className="col-md-3"
                 initial={{ opacity: 0, y: 20 }}
@@ -103,7 +86,7 @@ const About = () => {
                   <h3 className="fw-bold mb-1">{stat.value}</h3>
                   <small className="text-muted fw-bold">{stat.label}</small>
                 </div>
-              </motion.div>
+              </Motion.div>
             ))}
           </div>
         </div>
@@ -118,7 +101,7 @@ const About = () => {
           </div>
           
           <div className="row g-4">
-            <motion.div 
+            <Motion.div 
               className="col-lg-4"
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -136,9 +119,9 @@ const About = () => {
                     : "تبسيط عمليات الشحن والنقل من خلال الابتكار الرقمي، وتوفير الوقت والموارد للشركات والأفراد في كافة أنحاء المملكة."}
                 </p>
               </div>
-            </motion.div>
+            </Motion.div>
 
-            <motion.div 
+            <Motion.div 
               className="col-lg-4"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -156,9 +139,9 @@ const About = () => {
                     : "أن نكون الركيزة اللوجستية الأساسية لرؤية المملكة 2030، وترسيخ اسم جسور كأول وجهة للنقل الموثوق."}
                 </p>
               </div>
-            </motion.div>
+            </Motion.div>
 
-            <motion.div 
+            <Motion.div 
               className="col-lg-4"
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -176,7 +159,7 @@ const About = () => {
                     : "النزاهة، الشفافية، والالتزام. نحن نقدر سلامة بضائعكم والنمو المهني لشركائنا في النجاح."}
                 </p>
               </div>
-            </motion.div>
+            </Motion.div>
           </div>
         </div>
       </section>

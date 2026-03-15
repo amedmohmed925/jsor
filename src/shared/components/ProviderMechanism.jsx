@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetHomeDataQuery } from '../../api/site/siteApi';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 // استيراد الأيقونات بناءً على الصورة المرفقة
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -73,7 +73,7 @@ const ProviderMechanism = () => {
                         style={{ 
                           width: '45px', 
                           height: '45px', 
-                          backgroundColor: '#fff',
+                          backgroundColor: 'var(--card-bg)',
                           borderWidth: isActive || isPassed ? '2px' : '1px',
                           transition: 'all 0.3s ease',
                           zIndex: 2 
@@ -88,7 +88,7 @@ const ProviderMechanism = () => {
                           className="flex-grow-1"
                           style={{
                             width: '2px',
-                            backgroundColor: isPassed ? '#0d6efd' : '#dee2e6', // أزرق إذا مرت الخطوة، رمادي إذا لم تمر
+                            backgroundColor: isPassed ? 'var(--primary-color)' : 'var(--border-color)', // أزرق إذا مرت الخطوة، رمادي إذا لم تمر
                             transition: 'background-color 0.4s ease',
                             minHeight: '40px' // أقل ارتفاع للخط
                           }}
@@ -121,7 +121,7 @@ const ProviderMechanism = () => {
           {/* قسم الصورة الديناميكية (يسار) */}
           <div className="col-md-5 text-center mt-5 mt-md-0 d-flex justify-content-center">
             <AnimatePresence mode="wait">
-              <motion.img 
+              <Motion.img 
                 key={activeIndex} // تغيير الـ key يجبر الصورة على عمل أنيميشن عند كل تغيير
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
