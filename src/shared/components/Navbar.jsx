@@ -1,13 +1,21 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import { useAuth } from '../../hooks/useAuth';
+import { selectTheme, setTheme } from '../../store/slices/uiSlice';
 
 const Navbar = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation(['common', 'auth', 'user']);
   const { isAuthenticated, user, logout, role } = useAuth();
+  const dispatch = useDispatch();
+  const currentTheme = useSelector(selectTheme);
+
+  const handleToggleTheme = () => {
+    dispatch(setTheme(currentTheme === 'light' ? 'dark' : 'light'));
+  };
   
   // Navigation items with translation keys
   const navItems = [
@@ -31,6 +39,18 @@ const Navbar = () => {
         {/* Mobile Action Icons (Visible on mobile only) */}
         {!isAuthenticated && (
           <div className="d-flex d-lg-none align-items-center gap-2 ms-auto me-2">
+            <div 
+              className="theme-toggle-btn" 
+              onClick={handleToggleTheme} 
+              style={{ cursor: 'pointer', width: '36px', height: '36px' }}
+              title={currentTheme === 'light' ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري'}
+            >
+              {currentTheme === 'light' ? (
+                <i className="fas fa-moon" style={{ fontSize: '16px' }}></i>
+              ) : (
+                <i className="fas fa-sun text-warning" style={{ fontSize: '16px' }}></i>
+              )}
+            </div>
             <LanguageSwitcher isMinimal={true} />
             <Link to="/login" className="login-button py-1 px-3 fs-6 text-decoration-none rounded-pill">
               {t('auth:login.loginButton')}
@@ -41,6 +61,18 @@ const Navbar = () => {
         {isAuthenticated && (
           // تعديل: زيادة المسافة إلى gap-3 لتسهيل اللمس
           <div className="d-flex d-lg-none align-items-center gap-3 ms-auto me-2">
+            <div 
+              className="theme-toggle-btn" 
+              onClick={handleToggleTheme} 
+              style={{ cursor: 'pointer', width: '36px', height: '36px' }}
+              title={currentTheme === 'light' ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري'}
+            >
+              {currentTheme === 'light' ? (
+                <i className="fas fa-moon" style={{ fontSize: '16px' }}></i>
+              ) : (
+                <i className="fas fa-sun text-warning" style={{ fontSize: '16px' }}></i>
+              )}
+            </div>
             <LanguageSwitcher isMinimal={true} />
             {(role === 'driver' || role === 'admin') ? (
                 <Link to={role === 'admin' ? "/admin/dashboard" : "/driver/profile"} className="text-decoration-none">
@@ -139,6 +171,20 @@ const Navbar = () => {
           <ul className="navbar-nav align-items-lg-center gap-lg-3 mt-3 mt-lg-0 px-2 px-lg-0">
             <li className="nav-item d-none d-lg-block">
               <LanguageSwitcher />
+            </li>
+            <li className="nav-item d-none d-lg-block">
+              <div 
+                className="theme-toggle-btn" 
+                onClick={handleToggleTheme} 
+                style={{ cursor: 'pointer' }}
+                title={currentTheme === 'light' ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري'}
+              >
+                {currentTheme === 'light' ? (
+                  <i className="fas fa-moon" style={{ fontSize: '18px' }}></i>
+                ) : (
+                  <i className="fas fa-sun text-warning" style={{ fontSize: '18px' }}></i>
+                )}
+              </div>
             </li>
             <li className="nav-item d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2">
               {isAuthenticated ? (

@@ -44,9 +44,14 @@ const DriverNavbar = () => {
 
         {/* Mobile Action Icons (Visible on mobile only) */}
         <div className="d-flex d-lg-none align-items-center gap-2 ms-auto me-1">
-            <div className="nav-labg-mode bg-light rounded-pill p-2" onClick={handleToggleTheme} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div 
+              className="theme-toggle-btn" 
+              onClick={handleToggleTheme} 
+              style={{ cursor: 'pointer', width: '36px', height: '36px' }}
+              title={currentTheme === 'light' ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري'}
+            >
               {currentTheme === 'light' ? (
-                <img src="/assets/moon.svg" alt="moon" width="16" />
+                <i className="fas fa-moon" style={{ fontSize: '16px' }}></i>
               ) : (
                 <i className="fas fa-sun text-warning" style={{ fontSize: '16px' }}></i>
               )}
@@ -114,11 +119,16 @@ const DriverNavbar = () => {
                         </span>
                       )}
                     </Link>
-                    <div className="nav-labg-mode bg-light rounded-pill p-2" onClick={handleToggleTheme} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div 
+                      className="theme-toggle-btn" 
+                      onClick={handleToggleTheme} 
+                      style={{ cursor: 'pointer' }}
+                      title={currentTheme === 'light' ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري'}
+                    >
                       {currentTheme === 'light' ? (
-                        <img src="/assets/moon.svg" alt="moon" width="20" />
+                        <i className="fas fa-moon" style={{ fontSize: '18px' }}></i>
                       ) : (
-                        <i className="fas fa-sun text-warning" style={{ fontSize: '20px' }}></i>
+                        <i className="fas fa-sun text-warning" style={{ fontSize: '18px' }}></i>
                       )}
                     </div>
                 </div>

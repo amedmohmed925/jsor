@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useGetContactInfoQuery } from './api/site/siteApi';
+import { selectTheme } from './store/slices/uiSlice';
 import './index.css'
 
 // Route Components
@@ -55,6 +57,17 @@ import { USER_ROLES } from "./utils/constants";
 
 function App() {
   const { data: contactInfo } = useGetContactInfoQuery();
+  const currentTheme = useSelector(selectTheme);
+
+  // Apply theme to document
+  useEffect(() => {
+    const htmlElement = document.documentElement;
+    if (currentTheme === 'dark') {
+      htmlElement.setAttribute('data-theme', 'dark');
+    } else {
+      htmlElement.removeAttribute('data-theme');
+    }
+  }, [currentTheme]);
 
   useEffect(() => {
     if (contactInfo) {

@@ -67,7 +67,7 @@ const AdminNavbar = () => {
             ))}
           </ul>
 
-          {/* Right side items (Language, Profile, Notifications) */}
+          {/* Right side items (Language, Theme, Profile, Notifications) */}
           <ul className="navbar-nav align-items-lg-center gap-lg-5">
             <li className="nav-item">
               <LanguageSwitcher />
@@ -81,11 +81,16 @@ const AdminNavbar = () => {
                     </span>
                   )}
                 </Link>
-                <div className="nav-labg-mode d-flex align-items-center justify-content-center" onClick={handleToggleTheme} style={{ cursor: 'pointer' }}>
+                <div 
+                  className="theme-toggle-btn" 
+                  onClick={handleToggleTheme} 
+                  style={{ cursor: 'pointer' }}
+                  title={currentTheme === 'light' ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري'}
+                >
                   {currentTheme === 'light' ? (
-                    <img src="/assets/moon.svg" alt="moon" width="20" />
+                    <i className="fas fa-moon" style={{ fontSize: '18px' }}></i>
                   ) : (
-                    <i className="fas fa-sun text-warning" style={{ fontSize: '20px' }}></i>
+                    <i className="fas fa-sun text-warning" style={{ fontSize: '18px' }}></i>
                   )}
                 </div>
                 

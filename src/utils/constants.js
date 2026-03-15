@@ -35,6 +35,7 @@ export const STORAGE_KEYS = {
   AUTH_TOKEN: 'josur_auth_token',
   USER_DATA: 'josur_user_data',
   LANGUAGE: 'josur_language',
+  THEME: 'josur_theme',
 };
 
 // Route Paths

@@ -10,10 +10,14 @@ const getInitialLanguage = () => {
   return localStorage.getItem(STORAGE_KEYS.LANGUAGE) || 'ar';
 };
 
+const getInitialTheme = () => {
+  return localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+};
+
 const initialState = {
   language: getInitialLanguage(),
   sidebarOpen: false,
-  theme: 'light',
+  theme: getInitialTheme(),
 };
 
 const uiSlice = createSlice({
@@ -47,6 +51,7 @@ const uiSlice = createSlice({
      */
     setTheme: (state, action) => {
       state.theme = action.payload;
+      localStorage.setItem(STORAGE_KEYS.THEME, action.payload);
     },
   },
 });

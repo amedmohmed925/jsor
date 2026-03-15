@@ -123,7 +123,8 @@ body {
 
 .sticky-top {
   z-index: 1030;
-  background-color: white !important;
+  background-color: var(--navbar-bg) !important;
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* General button responsiveness */
@@ -142,7 +143,7 @@ body {
 /* Custom styles for Navbar links */
 .nav-link-custom {
   font-size: 14px !important;
-  color: #4B5563 !important;
+  color: var(--text-secondary) !important;
   font-weight: 500 !important;
   cursor: pointer;
   padding: 8px 12px !important;
@@ -159,12 +160,12 @@ body {
 }
 
 .nav-link-custom:hover {
-  background-color: #f3f8ff;
-  color: #1A73E8 !important;
+  background-color: var(--bg-hover);
+  color: var(--primary-color) !important;
 }
 
 .nav-link-custom.active {
-  color: #1A73E8 !important;
+  color: var(--primary-color) !important;
   font-weight: 700 !important;
 }
 
@@ -175,7 +176,7 @@ body {
   left: 18px;
   right: 18px;
   height: 3px;
-  background-color: #1A73E8;
+  background-color: var(--primary-color);
   border-radius: 2px;
 }
 
@@ -183,18 +184,18 @@ body {
   .nav-link-custom {
     padding: 12px 15px !important;
     border-radius: 0;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--border-color);
   }
   .nav-link-custom.active::after {
     display: none;
   }
   .nav-link-custom.active {
-    background-color: #f3f8ff;
-    border-left: 4px solid #1A73E8;
+    background-color: var(--bg-hover);
+    border-left: 4px solid var(--primary-color);
   }
   [dir="rtl"] .nav-link-custom.active {
     border-left: none;
-    border-right: 4px solid #1A73E8;
+    border-right: 4px solid var(--primary-color);
   }
   .navbar-nav {
     flex-direction: column !important;
@@ -205,7 +206,7 @@ body {
 /* Language button */
 .lang-button {
   font-size: 16px;
-  color: #374151 !important;
+  color: var(--text-primary) !important;
   font-weight: 400;
   background-color: transparent;
   border: none;
@@ -216,15 +217,15 @@ body {
 }
 
 .lang-button:hover {
-  color: #1A73E8;
+  color: var(--primary-color);
 }
 
 /* Login button */
 .login-button {
-  background-color: #1A73E8;
+  background-color: var(--btn-primary-bg);
   border-radius: 8px;
   padding: 10px 32px;
-  color: #FAFCFF;
+  color: var(--btn-primary-text);
   font-size: 16px;
   font-weight: 500;
   border: none;
@@ -233,22 +234,22 @@ body {
 }
 .btn-outline-light{
   padding: 10px 32px !important;
-  color: #374151 !important;
+  color: var(--text-primary) !important;
   font-size: 16px !important;
   font-weight: 500 !important;
 }
 
 .login-button:hover {
-  background-color: #1557b0;
+  background-color: var(--primary-dark);
 }
 
 /* Join button */
 .join-button {
-  background-color: #F4F4F5;
-  border: 1px solid #1A73E8;
+  background-color: var(--btn-secondary-bg);
+  border: 1px solid var(--primary-color);
   border-radius: 8px;
   padding: 10px 32px;
-  color: #374151;
+  color: var(--btn-secondary-text);
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -256,7 +257,7 @@ body {
 }
 
 .join-button:hover {
-  background-color: #e8f0fe;
+  background-color: var(--primary-light);
 }
 .navbar-toggler-icon span{
   color: #1557b0 !important;
@@ -271,6 +272,10 @@ body {
 
 .navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+[data-theme="dark"] .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23F3F4F6' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 /* Hero Section Styles */
 .home-container{
@@ -2355,3 +2360,444 @@ select.form-select {
 .status-active { background-color: #e0f2fe; color: #0369a1; }
 .status-completed { background-color: #dcfce7; color: #166534; }
 .status-cancelled { background-color: #fee2e2; color: #991b1b; }
+
+/* ===== Dark/Light Mode Theme System ===== */
+
+/* Light Mode (Default) */
+:root {
+  /* Primary Colors */
+  --primary-color: #1A73E8;
+  --primary-dark: #1557b0;
+  --primary-light: #e8f0fe;
+  
+  /* Background Colors */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F4F4F5;
+  --bg-tertiary: #f8f9fa;
+  --bg-hover: #f3f8ff;
+  
+  /* Text Colors */
+  --text-primary: #374151;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+  --text-light: #D1D5DB;
+  
+  /* Border Colors */
+  --border-color: #E5E7EB;
+  --border-light: #f0f0f0;
+  
+  /* Navbar */
+  --navbar-bg: #FFFFFF;
+  --navbar-text: #374151;
+  --navbar-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  
+  /* Dropdown & Cards */
+  --card-bg: #FFFFFF;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --dropdown-bg: #FFFFFF;
+  --dropdown-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  
+  /* Input Fields */
+  --input-bg: #FFFFFF;
+  --input-border: #DDDFDF;
+  --input-text: #374151;
+  
+  /* Buttons */
+  --btn-primary-bg: #1A73E8;
+  --btn-primary-text: #FAFCFF;
+  --btn-secondary-bg: #F4F4F5;
+  --btn-secondary-text: #374151;
+  
+  /* Status Colors */
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --warning-bg: #fff3cd;
+  --warning-text: #856404;
+  --error-bg: #fee2e2;
+  --error-text: #991b1b;
+  --info-bg: #e0f2fe;
+  --info-text: #0369a1;
+  
+  /* Dividers */
+  --divider-color: #E5E7EB;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  /* Primary Colors */
+  --primary-color: #4A9EFF;
+  --primary-dark: #357ABD;
+  --primary-light: #1a3a52;
+  
+  /* Background Colors */
+  --bg-primary: #1F2937;
+  --bg-secondary: #2D3748;
+  --bg-tertiary: #374151;
+  --bg-hover: #1a2332;
+  
+  /* Text Colors */
+  --text-primary: #F3F4F6;
+  --text-secondary: #D1D5DB;
+  --text-muted: #9CA3AF;
+  --text-light: #6B7280;
+  
+  /* Border Colors */
+  --border-color: #4B5563;
+  --border-light: #374151;
+  
+  /* Navbar */
+  --navbar-bg: #1F2937;
+  --navbar-text: #F3F4F6;
+  --navbar-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  
+  /* Dropdown & Cards */
+  --card-bg: #2D3748;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --dropdown-bg: #2D3748;
+  --dropdown-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  
+  /* Input Fields */
+  --input-bg: #374151;
+  --input-border: #4B5563;
+  --input-text: #F3F4F6;
+  
+  /* Buttons */
+  --btn-primary-bg: #4A9EFF;
+  --btn-primary-text: #1F2937;
+  --btn-secondary-bg: #374151;
+  --btn-secondary-text: #F3F4F6;
+  
+  /* Status Colors */
+  --success-bg: #064e3b;
+  --success-text: #86efac;
+  --warning-bg: #78350f;
+  --warning-text: #fcd34d;
+  --error-bg: #7f1d1d;
+  --error-text: #fca5a5;
+  --info-bg: #0c2d48;
+  --info-text: #38bdf8;
+  
+  /* Dividers */
+  --divider-color: #4B5563;
+}
+
+/* Apply theme to body and root elements */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Navbar Background */
+.navbar-background {
+  background-color: var(--navbar-bg) !important;
+  color: var(--navbar-text) !important;
+  box-shadow: var(--navbar-shadow) !important;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Sticky Navbar */
+.sticky-top {
+  background-color: var(--navbar-bg) !important;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Navigation Links */
+.nav-link-custom {
+  color: var(--text-secondary) !important;
+}
+
+.nav-link-custom:hover {
+  background-color: var(--bg-hover);
+  color: var(--primary-color) !important;
+}
+
+.nav-link-custom.active {
+  color: var(--primary-color) !important;
+}
+
+.nav-link-custom.active::after {
+  background-color: var(--primary-color);
+}
+
+/* Language Button */
+.lang-button {
+  color: var(--text-primary) !important;
+}
+
+.lang-button:hover {
+  color: var(--primary-color);
+}
+
+/* Login Button */
+.login-button {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-button:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Join Button */
+.join-button {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--primary-color);
+  transition: all 0.2s ease-in-out;
+}
+
+.join-button:hover {
+  background-color: var(--primary-light);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  background-color: var(--dropdown-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--dropdown-shadow) !important;
+}
+
+.dropdown-item {
+  color: var(--text-primary) !important;
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-hover) !important;
+  color: var(--primary-color) !important;
+}
+
+.dropdown-divider {
+  border-top: 1px solid var(--border-color) !important;
+}
+
+/* Cards and Containers */
+.card {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.card-header {
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Input Fields */
+.form-control,
+.form-select {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+/* Filter Box */
+.filter-box {
+  background-color: var(--bg-secondary) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.search-filter-title {
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.filter-checkbox-box {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+.filter-checkbox-box-2 {
+  background-color: var(--bg-secondary) !important;
+}
+
+/* Checkbox Styling */
+.checkbox-style {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+.checkbox-style:checked {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Hero Section */
+.hero-title {
+  color: var(--primary-color);
+}
+
+.hero-description {
+  color: var(--text-light);
+}
+
+/* Status Badges */
+.status-pending {
+  background-color: var(--warning-bg) !important;
+  color: var(--warning-text) !important;
+}
+
+.status-active {
+  background-color: var(--info-bg) !important;
+  color: var(--info-text) !important;
+}
+
+.status-completed {
+  background-color: var(--success-bg) !important;
+  color: var(--success-text) !important;
+}
+
+.status-cancelled {
+  background-color: var(--error-bg) !important;
+  color: var(--error-text) !important;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--bg-tertiary);
+  transform: scale(1.1);
+}
+
+/* Modal Styling */
+.modal-content {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.modal-header {
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.modal-body {
+  color: var(--text-primary) !important;
+}
+
+.btn-close {
+  filter: invert(var(--text-primary));
+}
+
+/* Tables */
+.table {
+  color: var(--text-primary) !important;
+}
+
+.table-light {
+  background-color: var(--bg-secondary) !important;
+}
+
+.table thead th {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 2px solid var(--border-color) !important;
+}
+
+.table tbody tr:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+/* Alerts */
+.alert {
+  border: 1px solid var(--border-color) !important;
+}
+
+.alert-success {
+  background-color: var(--success-bg) !important;
+  color: var(--success-text) !important;
+  border-color: var(--success-text) !important;
+}
+
+.alert-warning {
+  background-color: var(--warning-bg) !important;
+  color: var(--warning-text) !important;
+  border-color: var(--warning-text) !important;
+}
+
+.alert-danger {
+  background-color: var(--error-bg) !important;
+  color: var(--error-text) !important;
+  border-color: var(--error-text) !important;
+}
+
+.alert-info {
+  background-color: var(--info-bg) !important;
+  color: var(--info-text) !important;
+  border-color: var(--info-text) !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.pagination .page-link:hover {
+  background-color: var(--bg-hover) !important;
+  color: var(--primary-color) !important;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Badge */
+.badge {
+  background-color: var(--primary-color) !important;
+  color: var(--btn-primary-text) !important;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ===== End Dark/Light Mode Theme System ===== */
