@@ -13,6 +13,7 @@ const OrderDetails = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { t, i18n } = useTranslation(['driver', 'common']);
+    const [selectedImg, setSelectedImg] = useState(null);
     
     // Get order from location state
     const order = location.state?.order;
@@ -93,13 +94,43 @@ const OrderDetails = () => {
                                     <h2 className='orders-card-title my-2'>{t('driver:orders.load_images') || 'صور الحمولة'}</h2>
                                     <div className="taken-imgs d-flex gap-2 align-items-center flex-wrap">
                                         {[...(order.requestImageBefore || []), ...(order.requestImageAfter || [])].map((img) => (
-                                            <div key={img.id} className="taken-img position-relative">
+                                            <div key={img.id} className="taken-img position-relative" style={{ cursor: 'pointer' }} onClick={() => setSelectedImg(img.image)}>
                                                 <img src={img.image} className="taken-img" alt="cargo" />
                                             </div>
                                         ))}
                                     </div>
                                     </div>
                                 </div>
+
+                                {/* Image Modal */}
+                                {selectedImg && (
+                                    <div 
+                                        className="modal fade show d-block" 
+                                        style={{ backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 1050 }}
+                                        onClick={() => setSelectedImg(null)}
+                                    >
+                                        <div className="modal-dialog modal-dialog-centered modal-lg">
+                                            <div className="modal-content bg-transparent border-0">
+                                                <div className="modal-body p-0 text-center position-relative">
+                                                    <button 
+                                                        type="button" 
+                                                        className="btn-close btn-close-white position-absolute top-0 end-0 m-3" 
+                                                        onClick={() => setSelectedImg(null)}
+                                                        style={{ zIndex: 1051 }}
+                                                    ></button>
+                                                    <img 
+                                                        src={selectedImg} 
+                                                        alt="preview" 
+                                                        className="img-fluid rounded-3" 
+                                                        style={{ maxHeight: '90vh' }}
+                                                        onClick={(e) => e.stopPropagation()} 
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="col-md-6 mb-3">
                                     <div className="p-2 border rounded-2 h-100">
                                     <h2 className='orders-card-title mb-2'>{t('driver:orders.shipment_details_title') || 'تفاصيل الشحنة'}</h2>

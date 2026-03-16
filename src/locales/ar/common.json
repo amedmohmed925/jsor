@@ -47,7 +47,9 @@
         "deleted": "تم الحذف بنجاح",
         "created": "تم الإنشاء بنجاح",
         "copied": "تم نسخ الكود بنجاح",
-        "responseWindow": "قد تتلقى الرد خلال 48 ساعة"
+        "responseWindow": "قد تتلقى الرد خلال 48 ساعة",
+        "show_more": "عرض المزيد",
+        "show_less": "عرض أقل"
     },
     "labels": {
         "requiredService": "الخدمة المطلوبة",

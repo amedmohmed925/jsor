@@ -15,6 +15,11 @@ const NewOrders = ({ orders, isLoading }) => {
   const { token } = useAuth();
   const [createOffer, { isLoading: isCreatingOffer }] = useCreateOfferMutation();
   const [prices, setPrices] = useState({});
+  const [expandedAddresses, setExpandedAddresses] = useState({});
+
+  const toggleAddress = (id) => {
+    setExpandedAddresses(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const handlePriceChange = (orderId, value) => {
     setPrices(prev => ({ ...prev, [orderId]: value }));
@@ -43,6 +48,28 @@ const NewOrders = ({ orders, isLoading }) => {
     } catch (error) {
       toast.error(t('common:error_occurred'));
     }
+  };
+
+  const AddressDisplay = ({ addr, id }) => {
+    if (!addr || addr === 'null') return <span>--</span>;
+    const parts = addr.split(',');
+    const isLong = parts.length > 2;
+    const isExpanded = expandedAddresses[id];
+    
+    if (!isLong) return <span>{addr}</span>;
+    
+    const short = `${parts[0].trim()}, ${parts[1].trim()}`;
+    return (
+      <span>
+        {isExpanded ? addr : short} 
+        <span 
+          onClick={(e) => { e.stopPropagation(); toggleAddress(id); }} 
+          style={{ color: '#007bff', cursor: 'pointer', marginInlineStart: '5px', fontSize: '0.85rem' }}
+        >
+          {isExpanded ? t('common:messages.show_less') || 'عرض أقل' : t('common:messages.show_more') || 'عرض المزيد'}
+        </span>
+      </span>
+    );
   };
 
   if (isLoading) {
@@ -82,7 +109,7 @@ const NewOrders = ({ orders, isLoading }) => {
         if (destinations.length === 0 && order.city_to) {
           destinations.push(order.city_to);
         }
-        
+
         return (
           <div key={order.id} className="new-orders-card p-2 border rounded-3 mt-2">
             <div className="card-order-details pb-2">
@@ -118,10 +145,10 @@ const NewOrders = ({ orders, isLoading }) => {
                     </div>
                   </div>
                   <div className="from-to-text">
-                    <span>{order.address_from && order.address_from !== 'null' ? order.address_from : (order.city_from || '--')}</span>
+                    <AddressDisplay addr={order.address_from && order.address_from !== 'null' ? order.address_from : (order.city_from || '--')} id={`${order.id}-from`} />
                     {destinations.length > 0 ? (
                       destinations.map((dest, i) => (
-                        <span key={i}>{dest}</span>
+                        <AddressDisplay key={i} addr={dest} id={`${order.id}-to-${i}`} />
                       ))
                     ) : (
                       <span>--</span>

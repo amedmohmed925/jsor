@@ -47,7 +47,9 @@
         "deleted": "Deleted successfully",
         "created": "Created successfully",
         "copied": "Code copied successfully",
-        "responseWindow": "You may receive a response within 48 hours"
+        "responseWindow": "You may receive a response within 48 hours",
+        "show_more": "Show more",
+        "show_less": "Show less"
     },
     "labels": {
         "requiredService": "Required Service",

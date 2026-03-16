@@ -8,6 +8,33 @@ import { useNavigate } from 'react-router-dom';
 const CompletedOrders = ({ orders, isLoading, onRateClient }) => {
   const { t } = useTranslation(['driver', 'common']);
   const navigate = useNavigate();
+  const [expandedAddresses, setExpandedAddresses] = React.useState({});
+
+  const toggleAddress = (id) => {
+    setExpandedAddresses(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const AddressDisplay = ({ addr, id }) => {
+    if (!addr || addr === 'null') return <span>--</span>;
+    const parts = addr.split(',');
+    const isLong = parts.length > 2;
+    const isExpanded = expandedAddresses[id];
+    
+    if (!isLong) return <span>{addr}</span>;
+    
+    const short = `${parts[0].trim()}, ${parts[1].trim()}`;
+    return (
+      <span>
+        {isExpanded ? addr : short} 
+        <span 
+          onClick={(e) => { e.stopPropagation(); toggleAddress(id); }} 
+          style={{ color: '#007bff', cursor: 'pointer', marginInlineStart: '5px', fontSize: '0.85rem' }}
+        >
+          {isExpanded ? t('common:messages.show_less') || 'عرض أقل' : t('common:messages.show_more') || 'عرض المزيد'}
+        </span>
+      </span>
+    );
+  };
 
   if (isLoading) {
     return <div className="text-center py-4">{t('common:loading')}...</div>;
@@ -70,7 +97,9 @@ const CompletedOrders = ({ orders, isLoading, onRateClient }) => {
                         </div>
                       </div>
                       <p className="user-desc m-0">{order.user_id?.mobile || '--'}</p>
-                      <p className="user-desc m-0">{order.address_from && order.address_from !== 'null' ? order.address_from : (order.city_from || '--')}</p>
+                      <p className="user-desc m-0">
+                        <AddressDisplay addr={order.address_from && order.address_from !== 'null' ? order.address_from : (order.city_from || '--')} id={`${order.id}-user-addr`} />
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -95,10 +124,10 @@ const CompletedOrders = ({ orders, isLoading, onRateClient }) => {
                   </div>
                 </div>
                 <div className="from-to-text">
-                  <span>{order.address_from && order.address_from !== 'null' ? order.address_from : (order.city_from || '--')}</span>
+                  <AddressDisplay addr={order.address_from && order.address_from !== 'null' ? order.address_from : (order.city_from || '--')} id={`${order.id}-from`} />
                   {destinations.length > 0 ? (
                     destinations.map((dest, i) => (
-                      <span key={i}>{dest}</span>
+                      <AddressDisplay key={i} addr={dest} id={`${order.id}-to-${i}`} />
                     ))
                   ) : (
                     <span>--</span>

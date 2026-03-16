@@ -9,11 +9,38 @@ const ShippingOrders = ({ orders, isLoading }) => {
   const { t, i18n } = useTranslation(['driver', 'common']);
   const isRtl = i18n.language === 'ar';
   const navigate = useNavigate();
+  const [expandedAddresses, setExpandedAddresses] = React.useState({});
+
+  const toggleAddress = (id) => {
+    setExpandedAddresses(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const getName = (obj) => {
     if (!obj) return '';
     if (typeof obj === 'string') return obj;
     return isRtl ? (obj.name || '') : (obj.name_en || obj.name || '');
+  };
+
+  const AddressDisplay = ({ addr, id }) => {
+    if (!addr || addr === 'null') return <span>--</span>;
+    const parts = addr.split(',');
+    const isLong = parts.length > 2;
+    const isExpanded = expandedAddresses[id];
+    
+    if (!isLong) return <span>{addr}</span>;
+    
+    const short = `${parts[0].trim()}, ${parts[1].trim()}`;
+    return (
+      <span>
+        {isExpanded ? addr : short} 
+        <span 
+          onClick={(e) => { e.stopPropagation(); toggleAddress(id); }} 
+          style={{ color: '#007bff', cursor: 'pointer', marginInlineStart: '5px', fontSize: '0.85rem' }}
+        >
+          {isExpanded ? t('common:messages.show_less') || 'عرض أقل' : t('common:messages.show_more') || 'عرض المزيد'}
+        </span>
+      </span>
+    );
   };
 
   if (isLoading) {
@@ -98,10 +125,10 @@ const ShippingOrders = ({ orders, isLoading }) => {
                   </div>
                 </div>
                 <div className="from-to-text">
-                  <span>{order.address_from && order.address_from !== 'null' ? order.address_from : (getName(order.city_from) || '--')}</span>
+                  <AddressDisplay addr={order.address_from && order.address_from !== 'null' ? order.address_from : (getName(order.city_from) || '--')} id={`${order.id}-from`} />
                   {destinations.length > 0 ? (
                     destinations.map((dest, i) => (
-                      <span key={i}>{dest}</span>
+                      <AddressDisplay key={i} addr={dest} id={`${order.id}-to-${i}`} />
                     ))
                   ) : (
                     <span>--</span>
