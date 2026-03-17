@@ -145,7 +145,7 @@ const About = () => {
                     <div className={`icon-box ${item.featured ? 'bg-white text-primary' : `bg-${item.color}-subtle text-${item.color}`} rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center`} style={{ width: '80px', height: '80px' }}>
                       {item.icon}
                     </div>
-                    <h4 className="fw-bold mb-3">{item.title}</h4>
+                    <h4 className="fw-bold mb-3" style={{ color: item.featured ? '#fff' : 'var(--text-primary)' }}>{item.title}</h4>
                     <div className={`${item.featured ? 'opacity-90' : 'text-muted'} mb-0`} style={{ whiteSpace: 'pre-line' }}>
                       {item.content}
                     </div>
