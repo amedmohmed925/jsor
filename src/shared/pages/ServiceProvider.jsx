@@ -48,7 +48,7 @@ const ServiceProvider = () => {
       </div>
       <ProviderFeatures />
       <ProviderMechanism />
-      <ProviderDocuments />
+      <ProviderDocuments />   
       <Footer isProviderPage={true} />
     </div>
   );

@@ -54,10 +54,8 @@ const Footer = ({ isProviderPage = false }) => {
         </div>
         
         {/* Provider Footer - Only Shown on Provider Page */}
-        <div className={`d-flex justify-content-center flex-column align-items-center flex-wrap gap-2 border-bottom pb-3 provider-footer ${!isProviderPage ? 'd-none' : ''}`}>
-          <h3 className='login-title'>
-            {isLoading ? '...' : getLangField(footerSection, 'title') || 'هل أنت مستعد لبدء العمل وزيادة دخلك؟'}
-          </h3>
+        <div className={`d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 provider-footer ${!isProviderPage ? 'd-none' : ''}`}>
+          <h3 className='footer-title'>{t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
           <Link 
             to={isAuthenticated ? "#" : "/signup-driver"} 
             onClick={(e) => {
@@ -68,7 +66,7 @@ const Footer = ({ isProviderPage = false }) => {
             }}
             className="login-button text-decoration-none"
           >
-            {isLoading ? '...' : getLangField(footerSection, 'content') || 'ابدأ الآن كمزود خدمة'}
+            {t('common:hero.joinDriver', 'انضم الينا الان')}
           </Link>
         </div>
 
