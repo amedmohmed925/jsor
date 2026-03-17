@@ -16,7 +16,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-const Footer = ({ isProviderPage = false }) => {
+const Footer = ({ isProviderPage = false, isWorksPage = false }) => {
   const { t, i18n } = useTranslation(['common', 'auth']);
   const { isAuthenticated } = useAuth();
   const { data: homeData, isLoading } = useGetHomeDataQuery();
@@ -30,15 +30,24 @@ const Footer = ({ isProviderPage = false }) => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  const footerSection = homeData?.Sections?.[4]; // ID 76: هل أنت مستعد لبدء العمل وزيادة دخلك؟
+  const footerSection = homeData?.Sections?.[4];
+
+   // ID 76: هل أنت مستعد لبدء العمل وزيادة دخلك؟
+  const providerBannerSection = homeData?.Sections?.find(s => s.id === 76);
+  
+  // ID 109: حلول ذكية لشحن وتوصيل البضائع
   const solutionSection = homeData?.Sections?.find(s => s.id === 109);
+
+  // ID 112: حلول ذكية لشحن وتوصيل البضائع (لصفحة الأعمال)
+  const worksBannerSection = homeData?.Sections?.find(s => s.id === 112);
+  
   const aboutData = homeData?.About?.[0];
 
   return (
     <footer className='py-4'>
       <div className="container">
-        {/* General Footer - Hidden on Provider Page */}
-        <div className={`d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 general-footer ${isProviderPage ? 'd-none' : ''}`}>
+        {/* General Footer - Hidden on Provider or Works Page */}
+        <div className={`d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 general-footer ${isProviderPage || isWorksPage ? 'd-none' : ''}`}>
           <h3 className='footer-title'>{isLoading ? '...' : getLangField(solutionSection, 'title') || t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
           <Link 
             to={isAuthenticated ? "#" : "/signup-driver"} 
@@ -55,8 +64,8 @@ const Footer = ({ isProviderPage = false }) => {
         </div>
         
         {/* Provider Footer - Only Shown on Provider Page */}
-        <div className={`d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 provider-footer ${!isProviderPage ? 'd-none' : ''}`}>
-          <h3 className='footer-title'>{isLoading ? '...' : getLangField(solutionSection, 'title') || t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
+        <div className={`d-flex flex-column align-items-center text-center gap-3 border-bottom pb-3 provider-footer ${!isProviderPage ? 'd-none' : ''}`}>
+          <h3 className='footer-title m-0'>{isLoading ? '...' : getLangField(providerBannerSection, 'title') || 'هل أنت مستعد لبدء العمل وزيادة دخلك؟'}</h3>
           <Link 
             to={isAuthenticated ? "#" : "/signup-driver"} 
             onClick={(e) => {
@@ -67,7 +76,18 @@ const Footer = ({ isProviderPage = false }) => {
             }}
             className="login-button text-decoration-none"
           >
-            {t('common:hero.joinDriver', 'انضم الينا الان')}
+            {isLoading ? '...' : getLangField(providerBannerSection, 'content') || 'ابدأ الآن كمزود خدمة'}
+          </Link>
+        </div>
+
+        {/* Works Footer - Only Shown on Works Page */}
+        <div className={`d-flex flex-column align-items-center text-center gap-3 border-bottom pb-3 works-footer ${!isWorksPage ? 'd-none' : ''}`}>
+          <h3 className='footer-title m-0'>{isLoading ? '...' : getLangField(worksBannerSection, 'title') || 'حلول ذكية لشحن وتوصيل البضائع'}</h3>
+          <Link 
+            to="/signup-company" 
+            className="login-button text-decoration-none"
+          >
+            {i18n.language === 'en' ? 'Join as a company' : 'انضم كشركة'}
           </Link>
         </div>
 

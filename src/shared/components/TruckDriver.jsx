@@ -19,7 +19,8 @@ const TruckDriver = () => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  const driverSection = homeData?.Sections?.[14]; // ID 66: سائقي الشركات
+  const driverSection = homeData?.Sections?.find(section => section.id === 66); 
+  // ID 66: سائقي الشركات
   const driverCards = homeData?.Drivers || [];
 
   return (

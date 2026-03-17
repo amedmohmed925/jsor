@@ -20,7 +20,8 @@ const ServiceProvider = () => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  const providerHero = homeData?.Sections?.[8]; // ID 72: انضم كمزود خدمة
+  const providerHero = homeData?.Sections?.find(section => section.id === 72);
+   // ID 72: انضم كمزود خدمة
 
   return (
     <div className='overflow-hidden'>

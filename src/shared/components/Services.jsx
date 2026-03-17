@@ -18,9 +18,10 @@ const Services = () => {
     const enField = `${field}_en`;
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
+    const servicesSection = homeData?.Sections?.find(section => section.id === 32);
 
-  const servicesSection = homeData?.Sections?.[16]; // ID 32: خدماتنا
-  const servicesCards = homeData?.Services || [];
+
+    const servicesCards = homeData?.Services || [];
 
   const itemVariants = {
     hidden: { scale: 0.8, opacity: 0 },

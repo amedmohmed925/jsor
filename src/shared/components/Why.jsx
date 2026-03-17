@@ -15,7 +15,7 @@ const Why = () => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  const whySection = homeData?.Sections?.[18]; // ID 27: لماذا نحن
+  const whySection = homeData?.Sections?.find(section => section.id === 27);
   const whyCards = homeData?.Why || [];
 
   const containerVariants = {

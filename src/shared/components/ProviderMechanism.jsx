@@ -25,7 +25,8 @@ const ProviderMechanism = () => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  const mechanismSection = homeData?.Sections?.[6]; // ID 74: آلية الانضمام
+  const mechanismSection = homeData?.Sections?.find(section => section.id === 74);
+   // ID 74: آلية الانضمام
 
   // Get provider steps from API and reverse to match logical flow
   const providerSteps = homeData?.ProviderProcess ? [...homeData.ProviderProcess].reverse() : [];

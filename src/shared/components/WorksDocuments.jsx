@@ -23,7 +23,7 @@ const WorksDocuments = () => {
     }
   };
 
-  const docsSection = homeData?.Sections?.find(s => s.id === 79) || homeData?.Sections?.[79]; // Using ID 79
+  const docsSection = homeData?.Sections?.find(s => s.id === 79); // Using ID 79
 
   const docItems = [
     i18n.language?.startsWith('en') ? 'Commercial Register' : 'السجل التجاري',

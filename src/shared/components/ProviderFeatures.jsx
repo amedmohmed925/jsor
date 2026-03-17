@@ -15,7 +15,8 @@ const ProviderFeatures = () => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  const featuresSection = homeData?.Sections?.[7]; // ID 73: مميزات الانضمام كمزود خدمة
+  const featuresSection = homeData?.Sections?.find(section => section.id === 73); 
+  // ID 73: مميزات الانضمام كمزود خدمة
 
   return (
     <section className='my-5 overflow-hidden'>

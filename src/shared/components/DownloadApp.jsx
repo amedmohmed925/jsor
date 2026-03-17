@@ -16,7 +16,8 @@ const DownloadApp = () => {
     return (isEn && item[enField]) ? item[enField] : item[field];
   };
 
-  const appSection = homeData?.Sections?.[12]; // ID 68: احصل على تطبيقنا المحمول المجاني
+  const appSection = homeData?.Sections?.find(section => section.id === 68); 
+  // ID 68: احصل على تطبيقنا المحمول المجاني
 
   return (
     <section className='mt-5 pt-5 pb-0 mb-0 overflow-hidden'>

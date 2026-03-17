@@ -15,7 +15,9 @@ const RequestMechanism = () => {
   const { data: homeData, isLoading } = useGetHomeDataQuery();
   const [activeStep, setActiveStep] = useState(0);
 
-  const processSection = homeData?.Sections?.[17]; // ID 31: آلية الطلب
+
+  const processSection = homeData?.Sections?.find(section => section.id === 31);
+
   const processSteps = homeData?.Process || [];
   const activeStepIndex = processSteps.length > 0
     ? Math.min(activeStep, processSteps.length - 1)

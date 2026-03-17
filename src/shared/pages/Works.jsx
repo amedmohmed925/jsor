@@ -11,7 +11,7 @@ const Works = () => {
     <WorksHero />
     <WorksMain />
     <WorksDocuments />
-    <Footer />
+    <Footer isWorksPage={true} />
     </>
   )
 }

@@ -25,7 +25,8 @@ const Trucks = () => {
     return image;
   };
 
-  const trucksSection = homeData?.Sections?.[15]; // ID 29: انواع الشاحنات
+  
+  const trucksSection = homeData?.Sections?.find(section => section.id === 65); // ID 29: انواع الشاحنات
   const allTrucks = homeData?.Truks || [];
 
   // تحديد الشاحنات الأساسية بالـ IDs
