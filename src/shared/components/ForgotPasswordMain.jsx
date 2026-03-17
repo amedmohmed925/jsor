@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePasswordResetMutation } from '../../api/auth/authApi';
+import { siteApi } from '../../api/site/siteApi';
 
 const ForgotPasswordMain = () => {
     const [email, setEmail] = useState('');
     const [messageKey, setMessageKey] = useState('');
     const [errorKey, setErrorKey] = useState('');
 
-    const { t } = useTranslation(['auth', 'common']);
+    const { t, i18n } = useTranslation(['auth', 'common']);
+    const isEn = i18n.language === 'en';
+
+    const { data: homeData } = siteApi.useGetHomeDataQuery();
+    const section = homeData?.Sections?.find(s => s.id === 114);
 
     const [passwordReset, { isLoading: isResetLoading }] = usePasswordResetMutation();
     const navigate = useNavigate();
@@ -50,11 +55,11 @@ const ForgotPasswordMain = () => {
                     <Link to='/'>
                         <img src="assets/logo.png" alt="logo" />
                     </Link>
-                    <h3 className="login-title mt-2 m-0">
-                        {t('auth:forgotPassword.title')}
+                    <h3 className="login-title mt-2 m-0 text-center">
+                        {isEn ? (section?.title_en || t('auth:forgotPassword.title')) : (section?.title || t('auth:forgotPassword.title'))}
                     </h3>
                     <p className="login-desc m-0 text-center">
-                        {t('auth:forgotPassword.description')}
+                        {isEn ? (section?.content_en || t('auth:forgotPassword.description')) : (section?.content || t('auth:forgotPassword.description'))}
                     </p>
 
                     <div className="divider mt-3 mb-2">

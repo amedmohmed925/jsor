@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useResetPasswordMutation, useLoginMutation } from '../../api/auth/authApi';
 import { setCredentials } from '../../store/slices/authSlice';
+import { siteApi } from '../../api/site/siteApi';
 
 const ResetPasswordMain = () => {
     const [token, setToken] = useState('');
@@ -17,6 +18,11 @@ const ResetPasswordMain = () => {
     const [apiMessage, setApiMessage] = useState('');
 
     const { t, i18n } = useTranslation(['auth', 'common']);
+    const isEn = i18n.language === 'en';
+
+    const { data: homeData } = siteApi.useGetHomeDataQuery();
+    const section = homeData?.Sections?.find(s => s.id === 115);
+
     const [resetPassword, { isLoading }] = useResetPasswordMutation();
     const [login] = useLoginMutation();
     const dispatch = useDispatch();
@@ -146,11 +152,11 @@ const ResetPasswordMain = () => {
                     <Link to='/'>
                         <img src="assets/logo.png" alt="logo" />
                     </Link>
-                    <h3 className="login-title mt-2 m-0">
-                        {t('auth:resetPassword.title')}
+                    <h3 className="login-title mt-2 m-0 text-center">
+                        {isEn ? (section?.title_en || t('auth:resetPassword.title')) : (section?.title || t('auth:resetPassword.title'))}
                     </h3>
                     <p className="login-desc m-0 text-center">
-                        {t('auth:resetPassword.description')}
+                        {isEn ? (section?.content_en || t('auth:resetPassword.description')) : (section?.content || t('auth:resetPassword.description'))}
                     </p>
 
                     <div className="divider mt-3 mb-2">

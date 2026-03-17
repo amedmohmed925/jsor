@@ -3,9 +3,14 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useActivateMutation } from '../../api/auth/authApi';
 import Navbar from '../components/Navbar';
+import { siteApi } from '../../api/site/siteApi';
 
 const ActivateAccount = () => {
   const { t, i18n } = useTranslation(['auth', 'common']);
+  const isEn = i18n.language === 'en';
+  const { data: homeData } = siteApi.useGetHomeDataQuery();
+  const section = homeData?.Sections?.find(s => s.id === 113);
+
   const location = useLocation();
   const navigate = useNavigate();
   const [activate, { isLoading }] = useActivateMutation();
@@ -48,11 +53,11 @@ const ActivateAccount = () => {
             <Link to='/'>
               <img src="assets/logo.png" alt="logo" />
             </Link>
-            <h3 className="login-title mt-2 m-0">
-              {t('auth:activateAccount.title')}
+            <h3 className="login-title mt-2 m-0 text-center">
+              {isEn ? (section?.title_en || t('auth:activateAccount.title')) : (section?.title || t('auth:activateAccount.title'))}
             </h3>
             <p className="login-desc text-center px-3">
-              {t('auth:activateAccount.description', { email })}
+              {isEn ? (section?.content_en || t('auth:activateAccount.description', { email })) : (section?.content || t('auth:activateAccount.description', { email }))}
             </p>
 
             {error && <div className="alert alert-danger w-100 text-center">{error}</div>}
