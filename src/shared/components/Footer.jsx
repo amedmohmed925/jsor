@@ -31,6 +31,7 @@ const Footer = ({ isProviderPage = false }) => {
   };
 
   const footerSection = homeData?.Sections?.[4]; // ID 76: هل أنت مستعد لبدء العمل وزيادة دخلك؟
+  const solutionSection = homeData?.Sections?.find(s => s.id === 109);
   const aboutData = homeData?.About?.[0];
 
   return (
@@ -38,7 +39,7 @@ const Footer = ({ isProviderPage = false }) => {
       <div className="container">
         {/* General Footer - Hidden on Provider Page */}
         <div className={`d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 general-footer ${isProviderPage ? 'd-none' : ''}`}>
-          <h3 className='footer-title'>{t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
+          <h3 className='footer-title'>{isLoading ? '...' : getLangField(solutionSection, 'title') || t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
           <Link 
             to={isAuthenticated ? "#" : "/signup-driver"} 
             onClick={(e) => {
@@ -55,7 +56,7 @@ const Footer = ({ isProviderPage = false }) => {
         
         {/* Provider Footer - Only Shown on Provider Page */}
         <div className={`d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom pb-3 provider-footer ${!isProviderPage ? 'd-none' : ''}`}>
-          <h3 className='footer-title'>{t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
+          <h3 className='footer-title'>{isLoading ? '...' : getLangField(solutionSection, 'title') || t('footer.solutionTitle', 'حلول ذكية لشحن وتوصيل البضائع')}</h3>
           <Link 
             to={isAuthenticated ? "#" : "/signup-driver"} 
             onClick={(e) => {

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useDriverSignupMutation, useGetListsQuery, useGetCitiesQuery } from '../../api/site/siteApi';
+import { useDriverSignupMutation, useGetListsQuery, useGetCitiesQuery, useGetHomeDataQuery } from '../../api/site/siteApi';
 
 const DriverSignupMain = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,11 +26,14 @@ const DriverSignupMain = () => {
   });
 
   const [error, setError] = useState('');
+  const { data: homeData, isLoading: homeLoading } = useGetHomeDataQuery();
   const { data: listsData } = useGetListsQuery();
   const { data: citiesData, isLoading: citiesLoading } = useGetCitiesQuery(formData.country_id, {
     skip: !formData.country_id
   });
   const [driverSignup, { isLoading: signupLoading }] = useDriverSignupMutation();
+
+  const driverSection = homeData?.Sections?.find(s => s.id === 110);
 
   const getLangField = (item, field) => {
     if (!item) return '';
@@ -114,8 +117,12 @@ const DriverSignupMain = () => {
     <div className="login-main bg-white shadow position-relative p-4 rounded-4 w-100" style={{ maxWidth: '600px', margin: '40px auto' }}>
       <div className="text-center mb-4">
         <img src="/assets/logo.png" alt="Jusor Logo" style={{ height: '50px' }} className="mb-3" />
-        <h2 className="fw-bold mb-1">{isEn ? 'Create Driver Account Now' : 'انشأ حسابك ك سائق الان'}</h2>
-        <p className="text-muted">{isEn ? 'Welcome! Do you want to join us?' : 'مرحباً بك! هل تريد الانضمام إلينا؟'}</p>
+        <h2 className="fw-bold mb-1">
+          {homeLoading ? '...' : getLangField(driverSection, 'title') || (isEn ? 'Create Driver Account Now' : 'انشأ حسابك ك سائق الان')}
+        </h2>
+        <p className="text-muted">
+          {homeLoading ? '...' : getLangField(driverSection, 'content') || (isEn ? 'Welcome! Do you want to join us?' : 'مرحباً بك! هل تريد الانضمام إلينا؟')}
+        </p>
       </div>
 
       {error && <div className="alert alert-danger py-2 small mb-3">{error}</div>}

@@ -4,6 +4,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetListsQuery, useRegisterCompanyMutation, useGetCitiesByCountryQuery } from '../../api/auth/authApi';
+import { useGetHomeDataQuery } from '../../api/site/siteApi';
 
 const CompanySignupMain = () => {
   const navigate = useNavigate();
@@ -25,11 +26,14 @@ const CompanySignupMain = () => {
     item1: 0,
   });
 
+  const { data: homeData, isLoading: homeLoading } = useGetHomeDataQuery();
   const { data: listsData } = useGetListsQuery();
   const { data: citiesData } = useGetCitiesByCountryQuery(formData.country_id, {
     skip: !formData.country_id,
   });
   const [registerCompany, { isLoading: registerLoading }] = useRegisterCompanyMutation();
+
+  const companySection = homeData?.Sections?.find(s => s.id === 111);
 
   const getLangField = (item, field) => {
     if (!item) return '';
@@ -123,8 +127,12 @@ const CompanySignupMain = () => {
         <Link to="/" className="d-inline-block">
           <img src="/assets/logo.png" alt="Josur Logo" style={{ height: '52px' }} className="mb-3" />
         </Link>
-        <h2 className="login-title m-0">{t('auth:companySignup.title')}</h2>
-        <p className="login-desc mt-2 mb-0">{t('auth:companySignup.description')}</p>
+        <h2 className="login-title m-0">
+          {homeLoading ? '...' : getLangField(companySection, 'title') || t('auth:companySignup.title')}
+        </h2>
+        <p className="login-desc mt-2 mb-0">
+          {homeLoading ? '...' : getLangField(companySection, 'content') || t('auth:companySignup.description')}
+        </p>
       </div>
 
       {error && <div className="alert alert-danger py-2 small mb-3 text-center">{error}</div>}
